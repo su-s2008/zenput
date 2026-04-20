@@ -62,8 +62,7 @@ stages:
           - script: npm run build
             displayName: 'Build'
 
-          # SonarCloud needs JAVA_HOME to be set to JDK 17
-          - task: SonarCloudPrepare@3
+          - task: SonarCloudPrepare@4
             displayName: 'SonarCloud Prepare'
             inputs:
               SonarCloud: 'SonarQube'
@@ -73,12 +72,12 @@ stages:
             env:
               JAVA_HOME: $(JAVA_HOME)
 
-          - task: SonarCloudAnalyze@3
+          - task: SonarCloudAnalyze@4
             displayName: 'SonarCloud Analyze'
             env:
               JAVA_HOME: $(JAVA_HOME)
 
-          - task: SonarCloudPublish@3
+          - task: SonarCloudPublish@4
             displayName: 'SonarCloud Publish'
 
   - stage: Publish
