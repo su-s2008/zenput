@@ -14,7 +14,7 @@ variables:
   nodeVersion: '22' 
   npm_config_cache: $(Pipeline.Workspace)/.npm
   # Point to the Java 17 you installed for SonarCloud
-  JAVA_HOME: /usr/lib/jvm/java-17-openjdk-arm64 
+  JAVA_HOME: /usr/lib/jvm/java-21-openjdk-arm64
 
 stages:
   - stage: Build
