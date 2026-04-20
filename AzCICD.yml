@@ -25,7 +25,7 @@ stages:
       - job: BuildAndTest
         displayName: 'Build, Lint, Test & Scan'
         pool:
-          vmImage: 'ubuntu-latest'
+          name: default
         steps:
           - checkout: self
             fetchDepth: 0
@@ -89,7 +89,7 @@ stages:
       - deployment: PublishNpm
         displayName: 'Publish to npm registry'
         pool:
-          vmImage: 'ubuntu-latest'
+          name: default
         environment: 'npm-publish'        # configure approval checks on this environment in Azure DevOps
         strategy:
           runOnce:
