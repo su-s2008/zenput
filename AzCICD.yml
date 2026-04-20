@@ -56,19 +56,6 @@ stages:
           - script: npm run test:coverage
             displayName: 'Test with coverage'
 
-          # Publish test/coverage results so they appear in Azure DevOps UI
-          - task: PublishTestResults@2
-            displayName: 'Publish test results'
-            condition: succeededOrFailed()
-            inputs:
-              testResultsFormat: 'JUnit'
-              testResultsResults@2
-            displayName: 'Publish code coverage'
-            condition: succeededOrFailed()
-            inputs:
-              summaryFileLocation: '**/coverage/cobertura-coverage.xml'
-            continueOnError: true
-
           - script: npm run build
             displayName: 'Build'
 
