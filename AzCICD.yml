@@ -14,6 +14,7 @@ variables:
   nodeVersion: '24'
   # Point to the Java 17 you installed for SonarCloud
   JAVA_HOME: /usr/lib/jvm/java-21-openjdk-arm64
+  VERCEL_ENV: 'production'
 
 stages:
   - stage: Build
@@ -139,28 +140,22 @@ stages:
           - script: npm install -g vercel
             displayName: 'Install Vercel CLI'
 
-          - script: |
-              vercel pull --yes --environment=$(VERCEL_ENV) --token=$(VERCEL_TOKEN)
+          - script: vercel pull --yes --environment=$(VERCEL_ENV) --token=$(VERCEL_TOKEN)
             displayName: 'Pull Vercel project settings'
-            workingDirectory: demo
             env:
               VERCEL_ORG_ID: $(VERCEL_ORG_ID)
               VERCEL_PROJECT_ID: $(VERCEL_PROJECT_ID)
               VERCEL_TOKEN: $(VERCEL_TOKEN)
 
-          - script: |
-              vercel build --prod --token=$(VERCEL_TOKEN)
+          - script: vercel build --prod --token=$(VERCEL_TOKEN)
             displayName: 'Build Vercel deployment'
-            workingDirectory: demo
             env:
               VERCEL_ORG_ID: $(VERCEL_ORG_ID)
               VERCEL_PROJECT_ID: $(VERCEL_PROJECT_ID)
               VERCEL_TOKEN: $(VERCEL_TOKEN)
 
-          - script: |
-              vercel deploy --prebuilt --prod --token=$(VERCEL_TOKEN)
+          - script: vercel deploy --prebuilt --prod --token=$(VERCEL_TOKEN)
             displayName: 'Deploy to Vercel'
-            workingDirectory: demo
             env:
               VERCEL_ORG_ID: $(VERCEL_ORG_ID)
               VERCEL_PROJECT_ID: $(VERCEL_PROJECT_ID)
