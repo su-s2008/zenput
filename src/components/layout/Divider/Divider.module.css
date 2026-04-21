@@ -1,0 +1,43 @@
+.divider {
+  border: 0;
+  margin: 0;
+  background-color: var(--zp-color-border-subtle);
+  flex-shrink: 0;
+}
+
+.horizontal {
+  width: 100%;
+  height: 1px;
+}
+
+.vertical {
+  width: 1px;
+  align-self: stretch;
+  min-height: 1em;
+}
+
+.strong {
+  background-color: var(--zp-color-border);
+}
+
+.labelWrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--zp-space-3);
+  width: 100%;
+  color: var(--zp-color-text-secondary);
+  font-size: var(--zp-font-size-sm);
+}
+
+.labelWrapper::before,
+.labelWrapper::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background-color: var(--zp-color-border-subtle);
+}
+
+.labelWrapperStrong::before,
+.labelWrapperStrong::after {
+  background-color: var(--zp-color-border);
+}

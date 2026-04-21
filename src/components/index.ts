@@ -18,3 +18,8 @@ export * from './OTPInput';
 export * from './AutoComplete';
 export * from './DataTable';
 export * from './MoneyInput';
+
+// Design-system components
+export * from './Typography';
+export * from './layout';
+export * from './actions';

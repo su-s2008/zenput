@@ -14,3 +14,6 @@ export function classNames(...args: ClassValue[]): string {
   }
   return classes.join(' ');
 }
+
+/** Short alias for {@link classNames}. */
+export const cn = classNames;

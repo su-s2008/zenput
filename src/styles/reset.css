@@ -1,0 +1,51 @@
+/*
+ * Zenput base reset — minimal, opt-in.
+ * Consumers import '@zenput/styles/reset.css' (or 'zenput/dist/styles/reset.css')
+ * if they want a normalized baseline. Not applied automatically.
+ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  line-height: 1.5;
+}
+
+body {
+  margin: 0;
+  font-family: var(--zp-font-family-sans);
+  font-size: var(--zp-font-size-md);
+  color: var(--zp-color-text-primary);
+  background-color: var(--zp-color-background);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+a {
+  color: var(--zp-color-brand-text);
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}

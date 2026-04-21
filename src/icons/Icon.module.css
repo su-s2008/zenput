@@ -1,0 +1,11 @@
+.icon {
+  display: inline-block;
+  flex-shrink: 0;
+  vertical-align: middle;
+  color: currentcolor;
+  fill: none;
+  stroke: currentcolor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}

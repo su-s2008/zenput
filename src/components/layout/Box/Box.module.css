@@ -1,0 +1,7 @@
+.box {
+  box-sizing: border-box;
+}
+
+.fullWidth {
+  width: 100%;
+}
