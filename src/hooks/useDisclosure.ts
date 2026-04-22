@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 /** Value accepted by `setOpen`: either a boolean or an updater function. */
 export type SetOpen = (next: boolean | ((prev: boolean) => boolean)) => void;
@@ -42,7 +42,9 @@ export function useDisclosure(options: UseDisclosureOptions = {}): UseDisclosure
   // recently emitted so rapid successive functional updates compose
   // against the latest pending state instead of collapsing.
   const pendingRef = useRef<boolean>(open);
-  pendingRef.current = open;
+  useEffect(() => {
+    pendingRef.current = open;
+  }, [open]);
 
   const setOpen = useCallback<SetOpen>(
     (next) => {

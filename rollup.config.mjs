@@ -5,23 +5,30 @@ import postcss from 'rollup-plugin-postcss';
 import dts from 'rollup-plugin-dts';
 import peerDepsExternal from 'rollup-plugin-peer-deps-external';
 
+const basePlugins = ({ declaration }) => [
+  peerDepsExternal(),
+  resolve(),
+  commonjs(),
+  typescript({
+    tsconfig: './tsconfig.json',
+    rootDir: 'src',
+    declaration,
+    declarationDir: declaration ? 'dist/cjs/types' : undefined,
+  }),
+  postcss({ modules: true, extract: false }),
+];
+
 export default [
   {
     input: 'src/index.ts',
-    output: [
-      { file: 'dist/cjs/index.js', format: 'cjs', sourcemap: true },
-      { file: 'dist/esm/index.js', format: 'esm', sourcemap: true },
-    ],
-    plugins: [
-      peerDepsExternal(),
-      resolve(),
-      commonjs(),
-      typescript({
-        tsconfig: './tsconfig.json',
-        declarationDir: 'dist/types',
-      }),
-      postcss({ modules: true, extract: false }),
-    ],
+    output: { file: 'dist/cjs/index.js', format: 'cjs', sourcemap: true },
+    plugins: basePlugins({ declaration: true }),
+    external: ['react', 'react-dom'],
+  },
+  {
+    input: 'src/index.ts',
+    output: { file: 'dist/esm/index.js', format: 'esm', sourcemap: true },
+    plugins: basePlugins({ declaration: false }),
     external: ['react', 'react-dom'],
   },
   {

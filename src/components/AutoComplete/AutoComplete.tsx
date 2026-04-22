@@ -74,7 +74,7 @@ export const AutoComplete = forwardRef<HTMLInputElement, AutoCompleteProps>(
     const currentInputValue = isControlled ? (value as string) : inputValue;
 
     const wrapperRef = useRef<HTMLDivElement>(null);
-    const blurTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const blurTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const filteredOptions = options.filter((opt) =>
       opt.label.toLowerCase().includes(currentInputValue.toLowerCase())

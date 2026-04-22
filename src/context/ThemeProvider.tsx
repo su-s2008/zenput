@@ -112,7 +112,7 @@ interface ThemeProviderProps {
    * (e.g., "span" for inline contexts) or ensure your layout accounts for
    * the wrapper.
    */
-  as?: keyof JSX.IntrinsicElements | React.ElementType;
+  as?: keyof React.JSX.IntrinsicElements | React.ElementType;
   children: React.ReactNode;
 }
 
@@ -124,7 +124,7 @@ export function ThemeProvider({
   theme = EMPTY_THEME,
   as = 'div',
   children,
-}: Readonly<ThemeProviderProps>): JSX.Element {
+}: Readonly<ThemeProviderProps>): React.JSX.Element {
   const { mode, semantic, cssVars } = useMemo(() => createTheme(theme), [theme]);
   const legacy = useMemo(() => legacyCssVars(theme), [theme]);
 
