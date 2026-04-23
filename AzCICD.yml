@@ -256,26 +256,23 @@ stages:
           - script: npm install -g vercel@39.3.0
             displayName: 'Install Vercel CLI'
 
-          - script: vercel pull --yes --environment=$(VERCEL_ENV)
+          - script: vercel pull --yes --environment=$(VERCEL_ENV) --token=$(VERCEL_TOKEN)
             displayName: 'Pull Vercel project settings'
             env:
               VERCEL_ORG_ID: $(VERCEL_ORG_ID)
               VERCEL_PROJECT_ID: $(VERCEL_PROJECT_ID)
-              VERCEL_TOKEN: $(VERCEL_TOKEN)
 
-          - script: vercel build --prod
+          - script: vercel build --prod --token=$(VERCEL_TOKEN)
             displayName: 'Build Vercel deployment'
             env:
               VERCEL_ORG_ID: $(VERCEL_ORG_ID)
               VERCEL_PROJECT_ID: $(VERCEL_PROJECT_ID)
-              VERCEL_TOKEN: $(VERCEL_TOKEN)
 
-          - script: vercel deploy --prebuilt --prod
+          - script: vercel deploy --prebuilt --prod --token=$(VERCEL_TOKEN)
             displayName: 'Deploy to Vercel'
             env:
               VERCEL_ORG_ID: $(VERCEL_ORG_ID)
               VERCEL_PROJECT_ID: $(VERCEL_PROJECT_ID)
-              VERCEL_TOKEN: $(VERCEL_TOKEN)
 
   # ───────────────────────────────────────────────────────────────────────────
   # Optional publish stage — retained from previous pipeline configuration.
