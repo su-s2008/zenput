@@ -244,7 +244,7 @@ stages:
               key: 'npm | "$(Agent.OS)" | package-lock.json'
               path: $(npm_config_cache)
 
-          - script: npm install -g vercel@39.3.0
+          - script: npm install -g vercel@52
             displayName: 'Install Vercel CLI'
 
           - script: vercel pull --yes --environment=$(VERCEL_ENV) --token=$(VERCEL_TOKEN)
