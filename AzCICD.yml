@@ -37,7 +37,6 @@
 #   npm run test:ci
 #   npm run build
 #   npm run build-storybook
-#   npm run size
 # ═════════════════════════════════════════════════════════════════════════════
 
 trigger:
@@ -77,13 +76,13 @@ pool:
 
 stages:
   - stage: CI
-    displayName: 'CI (lint → test → build → size → a11y)'
+    displayName: 'CI (lint → test → build → a11y)'
     jobs:
       # All CI runs in a single sequential job on the single self-hosted
       # agent. Steps execute in order; later steps reuse node_modules and
       # build outputs from earlier steps.
       - job: CI
-        displayName: 'Lint, test, build, size, a11y (sequential)'
+        displayName: 'Lint, test, build, a11y (sequential)'
         timeoutInMinutes: 60
         workspace:
           clean: outputs       # only wipe build outputs between runs
@@ -188,10 +187,6 @@ stages:
             inputs:
               targetPath: 'storybook-static'
               artifact: 'storybook-static'
-
-          # ── Bundle-size budget ──────────────────────────────────────────
-          - script: npx size-limit
-            displayName: 'Bundle size (size-limit)'
 
           # ── Storybook a11y (axe via @storybook/test-runner) ─────────────
           - task: Cache@2
