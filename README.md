@@ -228,6 +228,45 @@ import { ThemeProvider } from 'zenput';
 </ThemeProvider>
 ```
 
+### Overlay / z-index / elevation tokens
+
+The following CSS custom properties are emitted by `ThemeProvider` and available for advanced customisation:
+
+#### Z-index scale (`--zp-z-*`)
+
+| Custom property | Value | Usage |
+|-----------------|-------|-------|
+| `--zp-z-hide` | `-1` | Hidden layers |
+| `--zp-z-base` | `0` | Default stacking |
+| `--zp-z-raised` | `1` | Slightly raised elements |
+| `--zp-z-docked` | `10` | Docked/fixed bars |
+| `--zp-z-dropdown` | `1000` | Dropdown menus |
+| `--zp-z-sticky` | `1100` | Sticky headers/footers |
+| `--zp-z-banner` | `1200` | Banners/notifications |
+| `--zp-z-overlay` | `1300` | Generic overlays |
+| `--zp-z-modal` | `1400` | Modal dialogs |
+| `--zp-z-popover` | `1500` | Popovers |
+| `--zp-z-skip-nav` | `1600` | Skip-navigation links |
+| `--zp-z-toast` | `1700` | Toast notifications |
+| `--zp-z-tooltip` | `1800` | Tooltips |
+
+#### Elevation scale (`--zp-elevation-*`)
+
+| Custom property | Description |
+|-----------------|-------------|
+| `--zp-elevation-0` | No shadow |
+| `--zp-elevation-1` | Extra-small shadow |
+| `--zp-elevation-2` | Small shadow |
+| `--zp-elevation-3` | Medium shadow |
+| `--zp-elevation-4` | Large shadow |
+| `--zp-elevation-5` | Extra-large shadow |
+
+#### Overlay backdrop (`--zp-overlay`)
+
+| Custom property | Light | Dark | High-contrast |
+|-----------------|-------|------|---------------|
+| `--zp-overlay` | `rgba(17, 24, 39, 0.5)` | `rgba(0, 0, 0, 0.6)` | `rgba(0, 0, 0, 0.75)` |
+
 ## Props
 
 ### Common props (all components inherit `BaseInputProps`)

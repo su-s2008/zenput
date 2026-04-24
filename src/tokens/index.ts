@@ -25,7 +25,7 @@ import {
 import { fontFamilies, fontSizes, fontWeights, lineHeights, letterSpacings } from './typography';
 import { spacing } from './spacing';
 import { radii } from './radii';
-import { shadows, borderWidths } from './shadows';
+import { shadows, borderWidths, elevation } from './shadows';
 import { durations, easings } from './motion';
 import { zIndex } from './zIndex';
 import { breakpoints } from './breakpoints';
@@ -82,14 +82,18 @@ export function buildCssVariables(semantic: SemanticColors): Record<string, stri
   // CSS custom-property identifiers (e.g. "0.5" -> "0-5").
   assignTokens(vars, 'space', spacing, normalizeSpacingKey);
 
-  // Radii / borders / shadows / motion / zIndex / breakpoints.
+  // Radii / borders / shadows / motion / zIndex / breakpoints / elevation.
   assignTokens(vars, 'radius', radii);
   assignTokens(vars, 'border-width', borderWidths);
   assignTokens(vars, 'shadow', shadows);
   assignTokens(vars, 'duration', durations);
   assignTokens(vars, 'easing', easings);
-  assignTokens(vars, 'z', zIndex);
+  assignTokens(vars, 'z', zIndex, kebab);
   assignTokens(vars, 'breakpoint', breakpoints);
+  assignTokens(vars, 'elevation', elevation);
+
+  // Overlay backdrop color — exposed as `--zp-overlay` (no category prefix).
+  vars[`${CSS_VAR_PREFIX}-overlay`] = semantic.overlay;
 
   return vars;
 }

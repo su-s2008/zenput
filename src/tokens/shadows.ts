@@ -13,6 +13,22 @@ export const shadows = {
 
 export type ShadowToken = keyof typeof shadows;
 
+/**
+ * Numeric elevation scale (0–5).
+ * Maps to `--zp-elevation-<n>` CSS custom properties.
+ * References the named `shadows` tokens to avoid duplicating string literals.
+ */
+export const elevation = {
+  0: shadows.none,
+  1: shadows.xs,
+  2: shadows.sm,
+  3: shadows.md,
+  4: shadows.lg,
+  5: shadows.xl,
+} as const;
+
+export type ElevationToken = keyof typeof elevation;
+
 export const borderWidths = {
   '0': '0',
   '1': '1px',

@@ -157,6 +157,9 @@ export interface SemanticColors {
 
   /** Focus ring color. */
   focusRing: string;
+
+  /** Backdrop / overlay background color (e.g. for Modal, Drawer backdrops). */
+  overlay: string;
 }
 
 export const lightSemantic: SemanticColors = {
@@ -199,6 +202,8 @@ export const lightSemantic: SemanticColors = {
   borderSubtle: neutral['200'],
 
   focusRing: blue['500'],
+
+  overlay: 'rgba(17, 24, 39, 0.5)',
 };
 
 export const darkSemantic: SemanticColors = {
@@ -241,6 +246,8 @@ export const darkSemantic: SemanticColors = {
   borderSubtle: neutral['800'],
 
   focusRing: blue['400'],
+
+  overlay: 'rgba(0, 0, 0, 0.6)',
 };
 
 /**
@@ -287,4 +294,6 @@ export const highContrastSemantic: SemanticColors = {
   borderSubtle: '#ffffff',
 
   focusRing: '#1aebff',
+
+  overlay: 'rgba(0, 0, 0, 0.75)',
 };
