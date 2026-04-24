@@ -1,0 +1,189 @@
+.container {
+  font-family: var(--zp-font-family-sans);
+  color: var(--zp-color-text-primary);
+  background: var(--zp-color-background);
+}
+
+.header {
+  padding: var(--zp-space-6);
+  border-bottom: var(--zp-border-width-1) solid var(--zp-color-border);
+}
+
+.title {
+  margin: 0 0 var(--zp-space-2) 0;
+  font-size: var(--zp-font-size-2xl);
+  font-weight: var(--zp-font-weight-bold);
+}
+
+.info {
+  display: flex;
+  gap: var(--zp-space-4);
+  font-size: var(--zp-font-size-sm);
+  color: var(--zp-color-text-secondary);
+}
+
+.layout {
+  display: flex;
+  min-height: 600px;
+}
+
+.sidebar {
+  width: 200px;
+  padding: var(--zp-space-4);
+  border-right: var(--zp-border-width-1) solid var(--zp-color-border);
+  background: var(--zp-color-surface);
+}
+
+.categoryButton {
+  display: block;
+  width: 100%;
+  padding: var(--zp-space-2) var(--zp-space-3);
+  margin-bottom: var(--zp-space-1);
+  text-align: left;
+  border: none;
+  border-radius: var(--zp-radius-md);
+  background: transparent;
+  color: var(--zp-color-text-primary);
+  font-size: var(--zp-font-size-sm);
+  cursor: pointer;
+  transition: background-color var(--zp-duration-fast) var(--zp-easing-standard);
+}
+
+.categoryButton:hover {
+  background: var(--zp-color-surface-raised);
+}
+
+.categoryButton:focus-visible {
+  outline: 2px solid var(--zp-color-focus-ring);
+  outline-offset: 2px;
+  background: var(--zp-color-surface-raised);
+}
+
+.categoryButton.active {
+  background: var(--zp-color-brand);
+  color: var(--zp-color-text-inverse);
+  font-weight: var(--zp-font-weight-semibold);
+}
+
+.categoryButton.active:focus-visible {
+  outline: 2px solid var(--zp-color-focus-ring);
+  outline-offset: 2px;
+}
+
+.content {
+  flex: 1;
+  padding: var(--zp-space-6);
+  overflow-y: auto;
+}
+
+.tokenGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: var(--zp-space-4);
+  margin-bottom: var(--zp-space-6);
+}
+
+.tokenItem {
+  display: flex;
+  align-items: center;
+  gap: var(--zp-space-3);
+  padding: var(--zp-space-3);
+  border: var(--zp-border-width-1) solid var(--zp-color-border);
+  border-radius: var(--zp-radius-md);
+  background: var(--zp-color-surface);
+}
+
+.tokenDetails {
+  flex: 1;
+  min-width: 0;
+}
+
+.tokenName {
+  font-size: var(--zp-font-size-sm);
+  font-weight: var(--zp-font-weight-semibold);
+  color: var(--zp-color-text-primary);
+  margin-bottom: var(--zp-space-1);
+}
+
+.tokenValue {
+  font-size: var(--zp-font-size-xs);
+  font-family: var(--zp-font-family-mono);
+  color: var(--zp-color-text-secondary);
+  word-break: break-all;
+}
+
+.colorSwatch {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--zp-radius-md);
+  border: var(--zp-border-width-1) solid var(--zp-color-border);
+  flex-shrink: 0;
+}
+
+.spacingVisual {
+  flex-shrink: 0;
+  max-width: 64px;
+  max-height: 64px;
+}
+
+.radiusVisual {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+}
+
+.shadowVisual {
+  width: 48px;
+  height: 48px;
+  background: var(--zp-color-surface);
+  border-radius: var(--zp-radius-md);
+  flex-shrink: 0;
+}
+
+.section {
+  margin-bottom: var(--zp-space-8);
+}
+
+.sectionTitle {
+  margin: 0 0 var(--zp-space-4) 0;
+  font-size: var(--zp-font-size-xl);
+  font-weight: var(--zp-font-weight-semibold);
+  color: var(--zp-color-text-primary);
+}
+
+.subsection {
+  margin-bottom: var(--zp-space-6);
+}
+
+.subsectionTitle {
+  margin: 0 0 var(--zp-space-3) 0;
+  font-size: var(--zp-font-size-lg);
+  font-weight: var(--zp-font-weight-medium);
+  color: var(--zp-color-text-secondary);
+}
+
+.paletteSection {
+  margin-bottom: var(--zp-space-8);
+}
+
+.paletteTitle {
+  margin: 0 0 var(--zp-space-4) 0;
+  font-size: var(--zp-font-size-lg);
+  font-weight: var(--zp-font-weight-semibold);
+  color: var(--zp-color-text-primary);
+  text-transform: capitalize;
+}
+
+.variantSection {
+  margin-bottom: var(--zp-space-4);
+  padding-left: var(--zp-space-4);
+  border-left: 2px solid var(--zp-color-border);
+}
+
+.variantName {
+  font-size: var(--zp-font-size-sm);
+  font-weight: var(--zp-font-weight-medium);
+  color: var(--zp-color-text-secondary);
+  margin-bottom: var(--zp-space-2);
+  text-transform: capitalize;
+}

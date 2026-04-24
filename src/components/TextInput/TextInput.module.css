@@ -5,7 +5,6 @@
   --input-warning-color: #b45309;
   --input-border-color: #d1d5db;
   --input-bg-color: #ffffff;
-  --input-text-color: #111827;
   --input-placeholder-color: #6b7280;
   --input-border-radius: 6px;
   --input-font-family: inherit;
@@ -25,7 +24,10 @@
 .label {
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--input-text-color);
+  /* Cascade: legacy `--input-text-color` (1.x `theme.textColor`) wins for
+   * back-compat; else the mode-aware `--zp-color-text-primary` emitted by
+   * ThemeProvider; else a hardcoded default when no provider is present. */
+  color: var(--input-text-color, var(--zp-color-text-primary, #111827));
 }
 
 .required::after {
@@ -42,7 +44,7 @@
 .input {
   width: 100%;
   font-family: var(--input-font-family);
-  color: var(--input-text-color);
+  color: var(--input-text-color, #111827);
   background-color: var(--input-bg-color);
   border-radius: var(--input-border-radius);
   transition:

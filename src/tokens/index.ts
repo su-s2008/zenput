@@ -2,9 +2,10 @@
  * Design-token entry point.
  *
  * Re-exports the raw token objects (colors, typography, spacing,
- * radii, shadows, motion, zIndex, breakpoints) and the helper that
- * converts a resolved token set into a flat `Record<string, string>`
- * of CSS custom properties consumed by the `ThemeProvider`.
+ * radii, shadows, motion, zIndex, breakpoints, density, recipes,
+ * components) and the helper that converts a resolved token set into
+ * a flat `Record<string, string>` of CSS custom properties consumed
+ * by the `ThemeProvider`.
  */
 export * from './colors';
 export * from './typography';
@@ -14,6 +15,9 @@ export * from './shadows';
 export * from './motion';
 export * from './zIndex';
 export * from './breakpoints';
+export * from './density';
+export * from './recipes';
+export * from './components';
 
 import {
   SemanticColors,
@@ -29,6 +33,8 @@ import { shadows, borderWidths, elevation } from './shadows';
 import { durations, easings } from './motion';
 import { zIndex } from './zIndex';
 import { breakpoints } from './breakpoints';
+import { densityTokens, DensityScale } from './density';
+import { defaultComponentTokens, ComponentTokensMap, ComponentName } from './components';
 
 export type ThemeMode = 'light' | 'dark' | 'highContrast';
 
@@ -58,7 +64,11 @@ export function normalizeSpacingKey(key: string): string {
  * the static token categories. Output keys are already prefixed with
  * {@link CSS_VAR_PREFIX}.
  */
-export function buildCssVariables(semantic: SemanticColors): Record<string, string> {
+export function buildCssVariables(
+  semantic: SemanticColors,
+  density: DensityScale = 'normal',
+  components?: ComponentTokensMap
+): Record<string, string> {
   const vars: Record<string, string> = {};
 
   // Palette (useful for custom brand colors).
@@ -94,6 +104,23 @@ export function buildCssVariables(semantic: SemanticColors): Record<string, stri
 
   // Overlay backdrop color — exposed as `--zp-overlay` (no category prefix).
   vars[`${CSS_VAR_PREFIX}-overlay`] = semantic.overlay;
+
+  // Density tokens
+  const densityVals = densityTokens[density];
+  assignTokens(vars, 'density', densityVals, kebab);
+
+  // Component tokens
+  if (components) {
+    for (const [componentName, componentTokens] of Object.entries(components)) {
+      if (componentTokens) {
+        const merged = {
+          ...defaultComponentTokens[componentName as ComponentName],
+          ...componentTokens,
+        };
+        assignTokens(vars, `component-${componentName}`, merged, kebab);
+      }
+    }
+  }
 
   return vars;
 }

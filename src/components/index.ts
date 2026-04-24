@@ -23,6 +23,7 @@ export * from './MoneyInput';
 export * from './Typography';
 export * from './layout';
 export * from './actions';
+export * from './TokenBrowser';
 
 // Overlay primitives
 export * from './Portal';

@@ -26,8 +26,6 @@ export default defineConfig({
         // Type-only declaration files — no executable code to cover.
         'src/types/**',
         'src/**/*.types.ts',
-        // TODO(follow-up): add tests for ThemeProvider and remove this exclusion.
-        'src/context/ThemeProvider.tsx',
       ],
       // Thresholds reflect current baseline to keep CI green on the tooling
       // migration. Aspirational targets are lines: 90, branches: 85 — raise

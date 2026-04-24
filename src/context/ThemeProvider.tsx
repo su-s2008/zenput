@@ -1,5 +1,13 @@
 import React, { createContext, useContext, useMemo, CSSProperties } from 'react';
-import { buildCssVariables, cssVar, semanticByMode, SemanticColors, ThemeMode } from '../tokens';
+import {
+  buildCssVariables,
+  cssVar,
+  semanticByMode,
+  SemanticColors,
+  ThemeMode,
+  DensityScale,
+  ComponentTokensMap,
+} from '../tokens';
 
 /**
  * Theme override shape.
@@ -8,8 +16,9 @@ import { buildCssVariables, cssVar, semanticByMode, SemanticColors, ThemeMode } 
  * preserved and continue to emit the original `--input-*` CSS variables
  * consumed by the form-input components.
  *
- * Additional properties (`mode`, `semantic`, `cssVars`) opt into the
- * full design-system token surface (`--zp-*` CSS variables).
+ * Additional properties (`mode`, `semantic`, `cssVars`, `density`,
+ * `components`) opt into the full design-system token surface
+ * (`--zp-*` CSS variables).
  */
 export interface Theme {
   // ---- Legacy 1.x overrides (still supported) ----
@@ -33,6 +42,10 @@ export interface Theme {
   mode?: ThemeMode;
   /** Partial overrides on top of the mode's semantic palette. */
   semantic?: Partial<SemanticColors>;
+  /** Density scale for component sizing. Default: `'normal'`. */
+  density?: DensityScale;
+  /** Per-component token overrides. */
+  components?: ComponentTokensMap;
   /**
    * Arbitrary extra CSS custom properties to merge in (e.g. custom
    * per-brand variables). Keys should include their leading `--`.
@@ -44,17 +57,23 @@ interface ThemeContextValue {
   theme: Theme;
   mode: ThemeMode;
   semantic: SemanticColors;
+  density: DensityScale;
+  components: ComponentTokensMap;
   cssVars: Record<string, string>;
 }
 
 const defaultMode: ThemeMode = 'light';
+const defaultDensity: DensityScale = 'normal';
 const defaultSemantic = semanticByMode[defaultMode];
-const defaultCssVars = buildCssVariables(defaultSemantic);
+const defaultComponents: ComponentTokensMap = {};
+const defaultCssVars = buildCssVariables(defaultSemantic, defaultDensity, defaultComponents);
 
 const ThemeContext = createContext<ThemeContextValue>({
   theme: {},
   mode: defaultMode,
   semantic: defaultSemantic,
+  density: defaultDensity,
+  components: defaultComponents,
   cssVars: defaultCssVars,
 });
 
@@ -65,18 +84,22 @@ const ThemeContext = createContext<ThemeContextValue>({
 export function createTheme(theme: Theme = {}): {
   mode: ThemeMode;
   semantic: SemanticColors;
+  density: DensityScale;
+  components: ComponentTokensMap;
   cssVars: Record<string, string>;
 } {
   const mode = theme.mode ?? defaultMode;
+  const density = theme.density ?? defaultDensity;
+  const components = theme.components ?? defaultComponents;
   const semantic: SemanticColors = {
     ...semanticByMode[mode],
     ...theme.semantic,
   };
   const cssVars: Record<string, string> = {
-    ...buildCssVariables(semantic),
+    ...buildCssVariables(semantic, density, components),
     ...theme.cssVars,
   };
-  return { mode, semantic, cssVars };
+  return { mode, semantic, density, components, cssVars };
 }
 
 /**
@@ -125,14 +148,17 @@ export function ThemeProvider({
   as = 'div',
   children,
 }: Readonly<ThemeProviderProps>): React.JSX.Element {
-  const { mode, semantic, cssVars } = useMemo(() => createTheme(theme), [theme]);
+  const { mode, semantic, density, components, cssVars } = useMemo(
+    () => createTheme(theme),
+    [theme]
+  );
   const legacy = useMemo(() => legacyCssVars(theme), [theme]);
 
   const mergedVars = useMemo(() => ({ ...cssVars, ...legacy }), [cssVars, legacy]);
 
   const contextValue = useMemo<ThemeContextValue>(
-    () => ({ theme, mode, semantic, cssVars: mergedVars }),
-    [theme, mode, semantic, mergedVars]
+    () => ({ theme, mode, semantic, density, components, cssVars: mergedVars }),
+    [theme, mode, semantic, density, components, mergedVars]
   );
 
   const WrapperComponent = as as React.ElementType;

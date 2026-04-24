@@ -209,7 +209,11 @@ function App() {
 
 ## Theming
 
-Use `ThemeProvider` to customise the design tokens:
+Zenput provides a comprehensive theming system with semantic colors, per-component tokens, density scaling, and theme composition utilities.
+
+### Basic Theming
+
+Use `ThemeProvider` to customize design tokens:
 
 ```tsx
 import { ThemeProvider } from 'zenput';
@@ -228,7 +232,164 @@ import { ThemeProvider } from 'zenput';
 </ThemeProvider>
 ```
 
-### Overlay / z-index / elevation tokens
+### Advanced Theming
+
+#### Theme Modes
+
+Switch between light, dark, and high-contrast modes:
+
+```tsx
+<ThemeProvider theme={{ mode: 'dark' }}>
+  {/* your app */}
+</ThemeProvider>
+```
+
+Available modes: `'light'` (default), `'dark'`, `'highContrast'`
+
+#### Density Scaling
+
+Control component sizing with density tokens:
+
+```tsx
+<ThemeProvider theme={{ density: 'compact' }}>
+  {/* your app */}
+</ThemeProvider>
+```
+
+Available densities: `'compact'`, `'normal'` (default), `'spacious'`
+
+#### Semantic Color Overrides
+
+Override semantic colors while preserving the mode's defaults:
+
+```tsx
+<ThemeProvider
+  theme={{
+    mode: 'light',
+    semantic: {
+      brand: '#6366f1',
+      brandHover: '#4f46e5',
+      danger: '#ef4444',
+      success: '#10b981',
+    },
+  }}
+>
+  {/* your app */}
+</ThemeProvider>
+```
+
+#### Per-Component Tokens
+
+Customize individual component styles:
+
+```tsx
+<ThemeProvider
+  theme={{
+    components: {
+      button: {
+        borderRadius: '9999px',      // Pill-shaped buttons
+        primaryBg: '#8b5cf6',
+        primaryBgHover: '#7c3aed',
+      },
+      input: {
+        borderRadius: 'var(--zp-radius-xl)',
+        borderColor: '#8b5cf6',
+      },
+      badge: {
+        fontSize: 'var(--zp-font-size-sm)',
+        borderRadius: 'var(--zp-radius-sm)',
+      },
+    },
+  }}
+>
+  {/* your app */}
+</ThemeProvider>
+```
+
+Available component tokens: `button`, `input`, `badge`, `dialog`, `tooltip`, `dataTable`
+
+#### Theme Composition with `extendTheme()`
+
+Compose themes by extending a base theme:
+
+```tsx
+import { ThemeProvider, extendTheme } from 'zenput';
+
+// Create a base brand theme
+const brandTheme = {
+  mode: 'light' as const,
+  semantic: {
+    brand: '#6366f1',
+    brandHover: '#4f46e5',
+  },
+};
+
+// Extend with additional customizations
+const customTheme = extendTheme(brandTheme, {
+  density: 'spacious',
+  components: {
+    button: {
+      borderRadius: 'var(--zp-radius-lg)',
+    },
+  },
+});
+
+<ThemeProvider theme={customTheme}>
+  {/* your app */}
+</ThemeProvider>
+```
+
+#### Multiple Theme Extensions
+
+Chain multiple theme presets:
+
+```tsx
+const baseTheme = { mode: 'light' as const };
+const densityPreset = { density: 'compact' as const };
+const componentOverrides = {
+  components: {
+    button: { borderRadius: 'var(--zp-radius-full)' },
+  },
+};
+
+const finalTheme = extendTheme(baseTheme, densityPreset, componentOverrides);
+```
+
+#### Custom CSS Variables
+
+Add arbitrary CSS custom properties:
+
+```tsx
+<ThemeProvider
+  theme={{
+    cssVars: {
+      '--custom-accent': '#f59e0b',
+      '--custom-highlight': '#fbbf24',
+    },
+  }}
+>
+  {/* your app */}
+</ThemeProvider>
+```
+
+### Token Browser
+
+Explore all available design tokens interactively:
+
+`TokenBrowser` uses the `--zp-*` CSS variables emitted by `ThemeProvider`, so
+render it inside a provider:
+
+```tsx
+import { ThemeProvider, TokenBrowser } from 'zenput';
+
+<ThemeProvider>
+  <TokenBrowser defaultCategory="colors" />
+</ThemeProvider>
+```
+
+### Design Token Reference
+
+#### Overlay / z-index / elevation tokens
 
 The following CSS custom properties are emitted by `ThemeProvider` and available for advanced customisation:
 
