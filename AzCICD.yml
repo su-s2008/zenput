@@ -1,23 +1,31 @@
 # ═════════════════════════════════════════════════════════════════════════════
-# Zenput — Azure Pipeline (single self-hosted agent, sequential)
+# Zenput — Azure Pipeline (single self-hosted agent, ARM64-optimized)
 #
-# This pipeline targets a single self-hosted Linux agent. All stages run in
-# sequence on the same machine, which means:
+# This pipeline targets a single self-hosted Linux agent (Oracle Cloud Ampere
+# A1, 4 vCPU ARM64 / 24 GB RAM). All stages run on the same machine, which
+# means:
 #
 #   - Node, npm cache and Playwright browsers only need to be set up once.
 #   - Workspace state (node_modules, dist/, storybook-static/) is reused
 #     between steps — no artifact hand-off needed inside a single job.
 #
+# CPU-budget rule: at most 2 CPU-heavy Node processes run in parallel at any
+# time (1 vCPU reserved for the OS, 1 for background I/O).
+#
+# Parallelised steps (2-way):
+#   lint + type-check  run concurrently  (disjoint outputs, low I/O overlap)
+#
 # The pipeline still mirrors the GitHub Actions workflow
 # (.github/workflows/ci.yml) — both systems invoke the same npm scripts as a
 # single source of truth:
 #
-#     npm run lint && npm run type-check && npm run test:ci && npm run build
+#     npm run lint  ╮ (parallel)
+#     npm run type-check  ╯  →  npm run test:ci  →  npm run build
 #
 # ── Agent requirements ──────────────────────────────────────────────────────
 #   Pool:          "Default" (self-hosted). Adjust `pool.name` below if yours
 #                  is named differently.
-#   OS:            Linux (the demands filter can be edited for Windows/macOS).
+#   OS:            Linux ARM64 / aarch64 (Oracle Cloud Ampere A1).
 #   Pre-installed: git, Node 20.x (nvm is fine), npm 10+. Playwright browsers
 #                  are installed once into `~/.cache/ms-playwright`.
 #
@@ -76,13 +84,13 @@ pool:
 
 stages:
   - stage: CI
-    displayName: 'CI (lint → test → build → a11y)'
+    displayName: 'CI (lint+typecheck ∥ → test → build → a11y)'
     jobs:
-      # All CI runs in a single sequential job on the single self-hosted
-      # agent. Steps execute in order; later steps reuse node_modules and
-      # build outputs from earlier steps.
+      # All CI runs in a single job on the single self-hosted agent.
+      # Lint and type-check run concurrently (2-way); remaining steps
+      # execute in order, reusing node_modules and build outputs.
       - job: CI
-        displayName: 'Lint, test, build, a11y (sequential)'
+        displayName: 'Lint+type-check (parallel), test, build, a11y'
         timeoutInMinutes: 60
         workspace:
           clean: outputs       # only wipe build outputs between runs
@@ -123,12 +131,18 @@ stages:
           - script: npm ci --prefer-offline --no-audit --fund=false
             displayName: 'Install dependencies (npm ci)'
 
-          # ── Lint & type-check ───────────────────────────────────────────
-          - script: npm run lint
-            displayName: 'Lint (ESLint flat config)'
-
-          - script: npm run type-check
-            displayName: 'Type-check (tsc --noEmit)'
+          # ── Lint & type-check (parallel, 2-way) ────────────────────────
+          - script: |
+              set -uo pipefail
+              npm run lint       > lint.log       2>&1 & PID1=$!
+              npm run type-check > type-check.log 2>&1 & PID2=$!
+              FAIL=0
+              wait $PID1 || FAIL=1
+              wait $PID2 || FAIL=1
+              echo "───── lint.log ─────";       cat lint.log
+              echo "───── type-check.log ─────"; cat type-check.log
+              exit $FAIL
+            displayName: 'Lint + type-check (parallel, 2-way)'
 
           # ── Test (Vitest + coverage) ────────────────────────────────────
           - task: SonarCloudPrepare@3

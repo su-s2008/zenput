@@ -17,6 +17,7 @@ export default tseslint.config(
       'reports/**',
       'node_modules/**',
       'demo/**',
+      '.vercel/**',
       '*.config.js',
       '*.config.cjs',
       '*.config.mjs',
