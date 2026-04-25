@@ -100,6 +100,37 @@ describe('SelectInput', () => {
     await userEvent.selectOptions(screen.getByRole('combobox'), 'uk');
     expect(handleChange).toHaveBeenCalledWith(['uk']);
   });
+
+  it('renders with required label', () => {
+    render(<SelectInput label="Country" options={OPTIONS} required />);
+    expect(screen.getByText('Country')).toBeInTheDocument();
+  });
+
+  it('renders success message', () => {
+    render(<SelectInput options={OPTIONS} validationState="success" successMessage="Valid!" />);
+    expect(screen.getByText('Valid!')).toBeInTheDocument();
+  });
+
+  it('renders multiple select with default placeholder when no placeholder prop', () => {
+    render(<SelectInput options={OPTIONS} multiple selectedValues={[]} />);
+    // Multiple mode renders a first option as placeholder
+    const combobox = screen.getByRole('combobox');
+    expect(combobox).toBeInTheDocument();
+  });
+
+  it('getLabel falls back to value when option not found', async () => {
+    const handleChange = vi.fn();
+    render(
+      <SelectInput
+        options={OPTIONS}
+        multiple
+        selectedValues={['unknown-value']}
+        onSelectedValuesChange={handleChange}
+      />
+    );
+    // The chip label should fall back to the raw value when option not found
+    expect(screen.getByRole('button', { name: 'Remove unknown-value' })).toBeInTheDocument();
+  });
 });
 
 describe('a11y (axe)', () => {

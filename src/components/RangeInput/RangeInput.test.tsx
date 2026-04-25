@@ -65,6 +65,36 @@ describe('RangeInput', () => {
     render(<RangeInput ref={ref} />);
     expect(ref.current).toBeInstanceOf(HTMLInputElement);
   });
+
+  it('renders warning message', () => {
+    render(<RangeInput validationState="warning" warningMessage="High value!" />);
+    expect(screen.getByText('High value!')).toBeInTheDocument();
+  });
+
+  it('renders success message', () => {
+    render(<RangeInput validationState="success" successMessage="Good range!" />);
+    expect(screen.getByText('Good range!')).toBeInTheDocument();
+  });
+
+  it('works in controlled mode', () => {
+    const handleChange = vi.fn();
+    render(<RangeInput value={50} onChange={handleChange} showValue />);
+    const slider = screen.getByRole('slider');
+    fireEvent.change(slider, { target: { value: '75' } });
+    expect(handleChange).toHaveBeenCalled();
+    // Controlled: display stays at 50
+    expect(screen.getByText('50')).toBeInTheDocument();
+  });
+
+  it('renders with fullWidth', () => {
+    const { container } = render(<RangeInput fullWidth />);
+    expect(container.firstChild).toBeTruthy();
+  });
+
+  it('renders with required label', () => {
+    render(<RangeInput label="Volume" required />);
+    expect(screen.getByText('Volume')).toBeInTheDocument();
+  });
 });
 
 describe('a11y (axe)', () => {

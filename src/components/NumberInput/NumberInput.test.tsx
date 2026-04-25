@@ -73,8 +73,6 @@ describe('NumberInput', () => {
     expect(ref.current).toBeInstanceOf(HTMLInputElement);
   });
 
-  // ── formatValue ───────────────────────────────────────────────────────────
-
   it('displays formatted value when formatValue is provided and not focused', () => {
     render(
       <NumberInput
@@ -84,6 +82,45 @@ describe('NumberInput', () => {
       />
     );
     expect(screen.getByDisplayValue('$1234.50')).toBeInTheDocument();
+  });
+
+  it('clears value when input is emptied', async () => {
+    render(<NumberInput defaultValue={5} />);
+    const input = screen.getByRole('spinbutton');
+    await userEvent.clear(input);
+    expect(input).toHaveValue(null);
+  });
+
+  it('calls onBlur when input loses focus', async () => {
+    const handleBlur = vi.fn();
+    render(<NumberInput onBlur={handleBlur} />);
+    const input = screen.getByRole('spinbutton');
+    await userEvent.click(input);
+    await userEvent.tab();
+    expect(handleBlur).toHaveBeenCalled();
+  });
+
+  it('calls onFocus when input is focused', async () => {
+    const handleFocus = vi.fn();
+    render(<NumberInput onFocus={handleFocus} />);
+    const input = screen.getByRole('spinbutton');
+    await userEvent.click(input);
+    expect(handleFocus).toHaveBeenCalled();
+  });
+
+  it('renders success message', () => {
+    render(<NumberInput validationState="success" successMessage="Valid number!" />);
+    expect(screen.getByText('Valid number!')).toBeInTheDocument();
+  });
+
+  it('renders warning message', () => {
+    render(<NumberInput validationState="warning" warningMessage="Value may be high" />);
+    expect(screen.getByText('Value may be high')).toBeInTheDocument();
+  });
+
+  it('renders with fullWidth and required label', () => {
+    render(<NumberInput label="Amount" fullWidth required />);
+    expect(screen.getByText('Amount')).toBeInTheDocument();
   });
 });
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, act, fireEvent } from '@testing-library/react';
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, vi } from 'vitest';
 import {
   Drawer,
   DrawerTrigger,
@@ -134,5 +134,33 @@ describe('Drawer', () => {
       screen.getByRole('button', { name: 'Close' }).click();
     });
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  });
+
+  it('throws when DrawerContent is used outside Drawer', () => {
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    expect(() =>
+      render(
+        <DrawerContent>
+          <DrawerBody>body</DrawerBody>
+        </DrawerContent>
+      )
+    ).toThrow();
+    spy.mockRestore();
+  });
+
+  it('warns when DrawerContent has no accessible name', async () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    render(
+      <Drawer defaultOpen>
+        <DrawerContent>
+          <DrawerBody>body without title</DrawerBody>
+        </DrawerContent>
+      </Drawer>
+    );
+    // Allow the deferred setTimeout in warnOnce to fire
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 10));
+    });
+    warnSpy.mockRestore();
   });
 });

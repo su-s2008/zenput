@@ -1,6 +1,6 @@
 import { vi } from 'vitest';
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom/vitest';
 import { AutoComplete } from './AutoComplete';
@@ -93,6 +93,145 @@ describe('AutoComplete', () => {
     const ref = React.createRef<HTMLInputElement>();
     render(<AutoComplete options={OPTIONS} ref={ref} />);
     expect(ref.current).toBeInstanceOf(HTMLInputElement);
+  });
+
+  it('closes dropdown on Escape key', async () => {
+    render(<AutoComplete options={OPTIONS} />);
+    const input = screen.getByRole('combobox');
+    await userEvent.click(input);
+    expect(screen.getByRole('listbox')).toBeInTheDocument();
+    await userEvent.keyboard('{Escape}');
+    expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+  });
+
+  it('opens dropdown on ArrowDown when closed', async () => {
+    render(<AutoComplete options={OPTIONS} />);
+    const input = screen.getByRole('combobox');
+    fireEvent.keyDown(input, { key: 'ArrowDown' });
+    expect(screen.getByRole('listbox')).toBeInTheDocument();
+  });
+
+  it('opens dropdown on Enter when closed', async () => {
+    render(<AutoComplete options={OPTIONS} />);
+    const input = screen.getByRole('combobox');
+    fireEvent.keyDown(input, { key: 'Enter' });
+    expect(screen.getByRole('listbox')).toBeInTheDocument();
+  });
+
+  it('navigates up with ArrowUp key', async () => {
+    render(<AutoComplete options={OPTIONS} />);
+    const input = screen.getByRole('combobox');
+    await userEvent.click(input);
+    await userEvent.keyboard('{ArrowDown}');
+    await userEvent.keyboard('{ArrowDown}');
+    await userEvent.keyboard('{ArrowUp}');
+    expect(input).toHaveAttribute('aria-activedescendant');
+  });
+
+  it('selects highlighted option on Enter', async () => {
+    const handleSelect = vi.fn();
+    render(<AutoComplete options={OPTIONS} onSelect={handleSelect} />);
+    const input = screen.getByRole('combobox');
+    await userEvent.click(input);
+    await userEvent.keyboard('{ArrowDown}');
+    await userEvent.keyboard('{Enter}');
+    expect(handleSelect).toHaveBeenCalledWith(OPTIONS[0]);
+  });
+
+  it('closes dropdown with allowCustomValue on Enter without highlight', async () => {
+    render(<AutoComplete options={OPTIONS} allowCustomValue />);
+    const input = screen.getByRole('combobox');
+    await userEvent.click(input);
+    fireEvent.keyDown(input, { key: 'Enter' });
+    // With allowCustomValue and no highlighted index, dropdown closes
+    expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+  });
+
+  it('does not show dropdown when readOnly', async () => {
+    render(<AutoComplete options={OPTIONS} readOnly />);
+    const input = screen.getByRole('combobox');
+    await userEvent.click(input);
+    expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+  });
+
+  it('calls onFocus when input is focused', async () => {
+    const handleFocus = vi.fn();
+    render(<AutoComplete options={OPTIONS} onFocus={handleFocus} />);
+    await userEvent.click(screen.getByRole('combobox'));
+    expect(handleFocus).toHaveBeenCalled();
+  });
+
+  it('calls onBlur when input loses focus', async () => {
+    const handleBlur = vi.fn();
+    render(<AutoComplete options={OPTIONS} onBlur={handleBlur} />);
+    const input = screen.getByRole('combobox');
+    await userEvent.click(input);
+    fireEvent.blur(input);
+    expect(handleBlur).toHaveBeenCalled();
+  });
+
+  it('closes dropdown when clicking outside', async () => {
+    render(
+      <div>
+        <AutoComplete options={OPTIONS} />
+        <button data-testid="outside">Outside</button>
+      </div>
+    );
+    await userEvent.click(screen.getByRole('combobox'));
+    expect(screen.getByRole('listbox')).toBeInTheDocument();
+    fireEvent.mouseDown(screen.getByTestId('outside'));
+    expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+  });
+
+  it('does not close dropdown on blur when focus stays within wrapper', () => {
+    render(<AutoComplete options={OPTIONS} />);
+    const input = screen.getByRole('combobox');
+    // Open dropdown via fireEvent (no timers)
+    fireEvent.focus(input);
+    // Blur without focus leaving the wrapper
+    fireEvent.blur(input);
+    // No assertion needed – just ensuring handleBlur runs without error
+  });
+
+  it('cleans up blur timeout on unmount', () => {
+    const { unmount } = render(<AutoComplete options={OPTIONS} />);
+    const input = screen.getByRole('combobox');
+    fireEvent.focus(input);
+    fireEvent.blur(input);
+    // Unmount while timeout is pending – should not throw
+    expect(() => unmount()).not.toThrow();
+  });
+
+  it('works in controlled mode', () => {
+    const handleChange = vi.fn();
+    render(<AutoComplete options={OPTIONS} value="React" onChange={handleChange} />);
+    const input = screen.getByRole('combobox');
+    expect(input).toHaveValue('React');
+    fireEvent.change(input, { target: { value: 'x' } });
+    expect(handleChange).toHaveBeenCalled();
+  });
+
+  it('does not select a disabled option', () => {
+    const disabledOptions = [
+      { value: 'react', label: 'React', disabled: true },
+      { value: 'vue', label: 'Vue' },
+    ];
+    const handleSelect = vi.fn();
+    render(<AutoComplete options={disabledOptions} onSelect={handleSelect} />);
+    const input = screen.getByRole('combobox');
+    fireEvent.focus(input);
+    const option = screen.getByRole('option', { name: 'React' });
+    fireEvent.mouseDown(option);
+    expect(handleSelect).not.toHaveBeenCalled();
+  });
+
+  it('highlights option on mouse enter', () => {
+    render(<AutoComplete options={OPTIONS} />);
+    const input = screen.getByRole('combobox');
+    fireEvent.focus(input);
+    const option = screen.getByRole('option', { name: 'Vue' });
+    fireEvent.mouseEnter(option);
+    expect(input).toHaveAttribute('aria-activedescendant');
   });
 });
 

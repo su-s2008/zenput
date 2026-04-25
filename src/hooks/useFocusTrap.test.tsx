@@ -265,4 +265,38 @@ describe('useFocusTrap', () => {
     document.dispatchEvent(event);
     expect(preventDefaultSpy).not.toHaveBeenCalled();
   });
+
+  it('prevents Tab from escaping when container has no tabbable elements (zero case)', () => {
+    render(
+      <Harness active>
+        {/* No interactive children */}
+        <span>No focusable elements here</span>
+      </Harness>
+    );
+    const container = screen.getByTestId('trap-container');
+    container.focus();
+
+    const event = new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true });
+    const preventDefaultSpy = vi.spyOn(event, 'preventDefault');
+    document.dispatchEvent(event);
+
+    expect(preventDefaultSpy).toHaveBeenCalled();
+    expect(document.activeElement).toBe(container);
+  });
+
+  it('pulls focus back into container when clickOutsideDeactivates=false and focus escapes', () => {
+    render(
+      <div>
+        <button data-testid="outside-btn">Outside</button>
+        <Harness active clickOutsideDeactivates={false} />
+      </div>
+    );
+
+    // Move focus outside the trap container – the focusin handler should pull it back
+    screen.getByTestId('outside-btn').focus();
+
+    // With clickOutsideDeactivates=false, the handleFocusIn callback fires and
+    // restores focus to the first tabbable element inside the container.
+    expect(document.activeElement).toBe(screen.getByTestId('btn-1'));
+  });
 });

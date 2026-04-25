@@ -61,6 +61,37 @@ describe('PhoneInput', () => {
     render(<PhoneInput ref={ref} />);
     expect(ref.current).toBeInstanceOf(HTMLInputElement);
   });
+
+  it('calls onChange when dial code changes', async () => {
+    const handleChange = vi.fn();
+    render(<PhoneInput onChange={handleChange} />);
+    const select = screen.getByRole('combobox', { name: 'Country dial code' });
+    await userEvent.selectOptions(select, '+44');
+    expect(handleChange).toHaveBeenCalled();
+  });
+
+  it('works in controlled mode for phone value', async () => {
+    const handleChange = vi.fn();
+    render(<PhoneInput phoneValue="1234567890" onChange={handleChange} />);
+    const input = document.querySelector('input[type="tel"]') as HTMLInputElement;
+    await userEvent.type(input, '1');
+    expect(handleChange).toHaveBeenCalled();
+  });
+
+  it('renders success message', () => {
+    render(<PhoneInput validationState="success" successMessage="Valid number!" />);
+    expect(screen.getByText('Valid number!')).toBeInTheDocument();
+  });
+
+  it('renders warning message', () => {
+    render(<PhoneInput validationState="warning" warningMessage="Check your number" />);
+    expect(screen.getByText('Check your number')).toBeInTheDocument();
+  });
+
+  it('renders with fullWidth and required label', () => {
+    render(<PhoneInput label="Phone" fullWidth required />);
+    expect(screen.getByText('Phone')).toBeInTheDocument();
+  });
 });
 
 describe('a11y (axe)', () => {

@@ -58,6 +58,21 @@ describe('DateInput', () => {
     render(<DateInput ref={ref} />);
     expect(ref.current).toBeInstanceOf(HTMLInputElement);
   });
+
+  it('renders success message', () => {
+    render(<DateInput validationState="success" successMessage="Date confirmed!" />);
+    expect(screen.getByText('Date confirmed!')).toBeInTheDocument();
+  });
+
+  it('renders warning message', () => {
+    render(<DateInput validationState="warning" warningMessage="Date is in the past" />);
+    expect(screen.getByText('Date is in the past')).toBeInTheDocument();
+  });
+
+  it('renders required label', () => {
+    render(<DateInput label="Start date" required />);
+    expect(screen.getByText('Start date')).toBeInTheDocument();
+  });
 });
 
 describe('a11y (axe)', () => {

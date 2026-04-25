@@ -51,6 +51,21 @@ describe('TimeInput', () => {
     render(<TimeInput ref={ref} />);
     expect(ref.current).toBeInstanceOf(HTMLInputElement);
   });
+
+  it('renders success message', () => {
+    render(<TimeInput validationState="success" successMessage="Looks good!" />);
+    expect(screen.getByText('Looks good!')).toBeInTheDocument();
+  });
+
+  it('renders warning message', () => {
+    render(<TimeInput validationState="warning" warningMessage="Outside business hours" />);
+    expect(screen.getByText('Outside business hours')).toBeInTheDocument();
+  });
+
+  it('renders required label', () => {
+    render(<TimeInput label="Start time" required />);
+    expect(screen.getByText('Start time')).toBeInTheDocument();
+  });
 });
 
 describe('a11y (axe)', () => {

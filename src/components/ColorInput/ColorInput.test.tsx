@@ -1,5 +1,6 @@
+import { vi } from 'vitest';
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
 import { ColorInput } from './ColorInput';
 import { expectNoA11yViolations } from '../../test-utils/axe';
@@ -48,6 +49,54 @@ describe('ColorInput', () => {
     const ref = React.createRef<HTMLInputElement>();
     render(<ColorInput ref={ref} />);
     expect(ref.current).toBeInstanceOf(HTMLInputElement);
+  });
+
+  it('updates internal color on change in uncontrolled mode', () => {
+    render(<ColorInput defaultValue="#FF5733" showHexValue />);
+    const input = document.querySelector('input[type="color"]') as HTMLInputElement;
+    fireEvent.change(input, { target: { value: '#00FF00' } });
+    expect(screen.getByText('#00FF00')).toBeInTheDocument();
+  });
+
+  it('calls onChange when color changes', () => {
+    const handleChange = vi.fn();
+    render(<ColorInput onChange={handleChange} />);
+    const input = document.querySelector('input[type="color"]') as HTMLInputElement;
+    fireEvent.change(input, { target: { value: '#123456' } });
+    expect(handleChange).toHaveBeenCalled();
+  });
+
+  it('works in controlled mode and does not update internal state', () => {
+    const handleChange = vi.fn();
+    render(<ColorInput value="#aabbcc" onChange={handleChange} showHexValue />);
+    const input = document.querySelector('input[type="color"]') as HTMLInputElement;
+    expect(input).toHaveValue('#aabbcc');
+    fireEvent.change(input, { target: { value: '#112233' } });
+    expect(handleChange).toHaveBeenCalled();
+    // The displayed value stays controlled (still shows original controlled value uppercased)
+    expect(screen.getByText('#AABBCC')).toBeInTheDocument();
+  });
+
+  it('renders success message', () => {
+    render(<ColorInput validationState="success" successMessage="Color applied!" />);
+    expect(screen.getByText('Color applied!')).toBeInTheDocument();
+  });
+
+  it('renders warning message', () => {
+    render(<ColorInput validationState="warning" warningMessage="Low contrast" />);
+    expect(screen.getByText('Low contrast')).toBeInTheDocument();
+  });
+
+  it('renders with fullWidth', () => {
+    const { container } = render(<ColorInput fullWidth />);
+    expect(container.firstChild).toBeTruthy();
+  });
+
+  it('renders required indicator when required', () => {
+    render(<ColorInput label="Color" required />);
+    const label = screen.getByText('Color');
+    expect(label).toBeInTheDocument();
+    expect(label.tagName).toBe('LABEL');
   });
 });
 

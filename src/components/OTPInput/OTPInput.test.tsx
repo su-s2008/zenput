@@ -78,6 +78,80 @@ describe('OTPInput', () => {
     render(<OTPInput ref={ref} />);
     expect(ref.current).toBeInstanceOf(HTMLDivElement);
   });
+
+  it('handles Backspace on filled digit', async () => {
+    render(<OTPInput length={4} />);
+    const inputs = document.querySelectorAll('input');
+    await userEvent.type(inputs[0], '5');
+    await userEvent.keyboard('{Backspace}');
+    expect(inputs[0]).toHaveValue('');
+  });
+
+  it('moves focus to previous input on Backspace when current is empty', async () => {
+    render(<OTPInput length={4} />);
+    const inputs = document.querySelectorAll('input');
+    await userEvent.type(inputs[0], '1');
+    await userEvent.type(inputs[1], '2');
+    inputs[1].focus();
+    // Clear second input first
+    await userEvent.keyboard('{Backspace}');
+    // Second digit was '2', so first Backspace clears it
+    expect(inputs[1]).toHaveValue('');
+    // Second Backspace moves focus back to inputs[0]
+    await userEvent.keyboard('{Backspace}');
+    expect(inputs[0]).toHaveFocus();
+  });
+
+  it('navigates left with ArrowLeft key', async () => {
+    render(<OTPInput length={4} />);
+    const inputs = document.querySelectorAll('input');
+    await userEvent.type(inputs[1], '2');
+    inputs[1].focus();
+    await userEvent.keyboard('{ArrowLeft}');
+    expect(inputs[0]).toHaveFocus();
+  });
+
+  it('navigates right with ArrowRight key', async () => {
+    render(<OTPInput length={4} />);
+    const inputs = document.querySelectorAll('input');
+    inputs[0].focus();
+    await userEvent.keyboard('{ArrowRight}');
+    expect(inputs[1]).toHaveFocus();
+  });
+
+  it('handles paste of valid digits', async () => {
+    const handleComplete = vi.fn();
+    render(<OTPInput length={4} onComplete={handleComplete} />);
+    const inputs = document.querySelectorAll('input');
+    inputs[0].focus();
+    await userEvent.paste('1234');
+    expect(handleComplete).toHaveBeenCalledWith('1234');
+  });
+
+  it('ignores invalid characters on input (numeric mode)', async () => {
+    render(<OTPInput length={4} inputType="numeric" />);
+    const inputs = document.querySelectorAll('input');
+    await userEvent.type(inputs[0], 'a');
+    expect(inputs[0]).toHaveValue('');
+  });
+
+  it('allows alphanumeric input in alphanumeric mode', async () => {
+    render(<OTPInput length={4} inputType="alphanumeric" />);
+    const inputs = document.querySelectorAll('input');
+    await userEvent.type(inputs[0], 'A');
+    expect(inputs[0]).toHaveValue('A');
+  });
+
+  it('renders with mask (password type)', () => {
+    render(<OTPInput mask />);
+    const inputs = document.querySelectorAll('input[type="password"]');
+    expect(inputs.length).toBeGreaterThan(0);
+  });
+
+  it('renders helper text', () => {
+    render(<OTPInput helperText="Enter code from SMS" />);
+    expect(screen.getByText('Enter code from SMS')).toBeInTheDocument();
+  });
 });
 
 describe('a11y (axe)', () => {

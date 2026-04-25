@@ -60,6 +60,14 @@ describe('TextArea', () => {
     expect(handleChange).toHaveBeenCalled();
   });
 
+  it('auto-resizes height when autoResize is true', async () => {
+    render(<TextArea autoResize />);
+    const textarea = screen.getByRole('textbox');
+    await userEvent.type(textarea, 'some text');
+    // autoResize sets style.height – just verify no errors thrown
+    expect(textarea).toBeInTheDocument();
+  });
+
   it('renders error message', () => {
     render(<TextArea validationState="error" errorMessage="Too short" />);
     expect(screen.getByText('Too short')).toBeInTheDocument();

@@ -60,6 +60,24 @@ describe('PasswordInput', () => {
     render(<PasswordInput ref={ref} />);
     expect(ref.current).toBeInstanceOf(HTMLInputElement);
   });
+
+  it('renders success message', () => {
+    render(<PasswordInput validationState="success" successMessage="Strong password!" />);
+    expect(screen.getByText('Strong password!')).toBeInTheDocument();
+  });
+
+  it('renders warning message', () => {
+    render(<PasswordInput validationState="warning" warningMessage="Weak password" />);
+    expect(screen.getByText('Weak password')).toBeInTheDocument();
+  });
+
+  it('works in controlled mode', async () => {
+    const handleChange = vi.fn();
+    render(<PasswordInput value="initial" onChange={handleChange} />);
+    const input = document.querySelector('input') as HTMLInputElement;
+    await userEvent.type(input, 'x');
+    expect(handleChange).toHaveBeenCalled();
+  });
 });
 
 describe('a11y (axe)', () => {

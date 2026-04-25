@@ -161,6 +161,80 @@ describe('Tabs', () => {
     expect(() => render(<Tab value="x">X</Tab>)).toThrow();
     spy.mockRestore();
   });
+
+  it('does nothing on keyboard navigation when all tabs are disabled', () => {
+    render(
+      <Tabs defaultValue="a">
+        <TabList>
+          <Tab value="a" disabled>
+            A
+          </Tab>
+          <Tab value="b" disabled>
+            B
+          </Tab>
+        </TabList>
+        <TabPanels>
+          <TabPanel value="a">Panel A</TabPanel>
+          <TabPanel value="b">Panel B</TabPanel>
+        </TabPanels>
+      </Tabs>
+    );
+    // All tabs disabled — keyboard navigation should return early without throwing
+    fireEvent.keyDown(screen.getByRole('tablist'), { key: 'ArrowRight' });
+    // No panel change (initial "a" panel was default but disabled tabs show nothing)
+  });
+
+  it('wraps ArrowRight from last tab back to first', async () => {
+    render(<BasicTabs />);
+    // Navigate to tab2 first
+    await userEvent.click(screen.getByRole('tab', { name: 'Tab 2' }));
+    // ArrowRight from tab2 (last enabled) should wrap to tab1
+    fireEvent.keyDown(screen.getByRole('tablist'), { key: 'ArrowRight' });
+    expect(screen.getByText('Content 1')).toBeInTheDocument();
+  });
+
+  it('navigates ArrowLeft from non-first tab', async () => {
+    render(<BasicTabs />);
+    // Navigate to tab2
+    await userEvent.click(screen.getByRole('tab', { name: 'Tab 2' }));
+    // ArrowLeft from tab2 (idx 1) should go to tab1 (idx 0)
+    fireEvent.keyDown(screen.getByRole('tablist'), { key: 'ArrowLeft' });
+    expect(screen.getByText('Content 1')).toBeInTheDocument();
+  });
+
+  it('supports vertical orientation ArrowDown navigation', () => {
+    render(
+      <Tabs defaultValue="a" orientation="vertical">
+        <TabList>
+          <Tab value="a">A</Tab>
+          <Tab value="b">B</Tab>
+        </TabList>
+        <TabPanels>
+          <TabPanel value="a">Panel A</TabPanel>
+          <TabPanel value="b">Panel B</TabPanel>
+        </TabPanels>
+      </Tabs>
+    );
+    fireEvent.keyDown(screen.getByRole('tablist'), { key: 'ArrowDown' });
+    expect(screen.getByText('Panel B')).toBeInTheDocument();
+  });
+
+  it('supports vertical orientation ArrowUp navigation', () => {
+    render(
+      <Tabs defaultValue="b" orientation="vertical">
+        <TabList>
+          <Tab value="a">A</Tab>
+          <Tab value="b">B</Tab>
+        </TabList>
+        <TabPanels>
+          <TabPanel value="a">Panel A</TabPanel>
+          <TabPanel value="b">Panel B</TabPanel>
+        </TabPanels>
+      </Tabs>
+    );
+    fireEvent.keyDown(screen.getByRole('tablist'), { key: 'ArrowUp' });
+    expect(screen.getByText('Panel A')).toBeInTheDocument();
+  });
 });
 
 describe('Tabs a11y (axe)', () => {

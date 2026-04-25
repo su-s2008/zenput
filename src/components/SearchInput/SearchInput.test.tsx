@@ -1,6 +1,6 @@
 import { vi } from 'vitest';
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom/vitest';
 import { SearchInput } from './SearchInput';
@@ -60,6 +60,47 @@ describe('SearchInput', () => {
     const ref = React.createRef<HTMLInputElement>();
     render(<SearchInput ref={ref} />);
     expect(ref.current).toBeInstanceOf(HTMLInputElement);
+  });
+
+  it('clears the input when clear button is clicked', async () => {
+    render(<SearchInput />);
+    const input = document.querySelector('input') as HTMLInputElement;
+    await userEvent.type(input, 'hello');
+    const clearBtn = screen.getByLabelText('Clear search');
+    await userEvent.click(clearBtn);
+    expect(input).toHaveValue('');
+    expect(screen.queryByLabelText('Clear search')).not.toBeInTheDocument();
+  });
+
+  it('calls onSearch with empty string when clear button is clicked', async () => {
+    const handleSearch = vi.fn();
+    render(<SearchInput onSearch={handleSearch} />);
+    const input = document.querySelector('input') as HTMLInputElement;
+    await userEvent.type(input, 'test');
+    const clearBtn = screen.getByLabelText('Clear search');
+    await userEvent.click(clearBtn);
+    expect(handleSearch).toHaveBeenCalledWith('');
+  });
+
+  it('calls onChange with synthetic event when clear is clicked in controlled mode', () => {
+    const handleChange = vi.fn();
+    render(<SearchInput value="existing" onChange={handleChange} />);
+    const clearBtn = screen.getByLabelText('Clear search');
+    fireEvent.click(clearBtn);
+    expect(handleChange).toHaveBeenCalled();
+  });
+
+  it('hides search icon when showSearchIcon is false', () => {
+    render(<SearchInput showSearchIcon={false} />);
+    expect(screen.queryByText('🔍')).not.toBeInTheDocument();
+  });
+
+  it('calls onKeyDown when a key is pressed', async () => {
+    const handleKeyDown = vi.fn();
+    render(<SearchInput onKeyDown={handleKeyDown} />);
+    const input = document.querySelector('input') as HTMLInputElement;
+    await userEvent.type(input, '{Enter}');
+    expect(handleKeyDown).toHaveBeenCalled();
   });
 });
 
