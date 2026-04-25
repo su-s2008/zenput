@@ -1,0 +1,57 @@
+.field {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 4px;
+  font-family: inherit;
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+.label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--input-text-color, var(--zp-color-text-primary, #111827));
+}
+
+.required::after {
+  content: ' *';
+  color: var(--field-error-color, #dc2626);
+}
+
+.description {
+  font-size: 0.75rem;
+  color: var(--zp-color-text-secondary, #6b7280);
+}
+
+.message {
+  font-size: 0.75rem;
+  color: var(--zp-color-text-secondary, #6b7280);
+}
+
+.message.error {
+  color: var(--field-error-color, #dc2626);
+}
+
+.message.success {
+  color: var(--field-success-color, #15803d);
+}
+
+.message.warning {
+  color: var(--field-warning-color, #b45309);
+}
+
+.message.info {
+  color: var(--field-info-color, #1d4ed8);
+}
+
+.counter {
+  font-size: 0.75rem;
+  color: var(--zp-color-text-secondary, #6b7280);
+  align-self: flex-end;
+}
+
+.counter.exceeded {
+  color: var(--field-error-color, #dc2626);
+}
