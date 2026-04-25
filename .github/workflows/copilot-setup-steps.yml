@@ -1,0 +1,40 @@
+name: "Copilot Setup Steps"
+
+# Run automatically when this file changes (for easy validation), and allow
+# manual runs from the Actions tab.
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/copilot-setup-steps.yml
+  pull_request:
+    paths:
+      - .github/workflows/copilot-setup-steps.yml
+
+jobs:
+  # Job name MUST be `copilot-setup-steps` — Copilot will not pick it up otherwise.
+  copilot-setup-steps:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      # Install root library dependencies (linters, test runner, build tools, etc.)
+      - name: Install root dependencies
+        run: npm ci --ignore-scripts
+
+      # Install the demo site's own dependencies (React, Vite, @types/node, …)
+      # The demo is a standalone Vite app under demo/ with its own package-lock.json.
+      - name: Install demo dependencies
+        run: npm ci --ignore-scripts
+        working-directory: demo
