@@ -174,9 +174,7 @@ export function DialogProvider({ children }: DialogProviderProps): React.ReactEl
               if (!open) entry.close(entry.defaultCloseValue);
             }}
           >
-            <DialogContent size={entry.size}>
-              {entry.renderContent(entry.close)}
-            </DialogContent>
+            <DialogContent size={entry.size}>{entry.renderContent(entry.close)}</DialogContent>
           </Dialog>
         );
       })}
@@ -219,7 +217,7 @@ export function useDialog(): DialogApi {
   const { _open } = useDialogProviderContext();
 
   const open = useCallback(
-    <T = unknown>(options: DialogOpenOptions<T>): DialogHandle<T> => {
+    <T = unknown,>(options: DialogOpenOptions<T>): DialogHandle<T> => {
       const handle = _open({
         size: options.size,
         dismissible: options.dismissible,
@@ -293,10 +291,7 @@ export function useConfirm(): (options?: ConfirmOptions) => Promise<boolean> {
               <Button variant="secondary" onClick={() => close(false)}>
                 {cancelLabel}
               </Button>
-              <Button
-                variant={destructive ? 'danger' : 'primary'}
-                onClick={() => close(true)}
-              >
+              <Button variant={destructive ? 'danger' : 'primary'} onClick={() => close(true)}>
                 {confirmLabel}
               </Button>
             </DialogFooter>
@@ -510,12 +505,7 @@ export function useAlert(): (options?: AlertOptions) => Promise<void> {
 
   return useCallback(
     (options: AlertOptions = {}): Promise<void> => {
-      const {
-        title = 'Alert',
-        description,
-        confirmLabel = 'OK',
-        dismissible = true,
-      } = options;
+      const { title = 'Alert', description, confirmLabel = 'OK', dismissible = true } = options;
 
       const { result } = _open({
         dismissible,

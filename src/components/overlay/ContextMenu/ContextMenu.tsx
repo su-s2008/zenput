@@ -53,16 +53,11 @@ export function ContextMenu({
     [open, setOpenBool, setTriggerNode, contentId]
   );
 
-  const ctxValue = useMemo(
-    () => ({ anchorPoint, setAnchorPoint }),
-    [anchorPoint]
-  );
+  const ctxValue = useMemo(() => ({ anchorPoint, setAnchorPoint }), [anchorPoint]);
 
   return (
     <MenuContext.Provider value={menuCtxValue}>
-      <ContextMenuContext.Provider value={ctxValue}>
-        {children}
-      </ContextMenuContext.Provider>
+      <ContextMenuContext.Provider value={ctxValue}>{children}</ContextMenuContext.Provider>
     </MenuContext.Provider>
   );
 }

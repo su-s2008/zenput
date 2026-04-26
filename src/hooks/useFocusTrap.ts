@@ -86,10 +86,7 @@ export function useFocusTrap({
 
     // 2. Move focus to the desired initial target.
     const tabbable = getTabbable(container);
-    const initialTarget =
-      initialFocusRef?.current ??
-      tabbable[0] ??
-      null;
+    const initialTarget = initialFocusRef?.current ?? tabbable[0] ?? null;
 
     // Track whether we added tabindex so we can clean it up on deactivation.
     const addedTabindex = !container.hasAttribute('tabindex');
@@ -174,11 +171,7 @@ export function useFocusTrap({
 
       // Restore focus when the trap deactivates.
       const toRestore = returnTarget ?? savedFocusRef.current;
-      if (
-        toRestore &&
-        toRestore instanceof HTMLElement &&
-        document.contains(toRestore)
-      ) {
+      if (toRestore && toRestore instanceof HTMLElement && document.contains(toRestore)) {
         toRestore.focus();
       }
     };

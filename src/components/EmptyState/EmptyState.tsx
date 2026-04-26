@@ -52,12 +52,7 @@ export function EmptyState({
 }: EmptyStateProps): React.ReactElement {
   return (
     <div
-      className={classNames(
-        styles.emptyState,
-        SIZE_CLASS[size],
-        VARIANT_CLASS[variant],
-        className
-      )}
+      className={classNames(styles.emptyState, SIZE_CLASS[size], VARIANT_CLASS[variant], className)}
       style={style}
       role="status"
       aria-live="polite"

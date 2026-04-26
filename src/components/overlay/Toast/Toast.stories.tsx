@@ -130,14 +130,20 @@ export const PromiseHelper: Story = {
             }
           }, 2000);
         });
-        toast.promise(p, {
-          loading: 'Saving your changes…',
-          success: (data) => `Saved ${data.name}!`,
-          error: (err) => `Failed: ${(err as Error).message}`,
-        }).catch(() => {});
+        toast
+          .promise(p, {
+            loading: 'Saving your changes…',
+            success: (data) => `Saved ${data.name}!`,
+            error: (err) => `Failed: ${(err as Error).message}`,
+          })
+          .catch(() => {});
       };
       return (
-        <button type="button" style={{ padding: '8px 16px', cursor: 'pointer' }} onClick={handleClick}>
+        <button
+          type="button"
+          style={{ padding: '8px 16px', cursor: 'pointer' }}
+          onClick={handleClick}
+        >
           Save (random success/fail)
         </button>
       );

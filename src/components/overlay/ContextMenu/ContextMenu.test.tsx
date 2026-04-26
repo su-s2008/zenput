@@ -61,13 +61,17 @@ describe('ContextMenu', () => {
 
   it('closes on Escape', () => {
     const { menuEl } = renderOpenContextMenu();
-    act(() => { fireEvent.keyDown(menuEl, { key: 'Escape' }); });
+    act(() => {
+      fireEvent.keyDown(menuEl, { key: 'Escape' });
+    });
     expect(screen.queryByRole('menu')).not.toBeInTheDocument();
   });
 
   it('closes on Tab', () => {
     const { menuEl } = renderOpenContextMenu();
-    act(() => { fireEvent.keyDown(menuEl, { key: 'Tab' }); });
+    act(() => {
+      fireEvent.keyDown(menuEl, { key: 'Tab' });
+    });
     expect(screen.queryByRole('menu')).not.toBeInTheDocument();
   });
 
@@ -82,7 +86,9 @@ describe('ContextMenu', () => {
       fireEvent.contextMenu(screen.getByTestId('trigger-area'), { clientX: 50, clientY: 50 });
     });
     expect(screen.getByRole('menu')).toBeInTheDocument();
-    act(() => { fireEvent.mouseDown(screen.getByTestId('outside')); });
+    act(() => {
+      fireEvent.mouseDown(screen.getByTestId('outside'));
+    });
     expect(screen.queryByRole('menu')).not.toBeInTheDocument();
   });
 
@@ -97,28 +103,42 @@ describe('ContextMenu', () => {
       fireEvent.contextMenu(screen.getByTestId('trigger-area'), { clientX: 50, clientY: 50 });
     });
     expect(screen.getByRole('menu')).toBeInTheDocument();
-    act(() => { fireEvent.touchStart(screen.getByTestId('outside')); });
+    act(() => {
+      fireEvent.touchStart(screen.getByTestId('outside'));
+    });
     expect(screen.queryByRole('menu')).not.toBeInTheDocument();
   });
 
   it('ArrowDown moves focus to next item', () => {
     const { menuEl, items } = renderOpenContextMenu();
-    act(() => { items[0].focus(); });
-    act(() => { fireEvent.keyDown(menuEl, { key: 'ArrowDown' }); });
+    act(() => {
+      items[0].focus();
+    });
+    act(() => {
+      fireEvent.keyDown(menuEl, { key: 'ArrowDown' });
+    });
     expect(document.activeElement).toBe(items[1]);
   });
 
   it('ArrowUp moves focus to previous item', () => {
     const { menuEl, items } = renderOpenContextMenu();
-    act(() => { items[1].focus(); });
-    act(() => { fireEvent.keyDown(menuEl, { key: 'ArrowUp' }); });
+    act(() => {
+      items[1].focus();
+    });
+    act(() => {
+      fireEvent.keyDown(menuEl, { key: 'ArrowUp' });
+    });
     expect(document.activeElement).toBe(items[0]);
   });
 
   it('type-ahead jumps to matching item', () => {
     const { menuEl, items } = renderOpenContextMenu();
-    act(() => { items[0].focus(); });
-    act(() => { fireEvent.keyDown(menuEl, { key: 'p' }); });
+    act(() => {
+      items[0].focus();
+    });
+    act(() => {
+      fireEvent.keyDown(menuEl, { key: 'p' });
+    });
     expect(document.activeElement).toBe(items.find((el) => el.textContent === 'Paste'));
   });
 
@@ -139,8 +159,12 @@ describe('ContextMenu', () => {
     });
     const menuEl = screen.getByRole('menu');
     const item = screen.getByRole('menuitem');
-    act(() => { item.focus(); });
-    act(() => { fireEvent.keyDown(menuEl, { key: ' ' }); });
+    act(() => {
+      item.focus();
+    });
+    act(() => {
+      fireEvent.keyDown(menuEl, { key: ' ' });
+    });
     expect(onSelect).toHaveBeenCalled();
   });
 
@@ -151,7 +175,9 @@ describe('ContextMenu', () => {
       act(() => {
         fireEvent.contextMenu(screen.getByTestId('trigger-area'), { clientX: 50, clientY: 50 });
       });
-      act(() => { vi.runAllTimers(); });
+      act(() => {
+        vi.runAllTimers();
+      });
       expect(document.activeElement).toBe(screen.getAllByRole('menuitem')[0]);
     } finally {
       vi.useRealTimers();

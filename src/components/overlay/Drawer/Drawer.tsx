@@ -135,8 +135,10 @@ export function Drawer({
 // DrawerTrigger
 // ---------------------------------------------------------------------------
 
-export interface DrawerTriggerProps
-  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'aria-haspopup' | 'aria-expanded'> {
+export interface DrawerTriggerProps extends Omit<
+  React.ButtonHTMLAttributes<HTMLButtonElement>,
+  'aria-haspopup' | 'aria-expanded'
+> {
   children: React.ReactNode;
 }
 
@@ -311,9 +313,7 @@ export const DrawerTitle = forwardRef<HTMLHeadingElement, DrawerTitleProps>(func
     registerTitle(true);
     return () => registerTitle(false);
   }, [registerTitle]);
-  return (
-    <Tag ref={ref} id={titleId} className={classNames(styles.title, className)} {...rest} />
-  );
+  return <Tag ref={ref} id={titleId} className={classNames(styles.title, className)} {...rest} />;
 });
 
 export type DrawerDescriptionProps = React.HTMLAttributes<HTMLParagraphElement>;

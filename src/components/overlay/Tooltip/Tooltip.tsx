@@ -208,8 +208,7 @@ export function TooltipTrigger({ children }: TooltipTriggerProps): React.ReactEl
   // React 19 moved `ref` onto `props`. Read it there first and fall
   // back to `child.ref` only if props.ref is not present, so the trigger
   // continues to work on older versions too.
-  const childRef =
-    childProps.ref ?? (child as unknown as { ref?: React.Ref<HTMLElement> }).ref;
+  const childRef = childProps.ref ?? (child as unknown as { ref?: React.Ref<HTMLElement> }).ref;
 
   const setRef = (node: HTMLElement | null): void => {
     setTriggerNode(node);
@@ -286,14 +285,12 @@ function computePosition(
   let left = 0;
 
   if (side === 'top' || side === 'bottom') {
-    top =
-      side === 'top' ? trigger.top - content.height - sideOffset : trigger.bottom + sideOffset;
+    top = side === 'top' ? trigger.top - content.height - sideOffset : trigger.bottom + sideOffset;
     if (align === 'start') left = trigger.left + alignOffset;
     else if (align === 'end') left = trigger.right - content.width - alignOffset;
     else left = trigger.left + trigger.width / 2 - content.width / 2 + alignOffset;
   } else {
-    left =
-      side === 'left' ? trigger.left - content.width - sideOffset : trigger.right + sideOffset;
+    left = side === 'left' ? trigger.left - content.width - sideOffset : trigger.right + sideOffset;
     if (align === 'start') top = trigger.top + alignOffset;
     else if (align === 'end') top = trigger.bottom - content.height - alignOffset;
     else top = trigger.top + trigger.height / 2 - content.height / 2 + alignOffset;

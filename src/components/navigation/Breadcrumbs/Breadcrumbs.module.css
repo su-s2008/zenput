@@ -28,7 +28,9 @@
 .link {
   color: var(--breadcrumbs-link);
   text-decoration: none;
-  transition: color 0.15s ease, text-decoration 0.15s ease;
+  transition:
+    color 0.15s ease,
+    text-decoration 0.15s ease;
 }
 
 .link:hover {

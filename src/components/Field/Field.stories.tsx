@@ -46,27 +46,15 @@ export const Default: Story = {
 export const ShorthandProps: Story = {
   render: () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-      <Field
-        label="Email"
-        description="We will never share your email."
-        required
-      >
+      <Field label="Email" description="We will never share your email." required>
         <FieldControl as="input" type="email" placeholder="you@example.com" />
       </Field>
 
-      <Field
-        label="Username"
-        validationState="error"
-        message="Username is already taken."
-      >
+      <Field label="Username" validationState="error" message="Username is already taken.">
         <FieldControl as="input" type="text" placeholder="Pick a username" />
       </Field>
 
-      <Field
-        label="Password"
-        validationState="success"
-        message="Password is strong!"
-      >
+      <Field label="Password" validationState="success" message="Password is strong!">
         <FieldControl as="input" type="password" placeholder="Enter password" />
       </Field>
     </div>
@@ -215,7 +203,9 @@ function AllSubComponentsExample() {
         style={{ width: '100%', resize: 'vertical', padding: '8px', boxSizing: 'border-box' }}
       />
       <FieldDescription>Keep it brief and to the point.</FieldDescription>
-      {hasError && <FieldMessage type="error">Message must be {MAX} characters or less.</FieldMessage>}
+      {hasError && (
+        <FieldMessage type="error">Message must be {MAX} characters or less.</FieldMessage>
+      )}
       <FieldCounter current={value.length} max={MAX} />
     </Field>
   );

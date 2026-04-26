@@ -52,7 +52,7 @@ export function Skeleton({
   ...rest
 }: SkeletonProps): React.ReactElement {
   if (!loading) {
-    return <>{children}</> as React.ReactElement;
+    return (<>{children}</>) as React.ReactElement;
   }
 
   const inlineStyle: React.CSSProperties = {

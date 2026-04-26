@@ -22,7 +22,11 @@ afterEach(() => {
 
 describe('Portal', () => {
   it('renders children into document.body (via shared host) by default', async () => {
-    render(<Portal><span data-testid="child">hello</span></Portal>);
+    render(
+      <Portal>
+        <span data-testid="child">hello</span>
+      </Portal>
+    );
 
     await waitFor(() => {
       expect(screen.getByTestId('child')).toBeInTheDocument();
@@ -38,7 +42,11 @@ describe('Portal', () => {
     container.setAttribute('data-testid', 'custom-container');
     document.body.appendChild(container);
 
-    render(<Portal container={container}><span data-testid="custom-child">world</span></Portal>);
+    render(
+      <Portal container={container}>
+        <span data-testid="custom-child">world</span>
+      </Portal>
+    );
 
     await waitFor(() => {
       expect(screen.getByTestId('custom-child')).toBeInTheDocument();
@@ -70,7 +78,9 @@ describe('Portal', () => {
   it('renders inline (no portal) when disabled=true', () => {
     const { container: wrapper } = render(
       <div data-testid="wrapper">
-        <Portal disabled><span data-testid="inline-child">inline</span></Portal>
+        <Portal disabled>
+          <span data-testid="inline-child">inline</span>
+        </Portal>
       </div>
     );
 
@@ -87,7 +97,9 @@ describe('Portal', () => {
 
   it('does not render on the server (renderToString returns empty)', () => {
     const html = renderToString(
-      <Portal><span>server child</span></Portal>
+      <Portal>
+        <span>server child</span>
+      </Portal>
     );
     // Portal returns null on server (before mount effect runs), so no portal content.
     expect(html).toBe('');
@@ -95,7 +107,9 @@ describe('Portal', () => {
 
   it('unmounting removes children but leaves the shared host', async () => {
     const { unmount } = render(
-      <Portal><span data-testid="to-remove">will go away</span></Portal>
+      <Portal>
+        <span data-testid="to-remove">will go away</span>
+      </Portal>
     );
 
     await waitFor(() => {

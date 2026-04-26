@@ -66,18 +66,12 @@ function computePosition(
   let left = 0;
 
   if (side === 'top' || side === 'bottom') {
-    top =
-      side === 'top'
-        ? trigger.top - content.height - sideOffset
-        : trigger.bottom + sideOffset;
+    top = side === 'top' ? trigger.top - content.height - sideOffset : trigger.bottom + sideOffset;
     if (align === 'start') left = trigger.left + alignOffset;
     else if (align === 'end') left = trigger.right - content.width - alignOffset;
     else left = trigger.left + trigger.width / 2 - content.width / 2 + alignOffset;
   } else {
-    left =
-      side === 'left'
-        ? trigger.left - content.width - sideOffset
-        : trigger.right + sideOffset;
+    left = side === 'left' ? trigger.left - content.width - sideOffset : trigger.right + sideOffset;
     if (align === 'start') top = trigger.top + alignOffset;
     else if (align === 'end') top = trigger.bottom - content.height - alignOffset;
     else top = trigger.top + trigger.height / 2 - content.height / 2 + alignOffset;
@@ -121,45 +115,48 @@ export function Menu({
   return <MenuContext.Provider value={value}>{children}</MenuContext.Provider>;
 }
 
-export interface MenuTriggerProps
-  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'aria-haspopup' | 'aria-expanded'> {
+export interface MenuTriggerProps extends Omit<
+  React.ButtonHTMLAttributes<HTMLButtonElement>,
+  'aria-haspopup' | 'aria-expanded'
+> {
   children: React.ReactNode;
 }
 
-export const MenuTrigger = forwardRef<HTMLButtonElement, MenuTriggerProps>(
-  function MenuTrigger({ onClick, type = 'button', ...rest }, forwardedRef) {
-    const ctx = useMenuContext('MenuTrigger');
-    const { setTriggerNode, setOpen, open, contentId } = ctx;
+export const MenuTrigger = forwardRef<HTMLButtonElement, MenuTriggerProps>(function MenuTrigger(
+  { onClick, type = 'button', ...rest },
+  forwardedRef
+) {
+  const ctx = useMenuContext('MenuTrigger');
+  const { setTriggerNode, setOpen, open, contentId } = ctx;
 
-    const mergedRef = useCallback(
-      (node: HTMLButtonElement | null) => {
-        setTriggerNode(node);
-        assignRef(forwardedRef, node);
-      },
-      [setTriggerNode, forwardedRef]
-    );
+  const mergedRef = useCallback(
+    (node: HTMLButtonElement | null) => {
+      setTriggerNode(node);
+      assignRef(forwardedRef, node);
+    },
+    [setTriggerNode, forwardedRef]
+  );
 
-    const handleClick = useCallback(
-      (e: React.MouseEvent<HTMLButtonElement>) => {
-        onClick?.(e);
-        if (!e.defaultPrevented) setOpen(!open);
-      },
-      [setOpen, open, onClick]
-    );
+  const handleClick = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      onClick?.(e);
+      if (!e.defaultPrevented) setOpen(!open);
+    },
+    [setOpen, open, onClick]
+  );
 
-    return (
-      <button
-        ref={mergedRef}
-        type={type}
-        aria-haspopup="menu"
-        aria-expanded={open}
-        aria-controls={open ? contentId : undefined}
-        onClick={handleClick}
-        {...rest}
-      />
-    );
-  }
-);
+  return (
+    <button
+      ref={mergedRef}
+      type={type}
+      aria-haspopup="menu"
+      aria-expanded={open}
+      aria-controls={open ? contentId : undefined}
+      onClick={handleClick}
+      {...rest}
+    />
+  );
+});
 
 export interface MenuContentProps extends React.HTMLAttributes<HTMLDivElement> {
   side?: MenuSide;
@@ -171,122 +168,120 @@ export interface MenuContentProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
 }
 
-export const MenuContent = forwardRef<HTMLDivElement, MenuContentProps>(
-  function MenuContent(
-    {
-      side = 'bottom',
-      align = 'start',
-      sideOffset = 4,
-      alignOffset = 0,
-      withPortal = true,
-      className,
-      children,
-      ...rest
+export const MenuContent = forwardRef<HTMLDivElement, MenuContentProps>(function MenuContent(
+  {
+    side = 'bottom',
+    align = 'start',
+    sideOffset = 4,
+    alignOffset = 0,
+    withPortal = true,
+    className,
+    children,
+    ...rest
+  },
+  forwardedRef
+) {
+  const ctx = useMenuContext('MenuContent');
+  const { open, setOpen, triggerRef, contentId } = ctx;
+  const contentElRef = useRef<HTMLDivElement | null>(null);
+  const [coords, setCoords] = useState<{ top: number; left: number } | null>(null);
+
+  const mergedRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      contentElRef.current = node;
+      assignRef(forwardedRef, node);
     },
-    forwardedRef
-  ) {
-    const ctx = useMenuContext('MenuContent');
-    const { open, setOpen, triggerRef, contentId } = ctx;
-    const contentElRef = useRef<HTMLDivElement | null>(null);
-    const [coords, setCoords] = useState<{ top: number; left: number } | null>(null);
+    [forwardedRef]
+  );
 
-    const mergedRef = useCallback(
-      (node: HTMLDivElement | null) => {
-        contentElRef.current = node;
-        assignRef(forwardedRef, node);
-      },
-      [forwardedRef]
-    );
+  useIsomorphicLayoutEffect(() => {
+    if (!open) return;
+    const updatePosition = (): void => {
+      const trigger = triggerRef.current;
+      const content = contentElRef.current;
+      if (!trigger || !content) return;
+      setCoords(
+        computePosition(
+          trigger.getBoundingClientRect(),
+          content.getBoundingClientRect(),
+          side,
+          align,
+          sideOffset,
+          alignOffset
+        )
+      );
+    };
+    updatePosition();
+    window.addEventListener('scroll', updatePosition, true);
+    window.addEventListener('resize', updatePosition);
+    return () => {
+      window.removeEventListener('scroll', updatePosition, true);
+      window.removeEventListener('resize', updatePosition);
+    };
+  }, [open, triggerRef, side, align, sideOffset, alignOffset]);
 
-    useIsomorphicLayoutEffect(() => {
-      if (!open) return;
-      const updatePosition = (): void => {
-        const trigger = triggerRef.current;
-        const content = contentElRef.current;
-        if (!trigger || !content) return;
-        setCoords(
-          computePosition(
-            trigger.getBoundingClientRect(),
-            content.getBoundingClientRect(),
-            side,
-            align,
-            sideOffset,
-            alignOffset
-          )
-        );
-      };
-      updatePosition();
-      window.addEventListener('scroll', updatePosition, true);
-      window.addEventListener('resize', updatePosition);
-      return () => {
-        window.removeEventListener('scroll', updatePosition, true);
-        window.removeEventListener('resize', updatePosition);
-      };
-    }, [open, triggerRef, side, align, sideOffset, alignOffset]);
-
-    useEffect(() => {
-      if (!open) return;
-      const rafId = requestAnimationFrame(() => {
-        const el = contentElRef.current;
-        if (!el) return;
-        const items = getMenuItems(el);
-        if (items.length > 0) items[0].focus();
-      });
-      return () => cancelAnimationFrame(rafId);
-    }, [open]);
-
-    useEffect(() => {
-      if (!open) return;
-      const handleMouseDown = (e: MouseEvent) => {
-        const target = e.target as Node;
-        if (isOutsideAll(target, [contentElRef.current, triggerRef.current])) {
-          setOpen(false);
-        }
-      };
-      document.addEventListener('mousedown', handleMouseDown);
-      document.addEventListener('touchstart', handleMouseDown as EventListener);
-      return () => {
-        document.removeEventListener('mousedown', handleMouseDown);
-        document.removeEventListener('touchstart', handleMouseDown as EventListener);
-      };
-    }, [open, setOpen, triggerRef]);
-
-    const handleClose = useCallback(() => {
-      setOpen(false);
-      triggerRef.current?.focus();
-    }, [setOpen, triggerRef]);
-
-    const handleKeyDown = useMenuKeyboardNav({
-      containerRef: contentElRef,
-      onTab: handleClose,
-      onEscape: handleClose,
+  useEffect(() => {
+    if (!open) return;
+    const rafId = requestAnimationFrame(() => {
+      const el = contentElRef.current;
+      if (!el) return;
+      const items = getMenuItems(el);
+      if (items.length > 0) items[0].focus();
     });
+    return () => cancelAnimationFrame(rafId);
+  }, [open]);
 
-    if (!open) return null;
+  useEffect(() => {
+    if (!open) return;
+    const handleMouseDown = (e: MouseEvent) => {
+      const target = e.target as Node;
+      if (isOutsideAll(target, [contentElRef.current, triggerRef.current])) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleMouseDown);
+    document.addEventListener('touchstart', handleMouseDown as EventListener);
+    return () => {
+      document.removeEventListener('mousedown', handleMouseDown);
+      document.removeEventListener('touchstart', handleMouseDown as EventListener);
+    };
+  }, [open, setOpen, triggerRef]);
 
-    const content = (
-      <div
-        ref={mergedRef}
-        role="menu"
-        id={contentId}
-        tabIndex={-1}
-        style={{
-          position: 'fixed',
-          top: coords?.top ?? -9999,
-          left: coords?.left ?? -9999,
-          visibility: coords ? 'visible' : 'hidden',
-        }}
-        className={classNames(styles.content, className)}
-        onKeyDown={handleKeyDown}
-        {...rest}
-      >
-        {children}
-      </div>
-    );
+  const handleClose = useCallback(() => {
+    setOpen(false);
+    triggerRef.current?.focus();
+  }, [setOpen, triggerRef]);
 
-    return withPortal ? <Portal>{content}</Portal> : content;
-  }
-);
+  const handleKeyDown = useMenuKeyboardNav({
+    containerRef: contentElRef,
+    onTab: handleClose,
+    onEscape: handleClose,
+  });
+
+  if (!open) return null;
+
+  const content = (
+    <div
+      ref={mergedRef}
+      role="menu"
+      id={contentId}
+      tabIndex={-1}
+      style={{
+        position: 'fixed',
+        top: coords?.top ?? -9999,
+        left: coords?.left ?? -9999,
+        visibility: coords ? 'visible' : 'hidden',
+      }}
+      className={classNames(styles.content, className)}
+      onKeyDown={handleKeyDown}
+      {...rest}
+    >
+      {children}
+    </div>
+  );
+
+  return withPortal ? <Portal>{content}</Portal> : content;
+});
 
 export interface MenuItemProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'role'> {
   disabled?: boolean;
@@ -296,76 +291,81 @@ export interface MenuItemProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   children?: React.ReactNode;
 }
 
-export const MenuItem = forwardRef<HTMLDivElement, MenuItemProps>(
-  function MenuItem({ disabled, destructive, leftIcon, onSelect, onClick, className, children, ...rest }, ref) {
-    const ctx = useContext(MenuContext);
+export const MenuItem = forwardRef<HTMLDivElement, MenuItemProps>(function MenuItem(
+  { disabled, destructive, leftIcon, onSelect, onClick, className, children, ...rest },
+  ref
+) {
+  const ctx = useContext(MenuContext);
 
-    const handleClick = useCallback(
-      (e: React.MouseEvent<HTMLDivElement>) => {
-        if (disabled) return;
-        onClick?.(e);
-        if (!e.defaultPrevented) {
+  const handleClick = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      if (disabled) return;
+      onClick?.(e);
+      if (!e.defaultPrevented) {
+        onSelect?.();
+        ctx?.setOpen(false);
+        ctx?.triggerRef.current?.focus();
+      }
+    },
+    [disabled, onClick, onSelect, ctx]
+  );
+
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLDivElement>) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        if (!disabled) {
           onSelect?.();
           ctx?.setOpen(false);
           ctx?.triggerRef.current?.focus();
         }
-      },
-      [disabled, onClick, onSelect, ctx]
-    );
+      }
+    },
+    [disabled, onSelect, ctx]
+  );
 
-    const handleKeyDown = useCallback(
-      (e: React.KeyboardEvent<HTMLDivElement>) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          if (!disabled) {
-            onSelect?.();
-            ctx?.setOpen(false);
-            ctx?.triggerRef.current?.focus();
-          }
-        }
-      },
-      [disabled, onSelect, ctx]
-    );
-
-    return (
-      <div
-        ref={ref}
-        role="menuitem"
-        tabIndex={-1}
-        aria-disabled={disabled || undefined}
-        data-disabled={disabled ? '' : undefined}
-        className={classNames(
-          styles.item,
-          destructive && styles.itemDestructive,
-          disabled && styles.itemDisabled,
-          className
-        )}
-        onClick={handleClick}
-        onKeyDown={handleKeyDown}
-        {...rest}
-      >
-        {leftIcon && <span className={styles.itemIcon}>{leftIcon}</span>}
-        {children}
-      </div>
-    );
-  }
-);
+  return (
+    <div
+      ref={ref}
+      role="menuitem"
+      tabIndex={-1}
+      aria-disabled={disabled || undefined}
+      data-disabled={disabled ? '' : undefined}
+      className={classNames(
+        styles.item,
+        destructive && styles.itemDestructive,
+        disabled && styles.itemDisabled,
+        className
+      )}
+      onClick={handleClick}
+      onKeyDown={handleKeyDown}
+      {...rest}
+    >
+      {leftIcon && <span className={styles.itemIcon}>{leftIcon}</span>}
+      {children}
+    </div>
+  );
+});
 
 export type MenuSeparatorProps = React.HTMLAttributes<HTMLHRElement>;
 
-export const MenuSeparator = forwardRef<HTMLHRElement, MenuSeparatorProps>(
-  function MenuSeparator({ className, ...rest }, ref) {
-    return <hr ref={ref} className={classNames(styles.separator, className)} {...rest} />;
-  }
-);
+export const MenuSeparator = forwardRef<HTMLHRElement, MenuSeparatorProps>(function MenuSeparator(
+  { className, ...rest },
+  ref
+) {
+  return <hr ref={ref} className={classNames(styles.separator, className)} {...rest} />;
+});
 
 export type MenuLabelProps = React.HTMLAttributes<HTMLDivElement>;
 
-export const MenuLabel = forwardRef<HTMLDivElement, MenuLabelProps>(
-  function MenuLabel({ className, ...rest }, ref) {
-    return <div ref={ref} role="presentation" className={classNames(styles.label, className)} {...rest} />;
-  }
-);
+export const MenuLabel = forwardRef<HTMLDivElement, MenuLabelProps>(function MenuLabel(
+  { className, ...rest },
+  ref
+) {
+  return (
+    <div ref={ref} role="presentation" className={classNames(styles.label, className)} {...rest} />
+  );
+});
 
 export interface MenuCheckboxItemProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'role'> {
   checked?: boolean;
@@ -375,7 +375,10 @@ export interface MenuCheckboxItemProps extends Omit<React.HTMLAttributes<HTMLDiv
 }
 
 export const MenuCheckboxItem = forwardRef<HTMLDivElement, MenuCheckboxItemProps>(
-  function MenuCheckboxItem({ checked, onCheckedChange, disabled, onClick, className, children, ...rest }, ref) {
+  function MenuCheckboxItem(
+    { checked, onCheckedChange, disabled, onClick, className, children, ...rest },
+    ref
+  ) {
     const ctx = useContext(MenuContext);
 
     const handleClick = useCallback(
@@ -431,12 +434,15 @@ export interface MenuRadioGroupProps {
   children: React.ReactNode;
 }
 
-export function MenuRadioGroup({ value, onValueChange, children }: MenuRadioGroupProps): React.ReactElement {
-  const ctxValue = useMemo(
-    () => ({ value, onValueChange }),
-    [value, onValueChange]
+export function MenuRadioGroup({
+  value,
+  onValueChange,
+  children,
+}: MenuRadioGroupProps): React.ReactElement {
+  const ctxValue = useMemo(() => ({ value, onValueChange }), [value, onValueChange]);
+  return (
+    <MenuRadioGroupContext.Provider value={ctxValue}>{children}</MenuRadioGroupContext.Provider>
   );
-  return <MenuRadioGroupContext.Provider value={ctxValue}>{children}</MenuRadioGroupContext.Provider>;
 }
 
 export interface MenuRadioItemProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'role'> {
@@ -445,58 +451,59 @@ export interface MenuRadioItemProps extends Omit<React.HTMLAttributes<HTMLDivEle
   children?: React.ReactNode;
 }
 
-export const MenuRadioItem = forwardRef<HTMLDivElement, MenuRadioItemProps>(
-  function MenuRadioItem({ value, disabled, onClick, className, children, ...rest }, ref) {
-    const ctx = useContext(MenuContext);
-    const radioCtx = useContext(MenuRadioGroupContext);
-    const checked = radioCtx?.value === value;
+export const MenuRadioItem = forwardRef<HTMLDivElement, MenuRadioItemProps>(function MenuRadioItem(
+  { value, disabled, onClick, className, children, ...rest },
+  ref
+) {
+  const ctx = useContext(MenuContext);
+  const radioCtx = useContext(MenuRadioGroupContext);
+  const checked = radioCtx?.value === value;
 
-    const handleClick = useCallback(
-      (e: React.MouseEvent<HTMLDivElement>) => {
-        if (disabled) return;
-        onClick?.(e);
-        if (!e.defaultPrevented) {
+  const handleClick = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      if (disabled) return;
+      onClick?.(e);
+      if (!e.defaultPrevented) {
+        radioCtx?.onValueChange(value);
+        ctx?.setOpen(false);
+        ctx?.triggerRef.current?.focus();
+      }
+    },
+    [disabled, onClick, radioCtx, value, ctx]
+  );
+
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLDivElement>) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        if (!disabled) {
           radioCtx?.onValueChange(value);
           ctx?.setOpen(false);
           ctx?.triggerRef.current?.focus();
         }
-      },
-      [disabled, onClick, radioCtx, value, ctx]
-    );
+      }
+    },
+    [disabled, radioCtx, value, ctx]
+  );
 
-    const handleKeyDown = useCallback(
-      (e: React.KeyboardEvent<HTMLDivElement>) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          if (!disabled) {
-            radioCtx?.onValueChange(value);
-            ctx?.setOpen(false);
-            ctx?.triggerRef.current?.focus();
-          }
-        }
-      },
-      [disabled, radioCtx, value, ctx]
-    );
-
-    return (
-      <div
-        ref={ref}
-        role="menuitemradio"
-        tabIndex={-1}
-        aria-checked={checked}
-        aria-disabled={disabled || undefined}
-        data-disabled={disabled ? '' : undefined}
-        className={classNames(styles.radioItem, disabled && styles.itemDisabled, className)}
-        onClick={handleClick}
-        onKeyDown={handleKeyDown}
-        {...rest}
-      >
-        <span className={styles.itemIndicator}>{checked ? '●' : ''}</span>
-        {children}
-      </div>
-    );
-  }
-);
+  return (
+    <div
+      ref={ref}
+      role="menuitemradio"
+      tabIndex={-1}
+      aria-checked={checked}
+      aria-disabled={disabled || undefined}
+      data-disabled={disabled ? '' : undefined}
+      className={classNames(styles.radioItem, disabled && styles.itemDisabled, className)}
+      onClick={handleClick}
+      onKeyDown={handleKeyDown}
+      {...rest}
+    >
+      <span className={styles.itemIndicator}>{checked ? '●' : ''}</span>
+      {children}
+    </div>
+  );
+});
 
 export interface MenuSubProps {
   children: React.ReactNode;
@@ -526,7 +533,10 @@ export interface MenuSubTriggerProps extends Omit<React.HTMLAttributes<HTMLDivEl
 }
 
 export const MenuSubTrigger = forwardRef<HTMLDivElement, MenuSubTriggerProps>(
-  function MenuSubTrigger({ disabled, onClick, onKeyDown, onMouseEnter, className, children, ...rest }, ref) {
+  function MenuSubTrigger(
+    { disabled, onClick, onKeyDown, onMouseEnter, className, children, ...rest },
+    ref
+  ) {
     const subCtx = useContext(MenuSubContext);
     if (!subCtx) throw new Error('<MenuSubTrigger> must be used inside <MenuSub>.');
 

@@ -45,7 +45,11 @@ const getServerSnapshot = () => false;
  * - CSS custom properties resolve through the React tree parent (how `createPortal` works).
  * - Unmounting removes only the React subtree; the shared host element is kept.
  */
-export function Portal({ children, container, disabled = false }: PortalProps): React.ReactElement | null {
+export function Portal({
+  children,
+  container,
+  disabled = false,
+}: PortalProps): React.ReactElement | null {
   // SSR-safe mounting detection via useSyncExternalStore.
   // getServerSnapshot returns false → renders null on server.
   // getClientSnapshot returns true → activates portal on client.

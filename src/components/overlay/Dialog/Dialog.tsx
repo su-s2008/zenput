@@ -147,8 +147,10 @@ const DialogBehaviorContext = createContext<DialogBehavior>({
 // DialogTrigger
 // ---------------------------------------------------------------------------
 
-export interface DialogTriggerProps
-  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'aria-haspopup' | 'aria-expanded'> {
+export interface DialogTriggerProps extends Omit<
+  React.ButtonHTMLAttributes<HTMLButtonElement>,
+  'aria-haspopup' | 'aria-expanded'
+> {
   children: React.ReactNode;
 }
 
@@ -331,14 +333,7 @@ export const DialogTitle = forwardRef<HTMLHeadingElement, DialogTitleProps>(func
     registerTitle(true);
     return () => registerTitle(false);
   }, [registerTitle]);
-  return (
-    <Tag
-      ref={ref}
-      id={titleId}
-      className={classNames(styles.title, className)}
-      {...rest}
-    />
-  );
+  return <Tag ref={ref} id={titleId} className={classNames(styles.title, className)} {...rest} />;
 });
 
 export type DialogDescriptionProps = React.HTMLAttributes<HTMLParagraphElement>;
@@ -386,4 +381,3 @@ export const DialogClose = forwardRef<HTMLButtonElement, DialogCloseProps>(funct
     </button>
   );
 });
-

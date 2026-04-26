@@ -12,7 +12,11 @@ describe('Card', () => {
   });
 
   it('renders children', () => {
-    render(<Card><span>Hello</span></Card>);
+    render(
+      <Card>
+        <span>Hello</span>
+      </Card>
+    );
     expect(screen.getByText('Hello')).toBeInTheDocument();
   });
 
@@ -38,7 +42,11 @@ describe('Card', () => {
 
   it('calls onClick when interactive card is clicked', async () => {
     const onClick = vi.fn();
-    render(<Card interactive onClick={onClick}>Click</Card>);
+    render(
+      <Card interactive onClick={onClick}>
+        Click
+      </Card>
+    );
     await userEvent.click(screen.getByRole('button', { name: 'Click' }));
     expect(onClick).toHaveBeenCalledTimes(1);
   });
@@ -59,7 +67,11 @@ describe('Card', () => {
   });
 
   it('forwards href when interactive without explicit as (anchor mode)', () => {
-    render(<Card interactive href="/x">Link</Card>);
+    render(
+      <Card interactive href="/x">
+        Link
+      </Card>
+    );
     const link = screen.getByRole('link');
     expect(link).toHaveAttribute('href', '/x');
     expect(link).not.toHaveAttribute('type');
@@ -71,7 +83,11 @@ describe('Card', () => {
   });
 
   it('respects an explicit type prop on a native button root', () => {
-    render(<Card as="button" type="submit">Submit</Card>);
+    render(
+      <Card as="button" type="submit">
+        Submit
+      </Card>
+    );
     expect(screen.getByRole('button')).toHaveAttribute('type', 'submit');
   });
 });

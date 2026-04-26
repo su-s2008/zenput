@@ -73,9 +73,7 @@ export function ProgressBar({
       {(label || showValue) && (
         <div className={styles.labelRow}>
           {label && <span>{label}</span>}
-          {showValue && !indeterminate && (
-            <span aria-hidden="true">{Math.round(percentage)}%</span>
-          )}
+          {showValue && !indeterminate && <span aria-hidden="true">{Math.round(percentage)}%</span>}
         </div>
       )}
       <div

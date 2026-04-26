@@ -33,10 +33,7 @@ export const SingleItem: Story = {
 
 export const TwoItems: Story = {
   args: {
-    items: [
-      { label: 'Home', href: '/' },
-      { label: 'Settings' },
-    ],
+    items: [{ label: 'Home', href: '/' }, { label: 'Settings' }],
   },
 };
 

@@ -524,13 +524,7 @@ describe('DataTable – controlled sort state', () => {
       { key: 'name', header: 'Name', sortable: true },
       ...columns.slice(2),
     ];
-    render(
-      <DataTable
-        columns={sortableColumns}
-        data={data}
-        onSortChange={handleSortChange}
-      />
-    );
+    render(<DataTable columns={sortableColumns} data={data} onSortChange={handleSortChange} />);
     await userEvent.click(screen.getByRole('button', { name: /Sort by Name/i }));
     expect(handleSortChange).toHaveBeenCalledWith({ key: 'name', direction: 'asc' });
   });
@@ -602,9 +596,7 @@ describe('DataTable – controlled expansion', () => {
 
 describe('DataTable – column visibility', () => {
   it('renders a "Columns" toggle button when onColumnVisibilityChange is provided', () => {
-    render(
-      <DataTable columns={columns} data={data} onColumnVisibilityChange={vi.fn()} />
-    );
+    render(<DataTable columns={columns} data={data} onColumnVisibilityChange={vi.fn()} />);
     expect(screen.getByRole('button', { name: /toggle column visibility/i })).toBeInTheDocument();
   });
 
@@ -658,13 +650,7 @@ describe('DataTable – density', () => {
 
 describe('DataTable – toolbar slot', () => {
   it('renders custom toolbar content', () => {
-    render(
-      <DataTable
-        columns={columns}
-        data={data}
-        toolbar={<button>Custom Action</button>}
-      />
-    );
+    render(<DataTable columns={columns} data={data} toolbar={<button>Custom Action</button>} />);
     expect(screen.getByRole('button', { name: 'Custom Action' })).toBeInTheDocument();
   });
 });

@@ -313,6 +313,14 @@ export const defaultComponentTokens = {
     heightLg: '12px',
     radius: 'var(--zp-radius-full)',
   } satisfies ProgressTokens,
+
+  segmented: {
+    bg: 'var(--zp-color-surface)',
+    indicatorBg: 'var(--zp-color-background)',
+    indicatorShadow: 'var(--zp-shadow-sm, 0 1px 2px rgba(0,0,0,0.1))',
+    padding: '0.1875rem',
+    radius: 'var(--zp-radius-lg)',
+  } satisfies SegmentedTokens,
 };
 
 /**
@@ -338,6 +346,17 @@ export interface ProgressTokens {
 }
 
 /**
+ * SegmentedControl component tokens
+ */
+export interface SegmentedTokens {
+  bg?: string;
+  indicatorBg?: string;
+  indicatorShadow?: string;
+  padding?: string;
+  radius?: string;
+}
+
+/**
  * All component token types
  */
 export interface ComponentTokensMap {
@@ -351,6 +370,7 @@ export interface ComponentTokensMap {
   toast?: Partial<ToastTokens>;
   skeleton?: Partial<SkeletonTokens>;
   progress?: Partial<ProgressTokens>;
+  segmented?: Partial<SegmentedTokens>;
 }
 
 export type ComponentName = keyof ComponentTokensMap;

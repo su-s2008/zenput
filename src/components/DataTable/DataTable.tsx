@@ -71,9 +71,7 @@ export function DataTable<T extends DataTableRecord = DataTableRecord>({
   const [internalSortState, setInternalSortState] = useState<DataTableSortState | null>(null);
 
   /** Internal expanded row keys (used when expandedRowKeys prop is not provided) */
-  const [internalExpandedKeys, setInternalExpandedKeys] = useState<Set<string | number>>(
-    new Set()
-  );
+  const [internalExpandedKeys, setInternalExpandedKeys] = useState<Set<string | number>>(new Set());
 
   /** Internal global filter (used when globalFilter prop is not provided) */
   const [internalGlobalFilter, setInternalGlobalFilter] = useState('');
@@ -102,23 +100,20 @@ export function DataTable<T extends DataTableRecord = DataTableRecord>({
   const instanceId = useId();
   const globalSearchId = `${instanceId}-global-search`;
   /** Sanitize a user-supplied key so it's safe to embed in an HTML `id`. */
-  const sanitizeIdPart = useCallback(
-    (part: string) => part.replace(/[^a-zA-Z0-9_-]/g, '_'),
-    []
-  );
+  const sanitizeIdPart = useCallback((part: string) => part.replace(/[^a-zA-Z0-9_-]/g, '_'), []);
   const columnToggleId = useCallback(
     (key: string) => `${instanceId}-col-toggle-${sanitizeIdPart(key)}`,
     [instanceId, sanitizeIdPart]
   );
   const filterCheckboxId = useCallback(
-    (key: string, index: number) =>
-      `${instanceId}-dt-filter-${sanitizeIdPart(key)}-${index}`,
+    (key: string, index: number) => `${instanceId}-dt-filter-${sanitizeIdPart(key)}-${index}`,
     [instanceId, sanitizeIdPart]
   );
 
   // ── Derive active (controlled vs uncontrolled) state ──────────────────────
 
-  const activeFilters = controlledFilterState !== undefined ? controlledFilterState : internalFilters;
+  const activeFilters =
+    controlledFilterState !== undefined ? controlledFilterState : internalFilters;
   const activeSortState =
     controlledSortState !== undefined ? controlledSortState : internalSortState;
   const activeExpandedKeys =
@@ -232,7 +227,11 @@ export function DataTable<T extends DataTableRecord = DataTableRecord>({
 
     const lower = activeGlobalFilter.toLowerCase();
     return columnFiltered.filter((row) =>
-      visibleColumns.some((col) => String(row[col.key] ?? '').toLowerCase().includes(lower))
+      visibleColumns.some((col) =>
+        String(row[col.key] ?? '')
+          .toLowerCase()
+          .includes(lower)
+      )
     );
   }, [data, columns, visibleColumns, activeFilters, activeGlobalFilter, serverSide]);
 
@@ -440,20 +439,12 @@ export function DataTable<T extends DataTableRecord = DataTableRecord>({
                   Columns
                 </button>
                 {columnToggleOpen && (
-                  <div
-                    className={styles.columnToggleDropdown}
-                    role="group"
-                    aria-label="Columns"
-                  >
+                  <div className={styles.columnToggleDropdown} role="group" aria-label="Columns">
                     {columns.map((col) => {
                       const isVisible = !activeHiddenColumns.includes(col.key);
                       const checkId = columnToggleId(col.key);
                       return (
-                        <label
-                          key={col.key}
-                          htmlFor={checkId}
-                          className={styles.columnToggleItem}
-                        >
+                        <label key={col.key} htmlFor={checkId} className={styles.columnToggleItem}>
                           <input
                             id={checkId}
                             type="checkbox"
@@ -532,16 +523,12 @@ export function DataTable<T extends DataTableRecord = DataTableRecord>({
                     : col.sticky === 'right'
                       ? { position: 'sticky', right: rightStickyOffsets[col.key] ?? 0, zIndex: 2 }
                       : {};
-                const alignStyle: React.CSSProperties =
-                  col.align ? { textAlign: col.align } : {};
+                const alignStyle: React.CSSProperties = col.align ? { textAlign: col.align } : {};
 
                 return (
                   <th
                     key={col.key}
-                    className={classNames(
-                      styles.th,
-                      col.sticky ? styles.stickyCol : undefined
-                    )}
+                    className={classNames(styles.th, col.sticky ? styles.stickyCol : undefined)}
                     aria-sort={
                       isSorted ? (sortDir === 'asc' ? 'ascending' : 'descending') : undefined
                     }
@@ -708,8 +695,9 @@ export function DataTable<T extends DataTableRecord = DataTableRecord>({
                             : col.sticky === 'right'
                               ? { position: 'sticky', right: rightStickyOffsets[col.key] ?? 0 }
                               : {};
-                        const alignStyle: React.CSSProperties =
-                          col.align ? { textAlign: col.align } : {};
+                        const alignStyle: React.CSSProperties = col.align
+                          ? { textAlign: col.align }
+                          : {};
                         return (
                           <td
                             key={col.key}
@@ -742,39 +730,40 @@ export function DataTable<T extends DataTableRecord = DataTableRecord>({
       </div>
 
       {/* Pagination controls */}
-      {pagination && (() => {
-        // Clamp the displayed range to valid bounds so the "x–y of total" label
-        // stays consistent even if the consumer's currentPage drifts out of
-        // range (for example after totalCount shrinks).
-        const safePageSize = Math.max(1, Math.floor(pagination.pageSize) || 1);
-        const totalPages = Math.max(
-          1,
-          Math.ceil(Math.max(0, pagination.totalCount) / safePageSize)
-        );
-        const safeCurrentPage = Math.min(
-          Math.max(1, Math.floor(pagination.currentPage) || 1),
-          totalPages
-        );
-        const rangeStart = (safeCurrentPage - 1) * safePageSize + 1;
-        const rangeEnd = Math.min(safeCurrentPage * safePageSize, pagination.totalCount);
-        return (
-          <div className={styles.pagination}>
-            <span className={styles.paginationInfo}>
-              {loading || pagination.totalCount === 0
-                ? `0–0 of ${pagination.totalCount}`
-                : `${rangeStart}–${rangeEnd} of ${pagination.totalCount}`}
-            </span>
-            <Pagination
-              currentPage={pagination.currentPage}
-              totalCount={pagination.totalCount}
-              pageSize={pagination.pageSize}
-              onPageChange={pagination.onPageChange}
-              disabled={loading}
-              size="sm"
-            />
-          </div>
-        );
-      })()}
+      {pagination &&
+        (() => {
+          // Clamp the displayed range to valid bounds so the "x–y of total" label
+          // stays consistent even if the consumer's currentPage drifts out of
+          // range (for example after totalCount shrinks).
+          const safePageSize = Math.max(1, Math.floor(pagination.pageSize) || 1);
+          const totalPages = Math.max(
+            1,
+            Math.ceil(Math.max(0, pagination.totalCount) / safePageSize)
+          );
+          const safeCurrentPage = Math.min(
+            Math.max(1, Math.floor(pagination.currentPage) || 1),
+            totalPages
+          );
+          const rangeStart = (safeCurrentPage - 1) * safePageSize + 1;
+          const rangeEnd = Math.min(safeCurrentPage * safePageSize, pagination.totalCount);
+          return (
+            <div className={styles.pagination}>
+              <span className={styles.paginationInfo}>
+                {loading || pagination.totalCount === 0
+                  ? `0–0 of ${pagination.totalCount}`
+                  : `${rangeStart}–${rangeEnd} of ${pagination.totalCount}`}
+              </span>
+              <Pagination
+                currentPage={pagination.currentPage}
+                totalCount={pagination.totalCount}
+                pageSize={pagination.pageSize}
+                onPageChange={pagination.onPageChange}
+                disabled={loading}
+                size="sm"
+              />
+            </div>
+          );
+        })()}
     </div>
   );
 }

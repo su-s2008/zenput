@@ -15,10 +15,7 @@
 
 .track {
   width: 100%;
-  background-color: var(
-    --zp-component-progress-track-bg,
-    var(--zp-color-border-subtle, #e5e7eb)
-  );
+  background-color: var(--zp-component-progress-track-bg, var(--zp-color-border-subtle, #e5e7eb));
   border-radius: var(--zp-component-progress-radius, var(--zp-radius-full, 9999px));
   overflow: hidden;
 }
@@ -43,7 +40,8 @@
   height: 100%;
   border-radius: inherit;
   background-color: var(--zp-component-progress-fill-bg, var(--zp-color-brand, #6366f1));
-  transition: width var(--zp-duration-normal, 200ms) var(--zp-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
+  transition: width var(--zp-duration-normal, 200ms)
+    var(--zp-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
 }
 
 /* Status fill colors */

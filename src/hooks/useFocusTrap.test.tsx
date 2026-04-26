@@ -107,9 +107,7 @@ describe('useFocusTrap', () => {
   });
 
   it('restores focus to returnFocusRef on deactivation', () => {
-    const { rerender } = render(
-      <Harness active returnFocusId="return-btn" />
-    );
+    const { rerender } = render(<Harness active returnFocusId="return-btn" />);
     // Trap is active, focus should be on first tabbable inside container
     expect(document.activeElement).toBe(screen.getByTestId('btn-1'));
 

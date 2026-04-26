@@ -105,13 +105,7 @@ export function CircularProgress({
         aria-label={accessibleLabel}
         aria-labelledby={ariaLabelledBy}
       >
-        <circle
-          className={styles.track}
-          cx={cx}
-          cy={cy}
-          r={radius}
-          strokeWidth={thickness}
-        />
+        <circle className={styles.track} cx={cx} cy={cy} r={radius} strokeWidth={thickness} />
         <circle
           className={styles.fill}
           cx={cx}
@@ -122,14 +116,12 @@ export function CircularProgress({
           strokeDashoffset={indeterminate ? undefined : offset}
         />
       </svg>
-      {(showValue && !indeterminate) && (
+      {showValue && !indeterminate && (
         <span className={styles.label} aria-hidden="true">
           {Math.round(percentage)}%
         </span>
       )}
-      {label && !showValue && (
-        <span className={styles.label}>{label}</span>
-      )}
+      {label && !showValue && <span className={styles.label}>{label}</span>}
     </div>
   );
 }

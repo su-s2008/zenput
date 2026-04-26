@@ -141,9 +141,6 @@ export const LargeSize: Story = {
 
 export const WithoutIcon: Story = {
   render: () => (
-    <EmptyState
-      title="No data available"
-      description="There is nothing to display at this time."
-    />
+    <EmptyState title="No data available" description="There is nothing to display at this time." />
   ),
 };

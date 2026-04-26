@@ -4,8 +4,7 @@ import { ThemeProvider } from '../../context/ThemeProvider';
 import { TokenBrowser } from './TokenBrowser';
 
 /** Wrap TokenBrowser in ThemeProvider so useTheme() works. */
-const renderWithTheme = (ui: React.ReactElement) =>
-  render(<ThemeProvider>{ui}</ThemeProvider>);
+const renderWithTheme = (ui: React.ReactElement) => render(<ThemeProvider>{ui}</ThemeProvider>);
 
 describe('TokenBrowser', () => {
   it('renders without crashing', () => {
@@ -51,7 +50,10 @@ describe('TokenBrowser', () => {
   it('switches category when a nav button is clicked', () => {
     renderWithTheme(<TokenBrowser />);
     fireEvent.click(screen.getByRole('button', { name: 'Typography' }));
-    expect(screen.getByRole('button', { name: 'Typography' })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('button', { name: 'Typography' })).toHaveAttribute(
+      'aria-pressed',
+      'true'
+    );
     // Typography section headers should appear
     expect(screen.getByText('Font Families')).toBeInTheDocument();
     expect(screen.getByText('Font Sizes')).toBeInTheDocument();
@@ -64,7 +66,10 @@ describe('TokenBrowser', () => {
     renderWithTheme(<TokenBrowser defaultCategory="palette" />);
     // palette has named ramps like "neutral", "blue", etc.
     // just verify some content is rendered
-    expect(screen.getByRole('button', { name: 'Color Palette' })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('button', { name: 'Color Palette' })).toHaveAttribute(
+      'aria-pressed',
+      'true'
+    );
   });
 
   it('renders the Spacing category', () => {
@@ -75,7 +80,10 @@ describe('TokenBrowser', () => {
 
   it('renders the Border Radius category', () => {
     renderWithTheme(<TokenBrowser defaultCategory="radii" />);
-    expect(screen.getByRole('button', { name: 'Border Radius' })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('button', { name: 'Border Radius' })).toHaveAttribute(
+      'aria-pressed',
+      'true'
+    );
   });
 
   it('renders the Shadows & Elevation category', () => {
@@ -98,7 +106,10 @@ describe('TokenBrowser', () => {
 
   it('renders the Breakpoints category', () => {
     renderWithTheme(<TokenBrowser defaultCategory="breakpoints" />);
-    expect(screen.getByRole('button', { name: 'Breakpoints' })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('button', { name: 'Breakpoints' })).toHaveAttribute(
+      'aria-pressed',
+      'true'
+    );
   });
 
   it('renders the Density category with scale sections', () => {

@@ -39,18 +39,24 @@ export const Default: Story = {
             <div style={{ padding: 12 }}>
               <p style={{ margin: '0 0 8px' }}>Pick an option:</p>
               <div style={{ display: 'flex', gap: 8 }}>
-                <Button size="sm" onClick={() => close('Option A')}>Option A</Button>
-                <Button size="sm" variant="secondary" onClick={() => close('Option B')}>Option B</Button>
+                <Button size="sm" onClick={() => close('Option A')}>
+                  Option A
+                </Button>
+                <Button size="sm" variant="secondary" onClick={() => close('Option B')}>
+                  Option B
+                </Button>
               </div>
             </div>
           ),
         });
-        handle.result.then((v) => setResult(v as string ?? '(dismissed)'));
+        handle.result.then((v) => setResult((v as string) ?? '(dismissed)'));
       };
 
       return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12, alignItems: 'center' }}>
-          <Button ref={buttonRef} onClick={handleClick}>Open popover</Button>
+          <Button ref={buttonRef} onClick={handleClick}>
+            Open popover
+          </Button>
           <p style={{ margin: 0 }}>Selected: {result}</p>
         </div>
       );
@@ -153,9 +159,10 @@ export const Sides: Story = {
                   side,
                   content: ({ close }) => (
                     <div style={{ padding: '8px 12px' }}>
-                      Popover on the <strong>{side}</strong>
-                      {' '}
-                      <button onClick={() => close()} style={{ marginLeft: 8, cursor: 'pointer' }}>✕</button>
+                      Popover on the <strong>{side}</strong>{' '}
+                      <button onClick={() => close()} style={{ marginLeft: 8, cursor: 'pointer' }}>
+                        ✕
+                      </button>
                     </div>
                   ),
                 })

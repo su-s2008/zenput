@@ -18,12 +18,8 @@ export function buildPaginationItems(
 
   // Normalize counts so that negative or non-finite values cannot reach
   // `Array.from({ length })` and trigger a RangeError.
-  const safeBoundary = Number.isFinite(boundaryCount)
-    ? Math.max(0, Math.floor(boundaryCount))
-    : 1;
-  const safeSibling = Number.isFinite(siblingCount)
-    ? Math.max(0, Math.floor(siblingCount))
-    : 1;
+  const safeBoundary = Number.isFinite(boundaryCount) ? Math.max(0, Math.floor(boundaryCount)) : 1;
+  const safeSibling = Number.isFinite(siblingCount) ? Math.max(0, Math.floor(siblingCount)) : 1;
 
   // When total pages is small enough to show all without ellipsis, return them all.
   const threshold = 2 * safeBoundary + 2 * safeSibling + 3;
@@ -36,19 +32,10 @@ export function buildPaginationItems(
 
   // Build the full set of page numbers that should always be visible.
   const startPages = Array.from({ length: safeBoundary }, (_, i) => i + 1);
-  const endPages = Array.from(
-    { length: safeBoundary },
-    (_, i) => total - safeBoundary + 1 + i
-  );
+  const endPages = Array.from({ length: safeBoundary }, (_, i) => total - safeBoundary + 1 + i);
 
-  const siblingsStart = Math.max(
-    safeBoundary + 1,
-    clamped - safeSibling
-  );
-  const siblingsEnd = Math.min(
-    total - safeBoundary,
-    clamped + safeSibling
-  );
+  const siblingsStart = Math.max(safeBoundary + 1, clamped - safeSibling);
+  const siblingsEnd = Math.min(total - safeBoundary, clamped + safeSibling);
 
   const siblingPages = Array.from(
     { length: Math.max(0, siblingsEnd - siblingsStart + 1) },
@@ -56,9 +43,9 @@ export function buildPaginationItems(
   );
 
   // Combine into a sorted unique list.
-  const allPages = Array.from(
-    new Set([...startPages, ...siblingPages, ...endPages])
-  ).filter((p) => p >= 1 && p <= total).sort((a, b) => a - b);
+  const allPages = Array.from(new Set([...startPages, ...siblingPages, ...endPages]))
+    .filter((p) => p >= 1 && p <= total)
+    .sort((a, b) => a - b);
 
   // Insert 'ellipsis' sentinels between non-consecutive runs.
   const items: (number | 'ellipsis')[] = [];
@@ -168,11 +155,7 @@ export function Pagination({
         {/* Page numbers / ellipses */}
         {items.map((item, idx) =>
           item === 'ellipsis' ? (
-            <span
-              key={`ellipsis-${idx}`}
-              className={styles.ellipsis}
-              aria-hidden="true"
-            >
+            <span key={`ellipsis-${idx}`} className={styles.ellipsis} aria-hidden="true">
               …
             </span>
           ) : (

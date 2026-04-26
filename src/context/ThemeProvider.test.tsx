@@ -13,7 +13,11 @@ describe('ThemeProvider', () => {
   });
 
   it('sets data-zp-theme attribute to "light" by default', () => {
-    const { container } = render(<ThemeProvider><span /></ThemeProvider>);
+    const { container } = render(
+      <ThemeProvider>
+        <span />
+      </ThemeProvider>
+    );
     const wrapper = container.firstChild as HTMLElement;
     expect(wrapper).toHaveAttribute('data-zp-theme', 'light');
   });
@@ -167,9 +171,7 @@ describe('useTheme', () => {
 
   it('returns the current theme values from the nearest ThemeProvider', () => {
     const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <ThemeProvider theme={{ mode: 'dark', density: 'compact' }}>
-        {children}
-      </ThemeProvider>
+      <ThemeProvider theme={{ mode: 'dark', density: 'compact' }}>{children}</ThemeProvider>
     );
     const { result } = renderHook(() => useTheme(), { wrapper });
     expect(result.current.mode).toBe('dark');

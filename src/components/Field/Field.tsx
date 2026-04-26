@@ -1,4 +1,12 @@
-import React, { createContext, useCallback, useContext, useEffect, useId, useMemo, useState } from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useId,
+  useMemo,
+  useState,
+} from 'react';
 import { classNames } from '../../utils';
 import styles from './Field.module.css';
 import type {
@@ -73,9 +81,7 @@ export function Field({
   const counterId = `${controlId}-counter`;
 
   // Convenience: `error` prop overrides validationState to 'error'
-  const resolvedValidationState: ValidationState | undefined = error
-    ? 'error'
-    : validationState;
+  const resolvedValidationState: ValidationState | undefined = error ? 'error' : validationState;
 
   // Track which described-by elements are actually mounted so aria-describedby
   // only references IDs that exist in the DOM.
@@ -151,22 +157,14 @@ Field.displayName = 'Field';
  * Label element for the field. Automatically associates with the control via
  * `htmlFor`.
  */
-export function FieldLabel({
-  children,
-  className,
-  ...rest
-}: FieldLabelProps): React.ReactElement {
+export function FieldLabel({ children, className, ...rest }: FieldLabelProps): React.ReactElement {
   const { controlId, required } = useFieldContext();
 
   return (
     <label
       {...rest}
       htmlFor={controlId}
-      className={classNames(
-        styles.label,
-        required ? styles.required : undefined,
-        className
-      )}
+      className={classNames(styles.label, required ? styles.required : undefined, className)}
     >
       {children}
     </label>
@@ -179,7 +177,15 @@ FieldLabel.displayName = 'FieldLabel';
 // ---------------------------------------------------------------------------
 
 /** Intrinsic HTML elements that accept the native `disabled` attribute. */
-const DISABLED_ELEMENTS = new Set(['input', 'select', 'textarea', 'button', 'fieldset', 'optgroup', 'option']);
+const DISABLED_ELEMENTS = new Set([
+  'input',
+  'select',
+  'textarea',
+  'button',
+  'fieldset',
+  'optgroup',
+  'option',
+]);
 
 /**
  * Wraps a form control and injects the correct `id` and ARIA attributes from
@@ -202,8 +208,7 @@ export function FieldControl<C extends React.ElementType = 'div'>({
   ...rest
 }: FieldControlProps<C>): React.ReactElement {
   const Component = (as ?? 'div') as React.ElementType;
-  const { controlId, describedByIds, required, disabled, validationState } =
-    useFieldContext();
+  const { controlId, describedByIds, required, disabled, validationState } = useFieldContext();
 
   // Merge any consumer-supplied aria-describedby with field-generated ids.
   const restRecord = rest as Record<string, unknown>;
@@ -212,7 +217,8 @@ export function FieldControl<C extends React.ElementType = 'div'>({
       ? restRecord['aria-describedby'].trim().split(/\s+/).filter(Boolean)
       : [];
   const mergedDescribedByIds = [...consumerDescribedBy, ...describedByIds];
-  const ariaDescribedBy = mergedDescribedByIds.length > 0 ? mergedDescribedByIds.join(' ') : undefined;
+  const ariaDescribedBy =
+    mergedDescribedByIds.length > 0 ? mergedDescribedByIds.join(' ') : undefined;
 
   // Only set native `disabled` for elements/components that support it.
   const supportsNativeDisabled =
@@ -228,12 +234,7 @@ export function FieldControl<C extends React.ElementType = 'div'>({
   };
 
   return (
-    <Component
-      {...rest}
-      {...injected}
-      className={className}
-      style={style}
-    >
+    <Component {...rest} {...injected} className={className} style={style}>
       {children}
     </Component>
   );
@@ -260,11 +261,7 @@ export function FieldDescription({
   }, [onDescriptionMount, onDescriptionUnmount]);
 
   return (
-    <span
-      {...rest}
-      id={descriptionId}
-      className={classNames(styles.description, className)}
-    >
+    <span {...rest} id={descriptionId} className={classNames(styles.description, className)}>
       {children}
     </span>
   );
@@ -389,4 +386,3 @@ export function useFieldControlProps() {
     ...(disabled ? { disabled: true as const } : {}),
   };
 }
-

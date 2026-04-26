@@ -1,0 +1,126 @@
+/* SegmentedControl tokens
+ *
+ * `--sc-*` are wired to `--zp-component-segmented-*` (emitted by
+ * ThemeProvider for `theme.components.segmented`) with semantic-token fallbacks
+ * so consumer overrides via the theme actually take effect. */
+.root {
+  --sc-bg: var(--zp-component-segmented-bg, var(--zp-color-surface));
+  --sc-indicator-bg: var(--zp-component-segmented-indicator-bg, var(--zp-color-background));
+  --sc-indicator-shadow: var(
+    --zp-component-segmented-indicator-shadow,
+    var(--zp-shadow-sm, 0 1px 2px rgba(0, 0, 0, 0.1))
+  );
+  --sc-padding: var(--zp-component-segmented-padding, 0.1875rem);
+  --sc-radius: var(--zp-component-segmented-radius, var(--zp-radius-lg));
+
+  display: inline-flex;
+  align-items: center;
+  background: var(--sc-bg);
+  border-radius: var(--sc-radius);
+  padding: var(--sc-padding);
+  gap: 0.125rem;
+}
+
+.fullWidth {
+  display: flex;
+  width: 100%;
+}
+
+.fullWidth .item {
+  flex: 1;
+}
+
+/* Size variants */
+.size-sm .item {
+  height: 1.75rem;
+  padding: 0 var(--zp-space-2);
+  font-size: var(--zp-font-size-xs);
+}
+.size-md .item {
+  height: 2rem;
+  padding: 0 var(--zp-space-3);
+  font-size: var(--zp-font-size-sm);
+}
+.size-lg .item {
+  height: 2.5rem;
+  padding: 0 var(--zp-space-4);
+  font-size: var(--zp-font-size-md);
+}
+
+/* Item */
+.item {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--zp-space-1);
+  font-family: var(--zp-font-family-sans);
+  font-weight: var(--zp-font-weight-medium);
+  color: var(--zp-color-text-secondary);
+  background: transparent;
+  border: none;
+  border-radius: calc(var(--sc-radius) - var(--sc-padding));
+  cursor: pointer;
+  transition:
+    color 0.15s,
+    background 0.15s;
+  white-space: nowrap;
+  outline: none;
+}
+
+.item:focus-visible {
+  outline: 2px solid var(--zp-color-focus-ring);
+  outline-offset: 1px;
+}
+
+.item:hover:not(:disabled):not(.itemSelected) {
+  color: var(--zp-color-text-primary);
+  background: var(--zp-color-surface-raised);
+}
+
+.itemSelected {
+  background: var(--sc-indicator-bg);
+  color: var(--zp-color-text-primary);
+  box-shadow: var(--sc-indicator-shadow);
+}
+
+.itemDisabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.itemIcon {
+  display: inline-flex;
+  align-items: center;
+  font-size: 1em;
+}
+
+/* ToggleGroup — uses the same item styles but with pressed/selected states */
+.toggleGroup {
+  border: var(--zp-border-width-1) solid var(--zp-color-border);
+  background: var(--zp-color-background);
+  --sc-padding: 0;
+  --sc-radius: var(--zp-radius-md);
+  gap: 0;
+}
+
+.toggleGroup .item {
+  border-radius: 0;
+  border-right: var(--zp-border-width-1) solid var(--zp-color-border);
+}
+
+.toggleGroup .item:first-child {
+  border-radius: var(--sc-radius) 0 0 var(--sc-radius);
+}
+
+.toggleGroup .item:last-child {
+  border-radius: 0 var(--sc-radius) var(--sc-radius) 0;
+  border-right: none;
+}
+
+.toggleGroup .toggleItem.itemSelected {
+  background: var(--zp-color-brand-subtle);
+  color: var(--zp-color-brand-text);
+  box-shadow: none;
+}

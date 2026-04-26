@@ -24,7 +24,9 @@ describe('assignRef', () => {
   });
 
   it('assigns null to a RefObject.current', () => {
-    const ref = { current: document.createElement('div') } as React.MutableRefObject<HTMLDivElement | null>;
+    const ref = {
+      current: document.createElement('div'),
+    } as React.MutableRefObject<HTMLDivElement | null>;
     assignRef(ref, null);
     expect(ref.current).toBeNull();
   });

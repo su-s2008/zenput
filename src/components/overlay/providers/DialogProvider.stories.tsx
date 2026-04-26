@@ -68,7 +68,10 @@ export const ConfirmFromTimeout: Story = {
       const handleClick = () => {
         // Trigger from a non-render callback — no JSX placement needed.
         setTimeout(async () => {
-          const ok = await confirm({ title: 'Proceed?', description: 'Triggered from setTimeout.' });
+          const ok = await confirm({
+            title: 'Proceed?',
+            description: 'Triggered from setTimeout.',
+          });
           setResult(ok ? 'Confirmed ✓' : 'Cancelled ✗');
         }, 200);
       };
@@ -130,7 +133,11 @@ export const Alert: Story = {
       const handleSave = async () => {
         // Simulate a save operation
         await new Promise((r) => setTimeout(r, 300));
-        await alert({ title: 'Saved!', description: 'Your changes have been saved.', confirmLabel: 'Great' });
+        await alert({
+          title: 'Saved!',
+          description: 'Your changes have been saved.',
+          confirmLabel: 'Great',
+        });
       };
 
       return <Button onClick={handleSave}>Save changes</Button>;
@@ -164,7 +171,9 @@ export const GenericDialog: Story = {
                 }}
               />
               <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
-                <Button variant="secondary" onClick={() => close()}>Cancel</Button>
+                <Button variant="secondary" onClick={() => close()}>
+                  Cancel
+                </Button>
                 <Button onClick={() => close('🍓')}>Strawberry</Button>
               </div>
             </div>
@@ -213,7 +222,9 @@ export const StackedDialogs: Story = {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12, alignItems: 'center' }}>
           <Button onClick={handleClick}>Start stacked confirms</Button>
           <ul style={{ margin: 0, padding: '0 16px' }}>
-            {log.map((l, i) => <li key={i}>{l}</li>)}
+            {log.map((l, i) => (
+              <li key={i}>{l}</li>
+            ))}
           </ul>
         </div>
       );
@@ -234,13 +245,16 @@ export const ConfirmFromFetchCatch: Story = {
 
       const handleClick = () => {
         // Show alert from an async error handler — no JSX needed at the call site.
-        Promise.reject(new Error('Network timeout'))
-          .catch(async (err: Error) => {
-            await alert({ title: 'Request failed', description: err.message });
-          });
+        Promise.reject(new Error('Network timeout')).catch(async (err: Error) => {
+          await alert({ title: 'Request failed', description: err.message });
+        });
       };
 
-      return <Button variant="danger" onClick={handleClick}>Simulate failing fetch</Button>;
+      return (
+        <Button variant="danger" onClick={handleClick}>
+          Simulate failing fetch
+        </Button>
+      );
     }
     return <Demo />;
   },

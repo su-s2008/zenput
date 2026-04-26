@@ -19,15 +19,15 @@
   );
   background-size: 200% 100%;
   animation: zp-skeleton-shimmer
-    var(--zp-component-skeleton-shimmer-duration, var(--zp-duration-shimmer, 1500ms))
-    linear infinite;
+    var(--zp-component-skeleton-shimmer-duration, var(--zp-duration-shimmer, 1500ms)) linear
+    infinite;
 }
 
 /* Pulse animation */
 .pulse {
   animation: zp-skeleton-pulse
-    var(--zp-component-skeleton-shimmer-duration, var(--zp-duration-shimmer, 1500ms))
-    ease-in-out infinite;
+    var(--zp-component-skeleton-shimmer-duration, var(--zp-duration-shimmer, 1500ms)) ease-in-out
+    infinite;
 }
 
 @keyframes zp-skeleton-shimmer {

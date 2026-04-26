@@ -28,9 +28,7 @@ type Story = StoryObj<typeof ThemeProvider>;
 const DemoComponents = () => (
   <Stack direction="column" spacing="4">
     <Box p="4" bg="surface" radius="lg" shadow="md">
-      <h3 style={{ marginTop: 0, color: 'var(--zp-color-text-primary)' }}>
-        Component Showcase
-      </h3>
+      <h3 style={{ marginTop: 0, color: 'var(--zp-color-text-primary)' }}>Component Showcase</h3>
       <Stack direction="column" spacing="3">
         <TextInput label="Email" placeholder="you@example.com" />
         <Stack direction="row" spacing="2">

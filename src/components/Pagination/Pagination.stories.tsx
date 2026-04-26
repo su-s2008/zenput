@@ -24,14 +24,7 @@ type Story = StoryObj<typeof Pagination>;
 
 function DefaultDemo() {
   const [page, setPage] = useState(1);
-  return (
-    <Pagination
-      currentPage={page}
-      totalCount={100}
-      pageSize={10}
-      onPageChange={setPage}
-    />
-  );
+  return <Pagination currentPage={page} totalCount={100} pageSize={10} onPageChange={setPage} />;
 }
 
 export const Default: Story = {
@@ -126,14 +119,7 @@ export const Disabled: Story = {
 
 function FewPagesDemo() {
   const [page, setPage] = useState(1);
-  return (
-    <Pagination
-      currentPage={page}
-      totalCount={30}
-      pageSize={10}
-      onPageChange={setPage}
-    />
-  );
+  return <Pagination currentPage={page} totalCount={30} pageSize={10} onPageChange={setPage} />;
 }
 
 export const FewPages: Story = {

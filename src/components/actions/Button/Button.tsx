@@ -87,7 +87,13 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       {...rest}
     >
       {loading && (
-        <Spinner size="sm" label="" className={styles.spinner} data-testid="button-spinner" aria-hidden="true" />
+        <Spinner
+          size="sm"
+          label=""
+          className={styles.spinner}
+          data-testid="button-spinner"
+          aria-hidden="true"
+        />
       )}
       <span
         className={classNames(loading ? styles.contentHidden : undefined)}

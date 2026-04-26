@@ -381,12 +381,7 @@ export const WithStickyHeader: Story = {
       // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
       tabIndex={0}
     >
-      <DataTable
-        columns={basicColumns}
-        data={employees}
-        rowKey={(row) => row.id}
-        stickyHeader
-      />
+      <DataTable columns={basicColumns} data={employees} rowKey={(row) => row.id} stickyHeader />
     </div>
   ),
 };
@@ -553,9 +548,7 @@ export const WithCustomHeaderRenderer: Story = {
         key: 'name',
         header: 'Name',
         headerRender: (col) => (
-          <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-            👤 {col.header}
-          </span>
+          <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>👤 {col.header}</span>
         ),
       },
       { key: 'department', header: 'Department' },

@@ -621,8 +621,7 @@ export function ToastProvider({
           return data;
         },
         (err: unknown) => {
-          const title =
-            typeof messages.error === 'function' ? messages.error(err) : messages.error;
+          const title = typeof messages.error === 'function' ? messages.error(err) : messages.error;
           dismiss(id);
           schedule(() => show({ title, status: 'error' }));
           throw err;

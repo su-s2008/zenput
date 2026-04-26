@@ -1,0 +1,182 @@
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--zp-space-1);
+  font-family: var(--zp-font-family-sans);
+  font-weight: var(--zp-font-weight-medium);
+  line-height: 1;
+  border-radius: var(--zp-radius-full);
+  white-space: nowrap;
+  max-width: 100%;
+  border: var(--zp-border-width-1) solid transparent;
+}
+
+/* Inner activator button used when the tag is both interactive and removable.
+ * Renders unstyled so the visible appearance is owned by the wrapper `.tag`. */
+.activator {
+  display: inline-flex;
+  align-items: center;
+  gap: inherit;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  outline: none;
+}
+.activator:focus-visible {
+  outline: 2px solid var(--zp-color-focus-ring);
+  outline-offset: 2px;
+  border-radius: var(--zp-radius-sm);
+}
+
+/* Sizes */
+.size-sm {
+  height: 1.375rem;
+  padding: 0 var(--zp-space-2);
+  font-size: var(--zp-font-size-xs);
+}
+.size-md {
+  height: 1.75rem;
+  padding: 0 var(--zp-space-3);
+  font-size: var(--zp-font-size-sm);
+}
+.size-lg {
+  height: 2rem;
+  padding: 0 var(--zp-space-3);
+  font-size: var(--zp-font-size-md);
+}
+
+.label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.leftIcon {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  font-size: 1em;
+}
+
+/* Remove button overrides */
+.removeBtn {
+  padding: 0 !important;
+  width: 1em !important;
+  height: 1em !important;
+  min-width: 0 !important;
+  margin-left: var(--zp-space-1);
+  flex-shrink: 0;
+  font-size: 0.75em;
+  border-radius: var(--zp-radius-full) !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Interactive */
+.interactive {
+  cursor: pointer;
+  transition: filter 0.15s;
+}
+.interactive:hover {
+  filter: brightness(0.93);
+}
+.interactive:focus-visible {
+  outline: 2px solid var(--zp-color-focus-ring);
+  outline-offset: 2px;
+}
+
+/* === Colors × Variants === */
+
+/* brand */
+.color-brand.variant-solid {
+  background-color: var(--zp-color-brand);
+  color: var(--zp-color-text-inverse);
+}
+.color-brand.variant-subtle {
+  background-color: var(--zp-color-brand-subtle);
+  color: var(--zp-color-brand-text);
+}
+.color-brand.variant-outline {
+  background-color: transparent;
+  color: var(--zp-color-brand-text);
+  border-color: var(--zp-color-brand);
+}
+
+/* neutral */
+.color-neutral.variant-solid {
+  background-color: var(--zp-color-border-strong);
+  color: var(--zp-color-text-inverse);
+}
+.color-neutral.variant-subtle {
+  background-color: var(--zp-color-surface-raised);
+  color: var(--zp-color-text-primary);
+}
+.color-neutral.variant-outline {
+  background-color: transparent;
+  color: var(--zp-color-text-primary);
+  border-color: var(--zp-color-border);
+}
+
+/* success */
+.color-success.variant-solid {
+  background-color: var(--zp-color-success);
+  color: var(--zp-color-text-inverse);
+}
+.color-success.variant-subtle {
+  background-color: var(--zp-color-success-subtle);
+  color: var(--zp-color-success-text);
+}
+.color-success.variant-outline {
+  background-color: transparent;
+  color: var(--zp-color-success-text);
+  border-color: var(--zp-color-success);
+}
+
+/* warning */
+.color-warning.variant-solid {
+  background-color: var(--zp-color-warning);
+  color: var(--zp-color-text-inverse);
+}
+.color-warning.variant-subtle {
+  background-color: var(--zp-color-warning-subtle);
+  color: var(--zp-color-warning-text);
+}
+.color-warning.variant-outline {
+  background-color: transparent;
+  color: var(--zp-color-warning-text);
+  border-color: var(--zp-color-warning);
+}
+
+/* error */
+.color-error.variant-solid {
+  background-color: var(--zp-color-danger);
+  color: var(--zp-color-text-inverse);
+}
+.color-error.variant-subtle {
+  background-color: var(--zp-color-danger-subtle);
+  color: var(--zp-color-danger-text);
+}
+.color-error.variant-outline {
+  background-color: transparent;
+  color: var(--zp-color-danger-text);
+  border-color: var(--zp-color-danger);
+}
+
+/* info */
+.color-info.variant-solid {
+  background-color: var(--zp-color-info);
+  color: var(--zp-color-text-inverse);
+}
+.color-info.variant-subtle {
+  background-color: var(--zp-color-info-subtle);
+  color: var(--zp-color-info-text);
+}
+.color-info.variant-outline {
+  background-color: transparent;
+  color: var(--zp-color-info-text);
+  border-color: var(--zp-color-info);
+}

@@ -129,8 +129,7 @@ export function CardMedia({
 }: CardMediaProps): React.ReactElement {
   // Use padding-bottom trick for intrinsic aspect-ratio reservation. Guard
   // against zero/negative/non-finite values which would produce broken layout.
-  const safeAspectRatio =
-    Number.isFinite(aspectRatio) && aspectRatio > 0 ? aspectRatio : 16 / 9;
+  const safeAspectRatio = Number.isFinite(aspectRatio) && aspectRatio > 0 ? aspectRatio : 16 / 9;
   const paddingBottom = `${(1 / safeAspectRatio) * 100}%`;
 
   return (

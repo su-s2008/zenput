@@ -33,35 +33,20 @@ describe('EmptyState', () => {
 
   it('renders a button for primary action with onClick', async () => {
     const onClick = vi.fn();
-    render(
-      <EmptyState
-        title="Empty"
-        primaryAction={{ label: 'Do something', onClick }}
-      />
-    );
+    render(<EmptyState title="Empty" primaryAction={{ label: 'Do something', onClick }} />);
     const btn = screen.getByRole('button', { name: 'Do something' });
     await userEvent.click(btn);
     expect(onClick).toHaveBeenCalledTimes(1);
   });
 
   it('renders a link for secondary action with href', () => {
-    render(
-      <EmptyState
-        title="Empty"
-        secondaryAction={{ label: 'Learn more', href: '/docs' }}
-      />
-    );
+    render(<EmptyState title="Empty" secondaryAction={{ label: 'Learn more', href: '/docs' }} />);
     const link = screen.getByRole('link', { name: 'Learn more' });
     expect(link).toHaveAttribute('href', '/docs');
   });
 
   it('renders nothing for an action with neither onClick nor href', () => {
-    render(
-      <EmptyState
-        title="Empty"
-        primaryAction={{ label: 'Broken' }}
-      />
-    );
+    render(<EmptyState title="Empty" primaryAction={{ label: 'Broken' }} />);
     expect(screen.queryByRole('button', { name: 'Broken' })).not.toBeInTheDocument();
     expect(screen.queryByRole('link', { name: 'Broken' })).not.toBeInTheDocument();
     expect(screen.queryByText('Broken')).not.toBeInTheDocument();
@@ -74,9 +59,7 @@ describe('EmptyState', () => {
   });
 
   it('passes a11y checks with no icon', async () => {
-    const { container } = render(
-      <EmptyState title="No data" description="Nothing to show." />
-    );
+    const { container } = render(<EmptyState title="No data" description="Nothing to show." />);
     await expectNoA11yViolations(container);
   });
 

@@ -15,7 +15,8 @@
   display: flex;
   align-items: center;
   gap: var(--zp-space-2);
-  padding: var(--zp-component-menu-item-padding-y, var(--zp-space-2)) var(--zp-component-menu-item-padding-x, var(--zp-space-3));
+  padding: var(--zp-component-menu-item-padding-y, var(--zp-space-2))
+    var(--zp-component-menu-item-padding-x, var(--zp-space-3));
   cursor: default;
   user-select: none;
   outline: none;

@@ -41,9 +41,15 @@ export function useMenuKeyboardNav({
   const onTabRef = useRef(onTab);
   const onEscapeRef = useRef(onEscape);
   const onArrowLeftRef = useRef(onArrowLeft);
-  useEffect(() => { onTabRef.current = onTab; });
-  useEffect(() => { onEscapeRef.current = onEscape; });
-  useEffect(() => { onArrowLeftRef.current = onArrowLeft; });
+  useEffect(() => {
+    onTabRef.current = onTab;
+  });
+  useEffect(() => {
+    onEscapeRef.current = onEscape;
+  });
+  useEffect(() => {
+    onArrowLeftRef.current = onArrowLeft;
+  });
 
   useEffect(() => {
     return () => {

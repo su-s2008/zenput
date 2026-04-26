@@ -85,10 +85,7 @@ describe('Breadcrumbs', () => {
         {children}
       </a>
     );
-    const customItems = [
-      { label: 'Home', href: '/', as: CustomLink },
-      { label: 'Current' },
-    ];
+    const customItems = [{ label: 'Home', href: '/', as: CustomLink }, { label: 'Current' }];
     render(<Breadcrumbs items={customItems} />);
     const link = screen.getByRole('link', { name: 'Home' });
     expect(link).toHaveAttribute('data-custom', 'true');

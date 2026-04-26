@@ -11,7 +11,13 @@ import React, {
 } from 'react';
 import { classNames } from '../../../utils';
 import styles from './Tabs.module.css';
-import type { TabListProps, TabPanelProps, TabPanelsProps, TabProps, TabsProps } from './Tabs.types';
+import type {
+  TabListProps,
+  TabPanelProps,
+  TabPanelsProps,
+  TabProps,
+  TabsProps,
+} from './Tabs.types';
 
 // ---------------------------------------------------------------------------
 // Context
@@ -126,10 +132,7 @@ export function TabList({ children, className, ...rest }: TabListProps): React.R
       const currentIdx = enabledValues.indexOf(selected);
       let nextIdx: number | null = null;
 
-      if (
-        (isHorizontal && e.key === 'ArrowRight') ||
-        (!isHorizontal && e.key === 'ArrowDown')
-      ) {
+      if ((isHorizontal && e.key === 'ArrowRight') || (!isHorizontal && e.key === 'ArrowDown')) {
         nextIdx = currentIdx < enabledValues.length - 1 ? currentIdx + 1 : 0;
       } else if (
         (isHorizontal && e.key === 'ArrowLeft') ||
@@ -155,7 +158,7 @@ export function TabList({ children, className, ...rest }: TabListProps): React.R
     [orientation, tabValues, selected, onSelect]
   );
 
-    return (
+  return (
     // The tablist element itself does not need to be focusable per WAI-ARIA:
     // individual tabs handle focus via roving tabIndex (0 for selected, -1 for others).
     // eslint-disable-next-line jsx-a11y/interactive-supports-focus
@@ -180,7 +183,13 @@ TabList.displayName = 'TabList';
 /**
  * Individual tab trigger. Must be a direct child of `<TabList>`.
  */
-export function Tab({ value, disabled, children, className, ...rest }: TabProps): React.ReactElement {
+export function Tab({
+  value,
+  disabled,
+  children,
+  className,
+  ...rest
+}: TabProps): React.ReactElement {
   const { selected, onSelect, baseId } = useTabsContext();
   const isSelected = selected === value;
 
@@ -237,7 +246,12 @@ TabPanels.displayName = 'TabPanels';
  * Content region associated with a `<Tab>`. Only the panel whose `value`
  * matches the currently selected tab is rendered.
  */
-export function TabPanel({ value, children, className, ...rest }: TabPanelProps): React.ReactElement | null {
+export function TabPanel({
+  value,
+  children,
+  className,
+  ...rest
+}: TabPanelProps): React.ReactElement | null {
   const { selected, baseId } = useTabsContext();
 
   if (selected !== value) {

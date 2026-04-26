@@ -1,10 +1,4 @@
-export {
-  DialogProvider,
-  useDialog,
-  useConfirm,
-  usePrompt,
-  useAlert,
-} from './DialogProvider';
+export { DialogProvider, useDialog, useConfirm, usePrompt, useAlert } from './DialogProvider';
 export type {
   DialogProviderProps,
   DialogHandle,

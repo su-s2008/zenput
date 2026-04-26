@@ -41,103 +41,47 @@ describe('buildPaginationItems', () => {
 
 describe('Pagination', () => {
   it('renders without crashing', () => {
-    render(
-      <Pagination
-        currentPage={1}
-        totalCount={100}
-        pageSize={10}
-        onPageChange={vi.fn()}
-      />
-    );
+    render(<Pagination currentPage={1} totalCount={100} pageSize={10} onPageChange={vi.fn()} />);
   });
 
   it('renders a nav landmark with aria-label', () => {
-    render(
-      <Pagination
-        currentPage={1}
-        totalCount={50}
-        pageSize={10}
-        onPageChange={vi.fn()}
-      />
-    );
+    render(<Pagination currentPage={1} totalCount={50} pageSize={10} onPageChange={vi.fn()} />);
     expect(screen.getByRole('navigation', { name: 'Pagination' })).toBeInTheDocument();
   });
 
   it('marks current page with aria-current="page"', () => {
-    render(
-      <Pagination
-        currentPage={3}
-        totalCount={50}
-        pageSize={10}
-        onPageChange={vi.fn()}
-      />
-    );
+    render(<Pagination currentPage={3} totalCount={50} pageSize={10} onPageChange={vi.fn()} />);
     const btn = screen.getByLabelText('Page 3');
     expect(btn).toHaveAttribute('aria-current', 'page');
   });
 
   it('disables previous button on first page', () => {
-    render(
-      <Pagination
-        currentPage={1}
-        totalCount={50}
-        pageSize={10}
-        onPageChange={vi.fn()}
-      />
-    );
+    render(<Pagination currentPage={1} totalCount={50} pageSize={10} onPageChange={vi.fn()} />);
     expect(screen.getByLabelText('Previous page')).toBeDisabled();
   });
 
   it('disables next button on last page', () => {
-    render(
-      <Pagination
-        currentPage={5}
-        totalCount={50}
-        pageSize={10}
-        onPageChange={vi.fn()}
-      />
-    );
+    render(<Pagination currentPage={5} totalCount={50} pageSize={10} onPageChange={vi.fn()} />);
     expect(screen.getByLabelText('Next page')).toBeDisabled();
   });
 
   it('calls onPageChange when a page button is clicked', async () => {
     const onChange = vi.fn();
-    render(
-      <Pagination
-        currentPage={1}
-        totalCount={50}
-        pageSize={10}
-        onPageChange={onChange}
-      />
-    );
+    render(<Pagination currentPage={1} totalCount={50} pageSize={10} onPageChange={onChange} />);
     await userEvent.click(screen.getByLabelText('Page 2'));
     expect(onChange).toHaveBeenCalledWith(2);
   });
 
   it('calls onPageChange when next is clicked', async () => {
     const onChange = vi.fn();
-    render(
-      <Pagination
-        currentPage={2}
-        totalCount={50}
-        pageSize={10}
-        onPageChange={onChange}
-      />
-    );
+    render(<Pagination currentPage={2} totalCount={50} pageSize={10} onPageChange={onChange} />);
     await userEvent.click(screen.getByLabelText('Next page'));
     expect(onChange).toHaveBeenCalledWith(3);
   });
 
   it('calls onPageChange when previous is clicked', async () => {
     const onChange = vi.fn();
-    render(
-      <Pagination
-        currentPage={3}
-        totalCount={50}
-        pageSize={10}
-        onPageChange={onChange}
-      />
-    );
+    render(<Pagination currentPage={3} totalCount={50} pageSize={10} onPageChange={onChange} />);
     await userEvent.click(screen.getByLabelText('Previous page'));
     expect(onChange).toHaveBeenCalledWith(2);
   });
@@ -175,25 +119,13 @@ describe('Pagination', () => {
   it('does not call onPageChange when navigating out of range', async () => {
     const onChange = vi.fn();
     const { rerender } = render(
-      <Pagination
-        currentPage={1}
-        totalCount={50}
-        pageSize={10}
-        onPageChange={onChange}
-      />
+      <Pagination currentPage={1} totalCount={50} pageSize={10} onPageChange={onChange} />
     );
     // Previous button is disabled at first page; click should be a no-op even
     // though the handler exists (covers the goTo guard).
     const prev = screen.getByLabelText('Previous page');
     expect(prev).toBeDisabled();
-    rerender(
-      <Pagination
-        currentPage={5}
-        totalCount={50}
-        pageSize={10}
-        onPageChange={onChange}
-      />
-    );
+    rerender(<Pagination currentPage={5} totalCount={50} pageSize={10} onPageChange={onChange} />);
     expect(screen.getByLabelText('Next page')).toBeDisabled();
   });
 
@@ -248,13 +180,7 @@ describe('Pagination', () => {
 
   it('disables all buttons when disabled=true', () => {
     render(
-      <Pagination
-        currentPage={3}
-        totalCount={50}
-        pageSize={10}
-        onPageChange={vi.fn()}
-        disabled
-      />
+      <Pagination currentPage={3} totalCount={50} pageSize={10} onPageChange={vi.fn()} disabled />
     );
     const buttons = screen.getAllByRole('button');
     buttons.forEach((btn) => expect(btn).toBeDisabled());
@@ -295,28 +221,14 @@ describe('Pagination', () => {
   });
 
   it('treats invalid pageSize (0 or negative) as 1', () => {
-    render(
-      <Pagination
-        currentPage={1}
-        totalCount={5}
-        pageSize={0}
-        onPageChange={vi.fn()}
-      />
-    );
+    render(<Pagination currentPage={1} totalCount={5} pageSize={0} onPageChange={vi.fn()} />);
     // With safePageSize=1 and totalCount=5, totalPages=5 → page 5 button rendered.
     expect(screen.getByLabelText('Page 5')).toBeInTheDocument();
   });
 
   it('does not call onPageChange when the page would not change', async () => {
     const onChange = vi.fn();
-    render(
-      <Pagination
-        currentPage={2}
-        totalCount={50}
-        pageSize={10}
-        onPageChange={onChange}
-      />
-    );
+    render(<Pagination currentPage={2} totalCount={50} pageSize={10} onPageChange={onChange} />);
     await userEvent.click(screen.getByLabelText('Page 2'));
     expect(onChange).not.toHaveBeenCalled();
   });

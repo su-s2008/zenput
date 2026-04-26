@@ -174,4 +174,4 @@ export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
   }
 );
 
-PasswordInput.displayName = 'PasswordInput';
+PasswordInput.displayName = 'PasswordInput'; // NOSONAR

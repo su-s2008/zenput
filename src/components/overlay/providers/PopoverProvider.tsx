@@ -1,11 +1,4 @@
-import React, {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { Portal } from '../../Portal';
 import { useEscapeKey } from '../internal/useEscapeKey';
 import { useClickOutside } from '../internal/useClickOutside';
@@ -327,7 +320,7 @@ export function usePopover(): PopoverApi {
   const { _open } = usePopoverProviderContext();
 
   const open = useCallback(
-    <T = unknown>(options: PopoverOpenOptions<T>): PopoverHandle<T> => {
+    <T = unknown,>(options: PopoverOpenOptions<T>): PopoverHandle<T> => {
       const handle = _open({
         anchor: options.anchor,
         side: options.side,

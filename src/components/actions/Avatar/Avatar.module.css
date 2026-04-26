@@ -1,0 +1,117 @@
+.avatar {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background-color: var(--zp-color-surface-raised);
+  color: var(--zp-color-text-primary);
+  font-family: var(--zp-font-family-sans);
+  font-weight: var(--zp-font-weight-semibold);
+  overflow: hidden;
+  user-select: none;
+  vertical-align: middle;
+}
+
+/* Sizes */
+.size-xs {
+  width: 1.5rem;
+  height: 1.5rem;
+  font-size: 0.5rem;
+}
+.size-sm {
+  width: 2rem;
+  height: 2rem;
+  font-size: 0.625rem;
+}
+.size-md {
+  width: 2.5rem;
+  height: 2.5rem;
+  font-size: var(--zp-font-size-sm);
+}
+.size-lg {
+  width: 3rem;
+  height: 3rem;
+  font-size: var(--zp-font-size-md);
+}
+.size-xl {
+  width: 3.5rem;
+  height: 3.5rem;
+  font-size: var(--zp-font-size-lg);
+}
+.size-2xl {
+  width: 4rem;
+  height: 4rem;
+  font-size: var(--zp-font-size-xl);
+}
+
+/* Shapes */
+.shape-circle {
+  border-radius: var(--zp-radius-full);
+}
+.shape-square {
+  border-radius: var(--zp-radius-md);
+}
+
+/* Image */
+.img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+}
+
+/* Initials */
+.initials {
+  line-height: 1;
+  letter-spacing: 0.02em;
+  color: inherit;
+}
+
+/* Fallback icon */
+.fallback {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 55%;
+  height: 55%;
+  color: var(--zp-color-text-secondary);
+}
+
+/* Status indicator */
+.status {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 28%;
+  height: 28%;
+  min-width: 0.5rem;
+  min-height: 0.5rem;
+  border-radius: var(--zp-radius-full);
+  border: 2px solid var(--zp-color-background, #fff);
+}
+.status-online {
+  background-color: var(--zp-color-success);
+}
+.status-offline {
+  background-color: var(--zp-color-border-strong);
+}
+.status-away {
+  background-color: var(--zp-color-warning);
+}
+.status-busy {
+  background-color: var(--zp-color-danger);
+}
+
+/* Group */
+.group {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Overflow count */
+.overflow {
+  background-color: var(--zp-color-surface-raised);
+  color: var(--zp-color-text-primary);
+  border: 2px solid var(--zp-color-background, #fff);
+}

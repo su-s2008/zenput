@@ -19,13 +19,8 @@ type Story = StoryObj<typeof Card>;
 export const Outlined: Story = {
   render: () => (
     <Card variant="outlined" style={{ maxWidth: 360 }}>
-      <CardHeader
-        title="Card Title"
-        description="Supporting description text"
-      />
-      <CardBody>
-        This is the main content area. It can contain any React nodes.
-      </CardBody>
+      <CardHeader title="Card Title" description="Supporting description text" />
+      <CardBody>This is the main content area. It can contain any React nodes.</CardBody>
       <CardFooter>
         <span style={{ color: '#6b7280', fontSize: '0.8125rem' }}>Updated 2 hours ago</span>
       </CardFooter>
@@ -59,13 +54,8 @@ export const WithMedia: Story = {
         alt="Mountain landscape"
         aspectRatio={16 / 9}
       />
-      <CardHeader
-        title="Mountain Sunrise"
-        description="Photography by Unsplash"
-      />
-      <CardBody>
-        A breathtaking view of the mountains at sunrise.
-      </CardBody>
+      <CardHeader title="Mountain Sunrise" description="Photography by Unsplash" />
+      <CardBody>A breathtaking view of the mountains at sunrise.</CardBody>
       <CardFooter>
         <button
           type="button"
@@ -108,13 +98,7 @@ export const Interactive: Story = {
 
 export const InteractiveLink: Story = {
   render: () => (
-    <Card
-      variant="elevated"
-      interactive
-      as="a"
-      href="#"
-      style={{ maxWidth: 320 }}
-    >
+    <Card variant="elevated" interactive as="a" href="#" style={{ maxWidth: 320 }}>
       <CardHeader title="Link Card" description="The whole card is a link" />
       <CardBody>Click anywhere on this card to navigate.</CardBody>
     </Card>

@@ -1,11 +1,4 @@
-import React, {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import {
   Drawer,
   DrawerContent,
@@ -199,7 +192,7 @@ export function useDrawer(): DrawerApi {
   const { _open } = useDrawerProviderContext();
 
   const open = useCallback(
-    <T = unknown>(options: DrawerOpenOptions<T>): DrawerHandle<T> => {
+    <T = unknown,>(options: DrawerOpenOptions<T>): DrawerHandle<T> => {
       const handle = _open({
         side: options.side,
         size: options.size,

@@ -20,16 +20,28 @@ import { expectNoA11yViolations } from '../../test-utils/axe';
 
 describe('Field (shorthand props)', () => {
   it('renders without errors', () => {
-    render(<Field><input /></Field>);
+    render(
+      <Field>
+        <input />
+      </Field>
+    );
   });
 
   it('renders shorthand label', () => {
-    render(<Field label="Full Name"><input /></Field>);
+    render(
+      <Field label="Full Name">
+        <input />
+      </Field>
+    );
     expect(screen.getByText('Full Name')).toBeInTheDocument();
   });
 
   it('renders shorthand description', () => {
-    render(<Field description="Enter your full name"><input /></Field>);
+    render(
+      <Field description="Enter your full name">
+        <input />
+      </Field>
+    );
     expect(screen.getByText('Enter your full name')).toBeInTheDocument();
   });
 
@@ -53,12 +65,20 @@ describe('Field (shorthand props)', () => {
   });
 
   it('renders with fullWidth prop without error', () => {
-    const { container } = render(<Field fullWidth><input /></Field>);
+    const { container } = render(
+      <Field fullWidth>
+        <input />
+      </Field>
+    );
     expect(container.firstChild).toBeTruthy();
   });
 
   it('label is a label element when required is true', () => {
-    render(<Field label="Name" required><input /></Field>);
+    render(
+      <Field label="Name" required>
+        <input />
+      </Field>
+    );
     const label = screen.getByText('Name').closest('label');
     expect(label).not.toBeNull();
   });

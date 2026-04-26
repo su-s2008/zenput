@@ -54,7 +54,17 @@ export const Circle: Story = {
 
 export const CardPlaceholder: Story = {
   render: () => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 12, width: 320, padding: 16, border: '1px solid #e5e7eb', borderRadius: 8 }}>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 12,
+        width: 320,
+        padding: 16,
+        border: '1px solid #e5e7eb',
+        borderRadius: 8,
+      }}
+    >
       <Skeleton height={160} />
       <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
         <SkeletonAvatar size={40} />

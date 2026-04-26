@@ -49,13 +49,15 @@ export const Default: Story = {
                 <p>Pick your filters here.</p>
               </DrawerBody>
               <DrawerFooter>
-                <Button variant="secondary" onClick={() => close()}>Cancel</Button>
+                <Button variant="secondary" onClick={() => close()}>
+                  Cancel
+                </Button>
                 <Button onClick={() => close('applied')}>Apply filters</Button>
               </DrawerFooter>
             </>
           ),
         });
-        handle.result.then((v) => setResult(v as string ?? '(cancelled)'));
+        handle.result.then((v) => setResult((v as string) ?? '(cancelled)'));
       };
 
       return (
@@ -134,7 +136,19 @@ export const FromRowAction: Story = {
               <th style={{ textAlign: 'left', padding: '4px 8px' }}>Name</th>
               <th style={{ textAlign: 'left', padding: '4px 8px' }}>Role</th>
               <th style={{ padding: '4px 8px' }}>
-                <span style={{ position: 'absolute', width: 1, height: 1, padding: 0, margin: -1, overflow: 'hidden', clip: 'rect(0,0,0,0)', whiteSpace: 'nowrap', border: 0 }}>
+                <span
+                  style={{
+                    position: 'absolute',
+                    width: 1,
+                    height: 1,
+                    padding: 0,
+                    margin: -1,
+                    overflow: 'hidden',
+                    clip: 'rect(0,0,0,0)',
+                    whiteSpace: 'nowrap',
+                    border: 0,
+                  }}
+                >
                   Actions
                 </span>
               </th>

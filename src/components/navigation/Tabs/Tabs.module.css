@@ -59,7 +59,9 @@
   cursor: pointer;
   outline: none;
   white-space: nowrap;
-  transition: color 0.15s ease, background-color 0.15s ease;
+  transition:
+    color 0.15s ease,
+    background-color 0.15s ease;
   border-radius: var(--zp-radius-sm, 4px) var(--zp-radius-sm, 4px) 0 0;
 }
 

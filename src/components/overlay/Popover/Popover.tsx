@@ -92,8 +92,10 @@ export function Popover({
 // PopoverTrigger
 // ---------------------------------------------------------------------------
 
-export interface PopoverTriggerProps
-  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'aria-haspopup' | 'aria-expanded'> {
+export interface PopoverTriggerProps extends Omit<
+  React.ButtonHTMLAttributes<HTMLButtonElement>,
+  'aria-haspopup' | 'aria-expanded'
+> {
   children: React.ReactNode;
 }
 
@@ -166,18 +168,12 @@ function computePosition(
   let left = 0;
 
   if (side === 'top' || side === 'bottom') {
-    top =
-      side === 'top'
-        ? trigger.top - content.height - sideOffset
-        : trigger.bottom + sideOffset;
+    top = side === 'top' ? trigger.top - content.height - sideOffset : trigger.bottom + sideOffset;
     if (align === 'start') left = trigger.left + alignOffset;
     else if (align === 'end') left = trigger.right - content.width - alignOffset;
     else left = trigger.left + trigger.width / 2 - content.width / 2 + alignOffset;
   } else {
-    left =
-      side === 'left'
-        ? trigger.left - content.width - sideOffset
-        : trigger.right + sideOffset;
+    left = side === 'left' ? trigger.left - content.width - sideOffset : trigger.right + sideOffset;
     if (align === 'start') top = trigger.top + alignOffset;
     else if (align === 'end') top = trigger.bottom - content.height - alignOffset;
     else top = trigger.top + trigger.height / 2 - content.height / 2 + alignOffset;

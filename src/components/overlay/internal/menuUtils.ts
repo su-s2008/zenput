@@ -1,6 +1,5 @@
 /** CSS selector matching all non-disabled, focusable menu item elements. */
-const MENU_ITEM_SELECTOR =
-  '[role="menuitem"],[role="menuitemcheckbox"],[role="menuitemradio"]';
+const MENU_ITEM_SELECTOR = '[role="menuitem"],[role="menuitemcheckbox"],[role="menuitemradio"]';
 
 /**
  * Returns all enabled (non-disabled) menu item elements within `container`.

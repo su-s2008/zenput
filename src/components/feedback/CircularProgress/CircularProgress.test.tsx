@@ -108,9 +108,7 @@ describe('CircularProgress', () => {
 
 describe('CircularProgress a11y (axe)', () => {
   it('has no detectable axe violations', async () => {
-    const { container } = render(
-      <CircularProgress value={60} label="Upload" showValue />
-    );
+    const { container } = render(<CircularProgress value={60} label="Upload" showValue />);
     await expectNoA11yViolations(container);
   });
 });

@@ -15,13 +15,7 @@ afterEach(() => {
 // Helpers
 // ---------------------------------------------------------------------------
 
-function Trigger({
-  onClick,
-  label = 'Show toast',
-}: {
-  onClick: () => void;
-  label?: string;
-}) {
+function Trigger({ onClick, label = 'Show toast' }: { onClick: () => void; label?: string }) {
   return (
     <button type="button" onClick={onClick}>
       {label}
@@ -198,9 +192,7 @@ describe('ToastProvider / useToast', () => {
       const toast = useToast();
       return (
         <Trigger
-          onClick={() =>
-            toast.show({ title: 'CB toast', status: 'info', duration: null, onClose })
-          }
+          onClick={() => toast.show({ title: 'CB toast', status: 'info', duration: null, onClose })}
         />
       );
     }
@@ -280,7 +272,9 @@ describe('ToastProvider / useToast', () => {
   it('auto-dismisses after duration', async () => {
     function App() {
       const toast = useToast();
-      return <Trigger onClick={() => toast.show({ title: 'Auto', status: 'info', duration: 50 })} />;
+      return (
+        <Trigger onClick={() => toast.show({ title: 'Auto', status: 'info', duration: 50 })} />
+      );
     }
     render(
       <ToastProvider>
@@ -304,7 +298,9 @@ describe('ToastProvider / useToast', () => {
     function App() {
       const toast = useToast();
       return (
-        <Trigger onClick={() => toast.show({ title: 'Persistent', status: 'info', duration: null })} />
+        <Trigger
+          onClick={() => toast.show({ title: 'Persistent', status: 'info', duration: null })}
+        />
       );
     }
     render(
@@ -613,9 +609,7 @@ describe('ToastProvider / useToast', () => {
     function App() {
       const toast = useToast();
       return (
-        <Trigger
-          onClick={() => toast.show({ title: 'Stuck?', status: 'info', duration: null })}
-        />
+        <Trigger onClick={() => toast.show({ title: 'Stuck?', status: 'info', duration: null })} />
       );
     }
     render(
@@ -769,13 +763,15 @@ describe('ToastProvider / useToast', () => {
     function App() {
       const toast = useToast();
       const handle = () => {
-        toast.promise(p, {
-          loading: 'Saving',
-          success: 'Saved',
-          error: (e) => `Error: ${(e as Error).message}`,
-        }).catch(() => {
-          // expected
-        });
+        toast
+          .promise(p, {
+            loading: 'Saving',
+            success: 'Saved',
+            error: (e) => `Error: ${(e as Error).message}`,
+          })
+          .catch(() => {
+            // expected
+          });
       };
       return <Trigger onClick={handle} />;
     }
@@ -831,9 +827,7 @@ describe('ToastProvider / useToast', () => {
   it('pauses auto-dismiss timer on mouseenter and resumes on mouseleave', async () => {
     function App() {
       const toast = useToast();
-      return (
-        <Trigger onClick={() => toast.show({ title: 'Hov', status: 'info', duration: 80 })} />
-      );
+      return <Trigger onClick={() => toast.show({ title: 'Hov', status: 'info', duration: 80 })} />;
     }
     render(
       <ToastProvider>
@@ -863,9 +857,7 @@ describe('ToastProvider / useToast', () => {
   it('pauses auto-dismiss timer on focus and resumes on blur', async () => {
     function App() {
       const toast = useToast();
-      return (
-        <Trigger onClick={() => toast.show({ title: 'Foc', status: 'info', duration: 80 })} />
-      );
+      return <Trigger onClick={() => toast.show({ title: 'Foc', status: 'info', duration: 80 })} />;
     }
     render(
       <ToastProvider>

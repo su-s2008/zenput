@@ -8,7 +8,13 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
-function BasicTooltip({ openDelay = 0, closeDelay = 0 }: { openDelay?: number; closeDelay?: number }) {
+function BasicTooltip({
+  openDelay = 0,
+  closeDelay = 0,
+}: {
+  openDelay?: number;
+  closeDelay?: number;
+}) {
   return (
     <Tooltip openDelay={openDelay} closeDelay={closeDelay}>
       <TooltipTrigger>

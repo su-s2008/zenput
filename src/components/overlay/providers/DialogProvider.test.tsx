@@ -71,11 +71,7 @@ function AlertButton({
   );
 }
 
-function GenericDialogButton({
-  onResult,
-}: {
-  onResult: (v: unknown) => void;
-}) {
+function GenericDialogButton({ onResult }: { onResult: (v: unknown) => void }) {
   const dialog = useDialog();
   return (
     <button
@@ -527,10 +523,7 @@ describe('usePrompt - branch coverage', () => {
   it('shows the generic "Invalid value" error when validate returns false (no string)', async () => {
     render(
       <DialogProvider>
-        <PromptButton
-          options={{ validate: () => false }}
-          onResult={() => undefined}
-        />
+        <PromptButton options={{ validate: () => false }} onResult={() => undefined} />
       </DialogProvider>
     );
 
@@ -838,9 +831,7 @@ describe('usePrompt - unique input ids', () => {
       screen.getByText('Start').click();
     });
 
-    const inputs = document.querySelectorAll<HTMLInputElement>(
-      'input[id^="zdp-prompt-input-"]'
-    );
+    const inputs = document.querySelectorAll<HTMLInputElement>('input[id^="zdp-prompt-input-"]');
     expect(inputs).toHaveLength(2);
     expect(inputs[0].id).not.toEqual(inputs[1].id);
   });
