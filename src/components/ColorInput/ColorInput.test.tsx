@@ -7,7 +7,8 @@ import { expectNoA11yViolations } from '../../test-utils/axe';
 
 describe('ColorInput', () => {
   it('renders without errors', () => {
-    render(<ColorInput />);
+    const { container } = render(<ColorInput />);
+    expect(container.firstChild).toBeInTheDocument();
   });
 
   it('renders with label', () => {

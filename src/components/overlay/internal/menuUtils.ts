@@ -7,7 +7,7 @@ const MENU_ITEM_SELECTOR = '[role="menuitem"],[role="menuitemcheckbox"],[role="m
 export function getMenuItems(container: HTMLElement): HTMLElement[] {
   const all = container.querySelectorAll<HTMLElement>(MENU_ITEM_SELECTOR);
   return Array.from(all).filter(
-    (el) => el.getAttribute('aria-disabled') !== 'true' && !el.hasAttribute('data-disabled')
+    (el) => el.getAttribute('aria-disabled') !== 'true' && el.dataset.disabled === undefined
   );
 }
 

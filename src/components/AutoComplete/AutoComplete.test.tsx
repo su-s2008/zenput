@@ -15,7 +15,8 @@ const OPTIONS = [
 
 describe('AutoComplete', () => {
   it('renders without errors', () => {
-    render(<AutoComplete options={OPTIONS} />);
+    const { container } = render(<AutoComplete options={OPTIONS} />);
+    expect(container.firstChild).toBeInTheDocument();
   });
 
   it('renders with label', () => {

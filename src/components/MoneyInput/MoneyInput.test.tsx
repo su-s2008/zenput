@@ -14,7 +14,8 @@ const CURRENCIES = [
 
 describe('MoneyInput', () => {
   it('renders without errors', () => {
-    render(<MoneyInput currencies={CURRENCIES} />);
+    const { container } = render(<MoneyInput currencies={CURRENCIES} />);
+    expect(container.firstChild).toBeInTheDocument();
   });
 
   it('renders the currency selector with all options', () => {

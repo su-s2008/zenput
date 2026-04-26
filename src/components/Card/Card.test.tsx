@@ -8,7 +8,8 @@ import { expectNoA11yViolations } from '../../test-utils/axe';
 
 describe('Card', () => {
   it('renders without crashing', () => {
-    render(<Card>Content</Card>);
+    const { container } = render(<Card>Content</Card>);
+    expect(container.firstChild).toBeInTheDocument();
   });
 
   it('renders children', () => {

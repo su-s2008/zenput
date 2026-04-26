@@ -7,7 +7,8 @@ import { expectNoA11yViolations } from '../../test-utils/axe';
 
 describe('RangeInput', () => {
   it('renders without errors', () => {
-    render(<RangeInput />);
+    const { container } = render(<RangeInput />);
+    expect(container.firstChild).toBeInTheDocument();
   });
 
   it('renders with label', () => {

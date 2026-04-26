@@ -14,7 +14,8 @@ const OPTIONS = [
 
 describe('CheckboxGroup', () => {
   it('renders without errors', () => {
-    render(<CheckboxGroup options={OPTIONS} />);
+    const { container } = render(<CheckboxGroup options={OPTIONS} />);
+    expect(container.firstChild).toBeInTheDocument();
   });
 
   it('renders group label', () => {

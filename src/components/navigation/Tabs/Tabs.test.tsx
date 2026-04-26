@@ -27,7 +27,8 @@ function BasicTabs() {
 
 describe('Tabs', () => {
   it('renders without crashing', () => {
-    render(<BasicTabs />);
+    const { container } = render(<BasicTabs />);
+    expect(container.firstChild).toBeInTheDocument();
   });
 
   it('shows the first panel by default', () => {

@@ -3,39 +3,23 @@ import React, {
   forwardRef,
   useCallback,
   useContext,
-  useId,
   useMemo,
   useRef,
 } from 'react';
 import { classNames } from '../../../utils';
-import { useDisclosure } from '../../../hooks/useDisclosure';
 import { useFocusTrap } from '../../../hooks/useFocusTrap';
 import { Portal } from '../../Portal';
 import { useEscapeKey } from '../internal/useEscapeKey';
 import { useClickOutside } from '../internal/useClickOutside';
 import { assignRef } from '../internal/assignRef';
 import { warnOnce } from '../../../utils/warnOnce';
+import { useOverlayPanelState } from '../internal/useOverlayPanelState';
+import type { OverlayPanelState } from '../internal/useOverlayPanelState';
 import styles from './Dialog.module.css';
 
 export type DialogSize = 'sm' | 'md' | 'lg' | 'xl' | 'full';
 
-interface DialogContextValue {
-  open: boolean;
-  setOpen: (next: boolean) => void;
-  /** Ref to the current trigger DOM node; used for focus restoration. */
-  triggerRef: React.RefObject<HTMLElement | null>;
-  /** Setter the DialogTrigger calls to register its DOM node. */
-  setTriggerNode: (node: HTMLElement | null) => void;
-  contentId: string;
-  titleId: string;
-  descriptionId: string;
-  /** Whether a `<DialogTitle>` is mounted; controls `aria-labelledby`. */
-  registerTitle: (mounted: boolean) => void;
-  hasTitle: boolean;
-  /** Whether a `<DialogDescription>` is mounted. */
-  registerDescription: (mounted: boolean) => void;
-  hasDescription: boolean;
-}
+type DialogContextValue = OverlayPanelState;
 
 const DialogContext = createContext<DialogContextValue | null>(null);
 
@@ -73,54 +57,11 @@ export function Dialog({
   closeOnEscape = true,
   children,
 }: DialogProps): React.ReactElement {
-  const { open, setOpen } = useDisclosure({
+  const value = useOverlayPanelState({
     open: controlledOpen,
     defaultOpen,
     onOpenChange,
   });
-
-  const triggerRef = useRef<HTMLElement | null>(null);
-  const contentId = useId();
-  const titleId = useId();
-  const descriptionId = useId();
-
-  const [hasTitle, setHasTitle] = React.useState(false);
-  const [hasDescription, setHasDescription] = React.useState(false);
-
-  const setOpenBool = useCallback((next: boolean) => setOpen(next), [setOpen]);
-  const setTriggerNode = useCallback((node: HTMLElement | null) => {
-    triggerRef.current = node;
-  }, []);
-  const registerTitle = useCallback((mounted: boolean) => setHasTitle(mounted), []);
-  const registerDescription = useCallback((mounted: boolean) => setHasDescription(mounted), []);
-
-  const value = useMemo<DialogContextValue>(
-    () => ({
-      open,
-      setOpen: setOpenBool,
-      triggerRef,
-      setTriggerNode,
-      contentId,
-      titleId,
-      descriptionId,
-      registerTitle,
-      hasTitle,
-      registerDescription,
-      hasDescription,
-    }),
-    [
-      open,
-      setOpenBool,
-      setTriggerNode,
-      contentId,
-      titleId,
-      descriptionId,
-      registerTitle,
-      hasTitle,
-      registerDescription,
-      hasDescription,
-    ]
-  );
 
   const behavior = useMemo(
     () => ({ closeOnOverlayClick, closeOnEscape }),

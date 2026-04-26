@@ -8,7 +8,8 @@ import { expectNoA11yViolations } from '../../test-utils/axe';
 
 describe('TextArea', () => {
   it('renders without errors', () => {
-    render(<TextArea />);
+    const { container } = render(<TextArea />);
+    expect(container.firstChild).toBeInTheDocument();
   });
 
   it('renders with label', () => {

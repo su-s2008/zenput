@@ -38,6 +38,27 @@ interface TokenBrowserProps {
   defaultCategory?: TokenCategory;
 }
 
+interface RecipeVariantSectionProps {
+  name: string;
+  variantStyles: Record<string, string>;
+  renderToken: (key: string, value: string | number) => React.ReactNode;
+}
+
+function RecipeVariantSection({
+  name,
+  variantStyles,
+  renderToken,
+}: RecipeVariantSectionProps): React.ReactElement {
+  return (
+    <div className={styles.variantSection}>
+      <div className={styles.variantName}>{name}</div>
+      <div className={styles.tokenGrid}>
+        {Object.entries(variantStyles).map(([key, value]) => renderToken(key, value))}
+      </div>
+    </div>
+  );
+}
+
 /**
  * Token Browser component for exploring and documenting design tokens.
  * This is primarily intended for documentation and Storybook.
@@ -289,14 +310,12 @@ export function TokenBrowser({ defaultCategory = 'colors' }: TokenBrowserProps) 
                   <div className={styles.subsection}>
                     <h4 className={styles.subsectionTitle}>Variants</h4>
                     {Object.entries(recipe.variants).map(([variantName, variantStyles]) => (
-                      <div key={variantName} className={styles.variantSection}>
-                        <div className={styles.variantName}>{variantName}</div>
-                        <div className={styles.tokenGrid}>
-                          {Object.entries(variantStyles).map(([key, value]) =>
-                            renderToken(key, value)
-                          )}
-                        </div>
-                      </div>
+                      <RecipeVariantSection
+                        key={variantName}
+                        name={variantName}
+                        variantStyles={variantStyles}
+                        renderToken={renderToken}
+                      />
                     ))}
                   </div>
                 )}

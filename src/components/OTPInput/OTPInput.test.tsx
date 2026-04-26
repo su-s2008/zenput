@@ -8,7 +8,8 @@ import { expectNoA11yViolations } from '../../test-utils/axe';
 
 describe('OTPInput', () => {
   it('renders without errors', () => {
-    render(<OTPInput />);
+    const { container } = render(<OTPInput />);
+    expect(container.firstChild).toBeInTheDocument();
   });
 
   it('renders with label', () => {

@@ -29,6 +29,10 @@ interface DrawerStackEntry {
   close: (value?: unknown) => void;
 }
 
+function removeDrawerEntryById(stack: DrawerStackEntry[], id: string): DrawerStackEntry[] {
+  return stack.filter((e) => e.id !== id);
+}
+
 interface DrawerProviderContextValue {
   _open: (opts: {
     side?: DrawerSide;
@@ -99,7 +103,7 @@ export function DrawerProvider({ children }: DrawerProviderProps): React.ReactEl
       });
 
       const close = (value?: unknown): void => {
-        setStack((prev) => prev.filter((e) => e.id !== id));
+        setStack((prev) => removeDrawerEntryById(prev, id));
         pendingRef.current.delete(id);
         resolveFn(value !== undefined ? value : null);
         requestAnimationFrame(() => {

@@ -8,7 +8,8 @@ import { expectNoA11yViolations } from '../../test-utils/axe';
 
 describe('Toggle', () => {
   it('renders without errors', () => {
-    render(<Toggle />);
+    const { container } = render(<Toggle />);
+    expect(container.firstChild).toBeInTheDocument();
   });
 
   it('renders with label', () => {

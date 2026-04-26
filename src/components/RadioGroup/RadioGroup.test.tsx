@@ -14,7 +14,8 @@ const OPTIONS = [
 
 describe('RadioGroup', () => {
   it('renders without errors', () => {
-    render(<RadioGroup name="plan" options={OPTIONS} />);
+    const { container } = render(<RadioGroup name="plan" options={OPTIONS} />);
+    expect(container.firstChild).toBeInTheDocument();
   });
 
   it('renders group label', () => {

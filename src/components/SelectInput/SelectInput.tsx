@@ -1,6 +1,6 @@
 import React, { forwardRef, useCallback, useState } from 'react';
 import { SelectInputProps } from './SelectInput.types';
-import { classNames } from '../../utils';
+import { classNames, getValidationMessage, getValidationMessageClass } from '../../utils';
 import { useFormField } from '../../hooks';
 import styles from './SelectInput.module.css';
 
@@ -53,23 +53,15 @@ export const SelectInput = forwardRef<HTMLSelectElement, SelectInputProps>(
       disabled,
     });
 
-    const activeMessage =
-      validationState === 'error'
-        ? errorMessage
-        : validationState === 'success'
-          ? successMessage
-          : validationState === 'warning'
-            ? warningMessage
-            : helperText;
+    const activeMessage = getValidationMessage(
+      validationState,
+      errorMessage,
+      successMessage,
+      warningMessage,
+      helperText
+    );
 
-    const messageClass =
-      validationState === 'error'
-        ? styles.errorText
-        : validationState === 'success'
-          ? styles.successText
-          : validationState === 'warning'
-            ? styles.warningText
-            : styles.helperText;
+    const messageClass = getValidationMessageClass(validationState, styles);
 
     // ── Multi-select state ───────────────────────────────────────────────────
 

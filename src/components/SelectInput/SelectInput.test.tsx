@@ -14,7 +14,8 @@ const OPTIONS = [
 
 describe('SelectInput', () => {
   it('renders without errors', () => {
-    render(<SelectInput options={OPTIONS} />);
+    const { container } = render(<SelectInput options={OPTIONS} />);
+    expect(container.firstChild).toBeInTheDocument();
   });
 
   it('renders with label', () => {

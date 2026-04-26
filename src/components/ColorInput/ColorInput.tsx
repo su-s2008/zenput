@@ -1,6 +1,6 @@
 import React, { forwardRef, useState, useCallback } from 'react';
 import { ColorInputProps } from './ColorInput.types';
-import { classNames } from '../../utils';
+import { classNames, getValidationMessage, getValidationMessageClass } from '../../utils';
 import { useFormField } from '../../hooks';
 import styles from './ColorInput.module.css';
 
@@ -66,23 +66,15 @@ export const ColorInput = forwardRef<HTMLInputElement, ColorInputProps>(
       [isControlled, onChange]
     );
 
-    const activeMessage =
-      validationState === 'error'
-        ? errorMessage
-        : validationState === 'success'
-          ? successMessage
-          : validationState === 'warning'
-            ? warningMessage
-            : helperText;
+    const activeMessage = getValidationMessage(
+      validationState,
+      errorMessage,
+      successMessage,
+      warningMessage,
+      helperText
+    );
 
-    const messageClass =
-      validationState === 'error'
-        ? styles.errorText
-        : validationState === 'success'
-          ? styles.successText
-          : validationState === 'warning'
-            ? styles.warningText
-            : styles.helperText;
+    const messageClass = getValidationMessageClass(validationState, styles);
 
     return (
       <div

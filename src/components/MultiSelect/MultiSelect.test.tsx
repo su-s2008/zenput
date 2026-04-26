@@ -15,7 +15,8 @@ const OPTIONS: MultiSelectOption[] = [
 
 describe('MultiSelect', () => {
   it('renders without errors', () => {
-    render(<MultiSelect options={OPTIONS} />);
+    const { container } = render(<MultiSelect options={OPTIONS} />);
+    expect(container.firstChild).toBeInTheDocument();
   });
 
   it('renders with label', () => {

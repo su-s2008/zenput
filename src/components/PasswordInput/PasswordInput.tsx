@@ -1,6 +1,6 @@
 import React, { forwardRef, useState, useCallback } from 'react';
 import { PasswordInputProps } from './PasswordInput.types';
-import { classNames } from '../../utils';
+import { classNames, getValidationMessage, getValidationMessageClass } from '../../utils';
 import { useFormField } from '../../hooks';
 import styles from './PasswordInput.module.css';
 
@@ -15,6 +15,24 @@ function getPasswordStrength(password: string): number {
 }
 
 const STRENGTH_LABELS = ['', 'Weak', 'Fair', 'Good', 'Strong'];
+const STRENGTH_SEGMENTS = [1, 2, 3, 4] as const;
+
+interface StrengthIndicatorProps {
+  strength: number;
+}
+
+function StrengthIndicator({ strength }: StrengthIndicatorProps): React.ReactElement {
+  return (
+    <>
+      <div className={classNames(styles.strengthBar, styles[`strength${strength}`])}>
+        {STRENGTH_SEGMENTS.map((i) => (
+          <div key={i} className={styles.strengthSegment} />
+        ))}
+      </div>
+      <span className={styles.strengthLabel}>{STRENGTH_LABELS[strength]}</span>
+    </>
+  );
+}
 
 export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
   (
@@ -80,24 +98,20 @@ export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
     );
 
     const strength = showStrengthIndicator ? getPasswordStrength(currentValue) : 0;
+    const showStrength = showStrengthIndicator && currentValue.length > 0;
 
-    const activeMessage =
-      validationState === 'error'
-        ? errorMessage
-        : validationState === 'success'
-          ? successMessage
-          : validationState === 'warning'
-            ? warningMessage
-            : helperText;
+    const toggleIcon = visible ? (hideIcon ?? <span>🙈</span>) : (showIcon ?? <span>👁</span>);
+    const toggleLabel = visible ? 'Hide password' : 'Show password';
 
-    const messageClass =
-      validationState === 'error'
-        ? styles.errorText
-        : validationState === 'success'
-          ? styles.successText
-          : validationState === 'warning'
-            ? styles.warningText
-            : styles.helperText;
+    const activeMessage = getValidationMessage(
+      validationState,
+      errorMessage,
+      successMessage,
+      warningMessage,
+      helperText
+    );
+
+    const messageClass = getValidationMessageClass(validationState, styles);
 
     return (
       <div
@@ -144,22 +158,12 @@ export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
             className={styles.toggleBtn}
             onClick={() => setVisible((v) => !v)}
             disabled={disabled}
-            aria-label={visible ? 'Hide password' : 'Show password'}
-            tabIndex={-1}
+            aria-label={toggleLabel}
           >
-            {visible ? (hideIcon ?? <span>🙈</span>) : (showIcon ?? <span>👁</span>)}
+            {toggleIcon}
           </button>
         </div>
-        {showStrengthIndicator && currentValue.length > 0 && (
-          <>
-            <div className={classNames(styles.strengthBar, styles[`strength${strength}`])}>
-              {[1, 2, 3, 4].map((i) => (
-                <div key={i} className={styles.strengthSegment} />
-              ))}
-            </div>
-            <span className={styles.strengthLabel}>{STRENGTH_LABELS[strength]}</span>
-          </>
-        )}
+        {showStrength && <StrengthIndicator strength={strength} />}
         {activeMessage && (
           <span
             id={helperId}

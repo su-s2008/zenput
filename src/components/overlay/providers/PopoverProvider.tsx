@@ -2,6 +2,7 @@ import React, { createContext, useCallback, useContext, useEffect, useRef, useSt
 import { Portal } from '../../Portal';
 import { useEscapeKey } from '../internal/useEscapeKey';
 import { useClickOutside } from '../internal/useClickOutside';
+import { computePosition } from '../internal/computePosition';
 import styles from '../Popover/Popover.module.css';
 
 // ---------------------------------------------------------------------------
@@ -33,42 +34,6 @@ function getAnchorRect(anchor: PopoverAnchor): DOMRect | null {
   return new DOMRect(anchor.x, anchor.y, 0, 0);
 }
 
-function computePosition(
-  anchorRect: DOMRect,
-  contentRect: DOMRect,
-  side: ImpPopoverSide,
-  align: ImpPopoverAlign,
-  sideOffset: number
-): PopoverCoords {
-  let top = 0;
-  let left = 0;
-
-  if (side === 'top' || side === 'bottom') {
-    top =
-      side === 'top'
-        ? anchorRect.top - contentRect.height - sideOffset
-        : anchorRect.bottom + sideOffset;
-    if (align === 'start') left = anchorRect.left;
-    else if (align === 'end') left = anchorRect.right - contentRect.width;
-    else left = anchorRect.left + anchorRect.width / 2 - contentRect.width / 2;
-  } else {
-    left =
-      side === 'left'
-        ? anchorRect.left - contentRect.width - sideOffset
-        : anchorRect.right + sideOffset;
-    if (align === 'start') top = anchorRect.top;
-    else if (align === 'end') top = anchorRect.bottom - contentRect.height;
-    else top = anchorRect.top + anchorRect.height / 2 - contentRect.height / 2;
-  }
-
-  const vw = typeof window !== 'undefined' ? window.innerWidth : 0;
-  const vh = typeof window !== 'undefined' ? window.innerHeight : 0;
-  left = Math.max(4, Math.min(left, vw - contentRect.width - 4));
-  top = Math.max(4, Math.min(top, vh - contentRect.height - 4));
-
-  return { top, left };
-}
-
 interface PopoverStackEntry {
   id: string;
   anchor: PopoverAnchor;
@@ -79,6 +44,10 @@ interface PopoverStackEntry {
   renderContent: (close: (value: unknown) => void) => React.ReactNode;
   /** Pre-built close function. */
   close: (value?: unknown) => void;
+}
+
+function removePopoverEntryById(stack: PopoverStackEntry[], id: string): PopoverStackEntry[] {
+  return stack.filter((e) => e.id !== id);
 }
 
 interface PopoverProviderContextValue {
@@ -105,6 +74,12 @@ function usePopoverProviderContext(): PopoverProviderContextValue {
 // ---------------------------------------------------------------------------
 // ImperativePopoverContent — renders one popover entry
 // ---------------------------------------------------------------------------
+
+function getAnchorElement(anchor: PopoverAnchor): HTMLElement | null {
+  if (anchor instanceof HTMLElement) return anchor;
+  if ('current' in anchor) return anchor.current;
+  return null;
+}
 
 function ImperativePopoverContent({
   entry,
@@ -149,17 +124,20 @@ function ImperativePopoverContent({
 
   const anchorRef = useRef<HTMLElement | null>(null);
   useEffect(() => {
-    if (entry.anchor instanceof HTMLElement) {
-      anchorRef.current = entry.anchor;
-    } else if ('current' in entry.anchor) {
-      anchorRef.current = entry.anchor.current;
-    }
+    anchorRef.current = getAnchorElement(entry.anchor);
   }, [entry.anchor]);
 
   const handleClickOutside = useCallback(() => {
     if (entry.dismissible) onClose(null);
   }, [entry.dismissible, onClose]);
   useClickOutside(isTopmost, [contentRef, anchorRef], handleClickOutside);
+
+  const positionStyle: React.CSSProperties = {
+    position: 'fixed',
+    top: coords?.top ?? -9999,
+    left: coords?.left ?? -9999,
+    visibility: coords ? 'visible' : 'hidden',
+  };
 
   return (
     <Portal>
@@ -170,12 +148,7 @@ function ImperativePopoverContent({
         tabIndex={-1}
         data-side={entry.side}
         data-align={entry.align}
-        style={{
-          position: 'fixed',
-          top: coords?.top ?? -9999,
-          left: coords?.left ?? -9999,
-          visibility: coords ? 'visible' : 'hidden',
-        }}
+        style={positionStyle}
         className={styles.content}
       >
         {entry.renderContent(onClose)}
@@ -235,7 +208,7 @@ export function PopoverProvider({ children }: PopoverProviderProps): React.React
       });
 
       const close = (value?: unknown): void => {
-        setStack((prev) => prev.filter((e) => e.id !== id));
+        setStack((prev) => removePopoverEntryById(prev, id));
         pendingRef.current.delete(id);
         resolveFn(value !== undefined ? value : null);
         requestAnimationFrame(() => {

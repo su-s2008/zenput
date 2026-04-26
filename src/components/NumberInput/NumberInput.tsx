@@ -1,9 +1,19 @@
 import React, { forwardRef, useCallback, useState } from 'react';
 import { NumberInputProps } from './NumberInput.types';
-import { classNames } from '../../utils';
+import { classNames, getValidationMessage, getValidationMessageClass } from '../../utils';
 import { useFormField } from '../../hooks';
 import { useControllable } from '../../hooks';
 import styles from './NumberInput.module.css';
+
+function computeDisplayValue(
+  currentValue: number | undefined,
+  formatValue: ((n: number) => string) | undefined,
+  isFocused: boolean
+): number | string {
+  if (currentValue === undefined) return '';
+  if (!isFocused && formatValue !== undefined) return formatValue(currentValue);
+  return currentValue;
+}
 
 export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
   (
@@ -101,35 +111,22 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
       [setCurrentValue]
     );
 
-    const activeMessage =
-      validationState === 'error'
-        ? errorMessage
-        : validationState === 'success'
-          ? successMessage
-          : validationState === 'warning'
-            ? warningMessage
-            : helperText;
+    const activeMessage = getValidationMessage(
+      validationState,
+      errorMessage,
+      successMessage,
+      warningMessage,
+      helperText
+    );
 
-    const messageClass =
-      validationState === 'error'
-        ? styles.errorText
-        : validationState === 'success'
-          ? styles.successText
-          : validationState === 'warning'
-            ? styles.warningText
-            : styles.helperText;
+    const messageClass = getValidationMessageClass(validationState, styles);
 
     const showControls = !hideControls && !readOnly;
     const isAtMin = min !== undefined && (currentValue ?? 0) <= min;
     const isAtMax = max !== undefined && (currentValue ?? 0) >= max;
 
     // When a formatValue function is provided, show formatted text when not focused
-    const displayValue =
-      !isFocused && formatValue !== undefined && currentValue !== undefined
-        ? formatValue(currentValue)
-        : currentValue !== undefined
-          ? currentValue
-          : '';
+    const displayValue = computeDisplayValue(currentValue, formatValue, isFocused);
 
     return (
       <div

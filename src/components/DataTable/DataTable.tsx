@@ -4,6 +4,7 @@ import {
   DataTableRecord,
   DataTableDensity,
   DataTableSortState,
+  DataTableColumn,
   SortDirection,
 } from './DataTable.types';
 import { classNames } from '../../utils';
@@ -17,6 +18,127 @@ const DENSITY_CLASS: Record<Exclude<DataTableDensity, 'default'>, string> = {
   compact: styles.densityCompact,
   comfortable: styles.densityComfortable,
 };
+
+function getStickyStyle(
+  sticky: 'left' | 'right' | undefined,
+  key: string,
+  leftOffsets: Record<string, number>,
+  rightOffsets: Record<string, number>,
+  zIndex?: number
+): React.CSSProperties {
+  if (sticky === 'left') {
+    return { position: 'sticky', left: leftOffsets[key] ?? 0, ...(zIndex !== undefined && { zIndex }) };
+  }
+  if (sticky === 'right') {
+    return { position: 'sticky', right: rightOffsets[key] ?? 0, ...(zIndex !== undefined && { zIndex }) };
+  }
+  return {};
+}
+
+function getSortIcon(isSorted: boolean, sortDir: SortDirection | null): string {
+  if (!isSorted) return '⇅';
+  return sortDir === 'asc' ? '▲' : '▼';
+}
+
+function getAriaSort(
+  isSorted: boolean,
+  sortDir: SortDirection | null
+): 'ascending' | 'descending' | undefined {
+  if (!isSorted) return undefined;
+  return sortDir === 'asc' ? 'ascending' : 'descending';
+}
+
+function HeaderLabel({
+  col,
+  isSorted,
+  sortDir,
+  handleSortClick,
+}: {
+  col: DataTableColumn<DataTableRecord>;
+  isSorted: boolean;
+  sortDir: SortDirection | null;
+  handleSortClick: (key: string) => void;
+}): React.ReactElement {
+  if (col.headerRender) return <>{col.headerRender(col)}</>;
+  if (!col.sortable) {
+    return <span className={styles.headerText}>{col.header}</span>;
+  }
+  const ariaLabel = `Sort by ${col.header}${isSorted ? `, currently ${sortDir}` : ''}`;
+  return (
+    <button
+      type="button"
+      className={classNames(styles.sortButton, isSorted && styles.sortButtonActive)}
+      onClick={() => handleSortClick(col.key)}
+      aria-label={ariaLabel}
+    >
+      <span className={styles.headerText}>{col.header}</span>
+      <span className={styles.sortIcon} aria-hidden="true">
+        {getSortIcon(isSorted, sortDir)}
+      </span>
+    </button>
+  );
+}
+
+interface FilterDropdownProps<T extends DataTableRecord> {
+  col: DataTableColumn<T>;
+  uniqueValues: string[];
+  selectedValues: string[];
+  filterCheckboxId: (key: string, index: number) => string;
+  toggleFilterValue: (key: string, value: string) => void;
+  clearFilter: (key: string) => void;
+}
+
+function FilterDropdown<T extends DataTableRecord>({
+  col,
+  uniqueValues,
+  selectedValues,
+  filterCheckboxId,
+  toggleFilterValue,
+  clearFilter,
+}: FilterDropdownProps<T>): React.ReactElement {
+  return (
+    <div
+      className={styles.filterDropdown}
+      role="dialog"
+      aria-label={`Filter options for ${col.header}`}
+    >
+      <ul className={styles.filterList} role="listbox">
+        {uniqueValues.length === 0 ? (
+          <li className={styles.filterEmpty}>No options</li>
+        ) : (
+          uniqueValues.map((val, valIndex) => {
+            const checkboxId = filterCheckboxId(col.key, valIndex);
+            return (
+              <li key={val} className={styles.filterItem}>
+                <label htmlFor={checkboxId} className={styles.filterLabel}>
+                  <input
+                    id={checkboxId}
+                    type="checkbox"
+                    checked={selectedValues.includes(val)}
+                    onChange={() => toggleFilterValue(col.key, val)}
+                    className={styles.filterCheckbox}
+                  />
+                  <span className={styles.filterValueText}>{val}</span>
+                </label>
+              </li>
+            );
+          })
+        )}
+      </ul>
+      {selectedValues.length > 0 && (
+        <div className={styles.filterActions}>
+          <button
+            type="button"
+            className={styles.clearButton}
+            onClick={() => clearFilter(col.key)}
+          >
+            Clear
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
 
 export function DataTable<T extends DataTableRecord = DataTableRecord>({
   columns,
@@ -517,21 +639,20 @@ export function DataTable<T extends DataTableRecord = DataTableRecord>({
                 const isSorted = activeSortState?.key === col.key;
                 const sortDir = isSorted ? activeSortState!.direction : null;
 
-                const stickyStyle: React.CSSProperties =
-                  col.sticky === 'left'
-                    ? { position: 'sticky', left: leftStickyOffsets[col.key] ?? 0, zIndex: 2 }
-                    : col.sticky === 'right'
-                      ? { position: 'sticky', right: rightStickyOffsets[col.key] ?? 0, zIndex: 2 }
-                      : {};
+                const stickyStyle = getStickyStyle(
+                  col.sticky,
+                  col.key,
+                  leftStickyOffsets,
+                  rightStickyOffsets,
+                  2
+                );
                 const alignStyle: React.CSSProperties = col.align ? { textAlign: col.align } : {};
 
                 return (
                   <th
                     key={col.key}
-                    className={classNames(styles.th, col.sticky ? styles.stickyCol : undefined)}
-                    aria-sort={
-                      isSorted ? (sortDir === 'asc' ? 'ascending' : 'descending') : undefined
-                    }
+                    className={classNames(styles.th, col.sticky && styles.stickyCol)}
+                    aria-sort={getAriaSort(isSorted, sortDir)}
                     style={{
                       ...(col.width === undefined ? undefined : { width: col.width }),
                       ...stickyStyle,
@@ -539,26 +660,12 @@ export function DataTable<T extends DataTableRecord = DataTableRecord>({
                     }}
                   >
                     <div className={styles.thContent}>
-                      {col.headerRender ? (
-                        col.headerRender(col)
-                      ) : col.sortable ? (
-                        <button
-                          type="button"
-                          className={classNames(
-                            styles.sortButton,
-                            isSorted ? styles.sortButtonActive : undefined
-                          )}
-                          onClick={() => handleSortClick(col.key)}
-                          aria-label={`Sort by ${col.header}${isSorted ? `, currently ${sortDir}` : ''}`}
-                        >
-                          <span className={styles.headerText}>{col.header}</span>
-                          <span className={styles.sortIcon} aria-hidden="true">
-                            {isSorted ? (sortDir === 'asc' ? '▲' : '▼') : '⇅'}
-                          </span>
-                        </button>
-                      ) : (
-                        <span className={styles.headerText}>{col.header}</span>
-                      )}
+                      <HeaderLabel
+                        col={col as DataTableColumn<DataTableRecord>}
+                        isSorted={isSorted}
+                        sortDir={sortDir}
+                        handleSortClick={handleSortClick}
+                      />
                       {col.filterable && (
                         <div className={styles.filterContainer}>
                           <button
@@ -568,14 +675,14 @@ export function DataTable<T extends DataTableRecord = DataTableRecord>({
                             aria-haspopup="listbox"
                             className={classNames(
                               styles.filterButton,
-                              isActive ? styles.filterButtonActive : undefined
+                              isActive && styles.filterButtonActive
                             )}
                             onClick={() => toggleFilterDropdown(col.key)}
                           >
                             <span
                               className={classNames(
                                 styles.filterArrow,
-                                isOpen ? styles.filterArrowOpen : undefined
+                                isOpen && styles.filterArrowOpen
                               )}
                               aria-hidden="true"
                             >
@@ -583,47 +690,14 @@ export function DataTable<T extends DataTableRecord = DataTableRecord>({
                             </span>
                           </button>
                           {isOpen && (
-                            <div
-                              className={styles.filterDropdown}
-                              role="dialog"
-                              aria-label={`Filter options for ${col.header}`}
-                            >
-                              <ul className={styles.filterList} role="listbox">
-                                {uniqueValues.length === 0 ? (
-                                  <li className={styles.filterEmpty}>No options</li>
-                                ) : (
-                                  uniqueValues.map((val, valIndex) => {
-                                    const checked = selectedValues.includes(val);
-                                    const checkboxId = filterCheckboxId(col.key, valIndex);
-                                    return (
-                                      <li key={val} className={styles.filterItem}>
-                                        <label htmlFor={checkboxId} className={styles.filterLabel}>
-                                          <input
-                                            id={checkboxId}
-                                            type="checkbox"
-                                            checked={checked}
-                                            onChange={() => toggleFilterValue(col.key, val)}
-                                            className={styles.filterCheckbox}
-                                          />
-                                          <span className={styles.filterValueText}>{val}</span>
-                                        </label>
-                                      </li>
-                                    );
-                                  })
-                                )}
-                              </ul>
-                              {selectedValues.length > 0 && (
-                                <div className={styles.filterActions}>
-                                  <button
-                                    type="button"
-                                    className={styles.clearButton}
-                                    onClick={() => clearFilter(col.key)}
-                                  >
-                                    Clear
-                                  </button>
-                                </div>
-                              )}
-                            </div>
+                            <FilterDropdown
+                              col={col}
+                              uniqueValues={uniqueValues}
+                              selectedValues={selectedValues}
+                              filterCheckboxId={filterCheckboxId}
+                              toggleFilterValue={toggleFilterValue}
+                              clearFilter={clearFilter}
+                            />
                           )}
                         </div>
                       )}

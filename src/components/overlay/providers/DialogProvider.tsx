@@ -45,6 +45,10 @@ interface StackEntry {
   close: (value?: unknown) => void;
 }
 
+function removeStackEntryById(stack: StackEntry[], id: string): StackEntry[] {
+  return stack.filter((e) => e.id !== id);
+}
+
 interface ProviderContextValue {
   _open: (opts: {
     size?: DialogSize;
@@ -128,7 +132,7 @@ export function DialogProvider({ children }: DialogProviderProps): React.ReactEl
       const defaultCloseValue = 'defaultCloseValue' in opts ? opts.defaultCloseValue : null;
 
       const close = (value: unknown = _CLOSE_DEFAULT): void => {
-        setStack((prev) => prev.filter((e) => e.id !== id));
+        setStack((prev) => removeStackEntryById(prev, id));
         pendingRef.current.delete(id);
         // When called with no argument, resolve to the hook-specific dismissed
         // value (e.g. false for confirm, null for prompt, undefined for alert).

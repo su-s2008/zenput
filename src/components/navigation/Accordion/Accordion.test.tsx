@@ -27,7 +27,8 @@ function BasicAccordion({ multiple = false }: { multiple?: boolean }) {
 
 describe('Accordion', () => {
   it('renders without crashing', () => {
-    render(<BasicAccordion />);
+    const { container } = render(<BasicAccordion />);
+    expect(container.firstChild).toBeInTheDocument();
   });
 
   it('all items are collapsed by default', () => {

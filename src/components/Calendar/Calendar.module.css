@@ -122,9 +122,12 @@
   outline-offset: 2px;
 }
 
+/* Outside-month dates are interactive (clicking them switches months) so
+ * their label text must meet WCAG AA contrast. Use the disabled-text token
+ * (#6b7280, ~4.83:1 on white) and avoid `opacity` which compounds and
+ * reduces measured contrast below threshold. */
 .cell.outsideMonth {
-  color: var(--zp-color-text-secondary, #9ca3af);
-  opacity: 0.6;
+  color: var(--zp-color-text-disabled, #6b7280);
 }
 
 .cell.today {

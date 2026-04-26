@@ -8,7 +8,8 @@ import { expectNoA11yViolations } from '../../test-utils/axe';
 
 describe('EmptyState', () => {
   it('renders without crashing', () => {
-    render(<EmptyState title="No data" />);
+    const { container } = render(<EmptyState title="No data" />);
+    expect(container.firstChild).toBeInTheDocument();
   });
 
   it('renders the title', () => {

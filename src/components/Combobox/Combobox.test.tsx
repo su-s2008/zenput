@@ -15,7 +15,8 @@ const OPTIONS: ComboboxOption[] = [
 
 describe('Combobox', () => {
   it('renders without errors', () => {
-    render(<Combobox options={OPTIONS} />);
+    const { container } = render(<Combobox options={OPTIONS} />);
+    expect(container.firstChild).toBeInTheDocument();
   });
 
   it('renders with label', () => {

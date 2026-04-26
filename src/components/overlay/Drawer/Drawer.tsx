@@ -3,36 +3,24 @@ import React, {
   forwardRef,
   useCallback,
   useContext,
-  useId,
   useMemo,
   useRef,
 } from 'react';
 import { classNames } from '../../../utils';
-import { useDisclosure } from '../../../hooks/useDisclosure';
 import { useFocusTrap } from '../../../hooks/useFocusTrap';
 import { Portal } from '../../Portal';
 import { useEscapeKey } from '../internal/useEscapeKey';
 import { useClickOutside } from '../internal/useClickOutside';
 import { assignRef } from '../internal/assignRef';
 import { warnOnce } from '../../../utils/warnOnce';
+import { useOverlayPanelState } from '../internal/useOverlayPanelState';
+import type { OverlayPanelState } from '../internal/useOverlayPanelState';
 import styles from './Drawer.module.css';
 
 export type DrawerSide = 'left' | 'right' | 'top' | 'bottom';
 export type DrawerSize = 'sm' | 'md' | 'lg' | 'xl' | 'full';
 
-interface DrawerContextValue {
-  open: boolean;
-  setOpen: (next: boolean) => void;
-  triggerRef: React.RefObject<HTMLElement | null>;
-  setTriggerNode: (node: HTMLElement | null) => void;
-  contentId: string;
-  titleId: string;
-  descriptionId: string;
-  registerTitle: (mounted: boolean) => void;
-  hasTitle: boolean;
-  registerDescription: (mounted: boolean) => void;
-  hasDescription: boolean;
-}
+type DrawerContextValue = OverlayPanelState;
 
 const DrawerContext = createContext<DrawerContextValue | null>(null);
 
@@ -71,53 +59,11 @@ export function Drawer({
   closeOnEscape = true,
   children,
 }: DrawerProps): React.ReactElement {
-  const { open, setOpen } = useDisclosure({
+  const value = useOverlayPanelState({
     open: controlledOpen,
     defaultOpen,
     onOpenChange,
   });
-
-  const triggerRef = useRef<HTMLElement | null>(null);
-  const contentId = useId();
-  const titleId = useId();
-  const descriptionId = useId();
-  const [hasTitle, setHasTitle] = React.useState(false);
-  const [hasDescription, setHasDescription] = React.useState(false);
-
-  const setOpenBool = useCallback((next: boolean) => setOpen(next), [setOpen]);
-  const setTriggerNode = useCallback((node: HTMLElement | null) => {
-    triggerRef.current = node;
-  }, []);
-  const registerTitle = useCallback((m: boolean) => setHasTitle(m), []);
-  const registerDescription = useCallback((m: boolean) => setHasDescription(m), []);
-
-  const value = useMemo<DrawerContextValue>(
-    () => ({
-      open,
-      setOpen: setOpenBool,
-      triggerRef,
-      setTriggerNode,
-      contentId,
-      titleId,
-      descriptionId,
-      registerTitle,
-      hasTitle,
-      registerDescription,
-      hasDescription,
-    }),
-    [
-      open,
-      setOpenBool,
-      setTriggerNode,
-      contentId,
-      titleId,
-      descriptionId,
-      registerTitle,
-      hasTitle,
-      registerDescription,
-      hasDescription,
-    ]
-  );
 
   const behavior = useMemo(
     () => ({ closeOnOverlayClick, closeOnEscape }),

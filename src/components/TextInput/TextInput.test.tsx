@@ -8,7 +8,8 @@ import { expectNoA11yViolations } from '../../test-utils/axe';
 
 describe('TextInput', () => {
   it('renders without errors', () => {
-    render(<TextInput />);
+    const { container } = render(<TextInput />);
+    expect(container.firstChild).toBeInTheDocument();
   });
 
   it('renders with label', () => {

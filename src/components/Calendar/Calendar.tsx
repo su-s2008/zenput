@@ -209,6 +209,17 @@ export const Calendar = forwardRef<HTMLDivElement, CalendarProps>(function Calen
     [onChange, min, max, disabledDates]
   );
 
+  const handleCellClick = useCallback(
+    (date: Date, isCurrentMonth: boolean) => {
+      setFocusedDate(date);
+      if (!isCurrentMonth) {
+        setDisplayMonth(new Date(date.getFullYear(), date.getMonth(), 1));
+      }
+      handleSelect(date);
+    },
+    [handleSelect, setDisplayMonth]
+  );
+
   // Keyboard navigation on the grid.
   const handleGridKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLTableElement>) => {
@@ -384,19 +395,17 @@ export const Calendar = forwardRef<HTMLDivElement, CalendarProps>(function Calen
                 )}
                 {week.map((date) => {
                   const isCurrentMonth = date.getMonth() === displayMonth.getMonth();
-                  const isSelected = value ? isSameDay(date, value) : false;
+                  const isSelected = !!value && isSameDay(date, value);
                   const isTodayDate = highlightToday && isToday(date);
                   const disabled = isDateDisabled(date, min, max, disabledDates);
                   const isFocused = isSameDay(date, focusedDate);
                   const dateStr = toLocalDateStr(date);
 
                   // Range highlighting (used by DateRangePicker).
-                  const isRangeStart = rangeStart ? isSameDay(date, rangeStart) : false;
-                  const isRangeEnd = rangeEnd ? isSameDay(date, rangeEnd) : false;
+                  const isRangeStart = !!rangeStart && isSameDay(date, rangeStart);
+                  const isRangeEnd = !!rangeEnd && isSameDay(date, rangeEnd);
                   const isInRange =
-                    rangeStart && rangeEnd
-                      ? date > rangeStart && date < rangeEnd
-                      : false;
+                    !!rangeStart && !!rangeEnd && date > rangeStart && date < rangeEnd;
 
                   return (
                     <td
@@ -415,23 +424,15 @@ export const Calendar = forwardRef<HTMLDivElement, CalendarProps>(function Calen
                         } as Intl.DateTimeFormatOptions).format(date)}
                         className={classNames(
                           styles.cell,
-                          !isCurrentMonth ? styles.outsideMonth : undefined,
-                          isSelected ? styles.selected : undefined,
-                          isTodayDate && !isSelected ? styles.today : undefined,
-                          disabled ? styles.disabled : undefined,
-                          isInRange ? styles.rangeMiddle : undefined,
-                          isRangeStart ? styles.rangeStart : undefined,
-                          isRangeEnd ? styles.rangeEnd : undefined
+                          !isCurrentMonth && styles.outsideMonth,
+                          isSelected && styles.selected,
+                          isTodayDate && !isSelected && styles.today,
+                          disabled && styles.disabled,
+                          isInRange && styles.rangeMiddle,
+                          isRangeStart && styles.rangeStart,
+                          isRangeEnd && styles.rangeEnd
                         )}
-                        onClick={() => {
-                          setFocusedDate(date);
-                          if (!isCurrentMonth) {
-                            setDisplayMonth(
-                              new Date(date.getFullYear(), date.getMonth(), 1)
-                            );
-                          }
-                          handleSelect(date);
-                        }}
+                        onClick={() => handleCellClick(date, isCurrentMonth)}
                         onFocus={() => setFocusedDate(date)}
                       >
                         {date.getDate()}

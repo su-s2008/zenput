@@ -11,6 +11,18 @@ export interface UseMenuKeyboardNavOptions {
   onArrowLeft?: (e: React.KeyboardEvent) => void;
 }
 
+function getNextIndex(currentIndex: number, length: number): number {
+  return currentIndex < length - 1 ? currentIndex + 1 : 0;
+}
+
+function getPrevIndex(currentIndex: number, length: number): number {
+  return currentIndex > 0 ? currentIndex - 1 : length - 1;
+}
+
+function isPrintableTypeAheadKey(e: React.KeyboardEvent): boolean {
+  return e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey;
+}
+
 /**
  * Shared keyboard navigation handler for menu containers (MenuContent,
  * MenuSubContent, ContextMenuContent).
@@ -57,6 +69,18 @@ export function useMenuKeyboardNav({
     };
   }, []);
 
+  const handleTypeAhead = useCallback((e: React.KeyboardEvent, items: HTMLElement[]) => {
+    typeAheadBuffer.current += e.key.toLowerCase();
+    if (typeAheadTimer.current) clearTimeout(typeAheadTimer.current);
+    typeAheadTimer.current = setTimeout(() => {
+      typeAheadBuffer.current = '';
+    }, 500);
+    const match = items.find((item) =>
+      (item.textContent ?? '').trim().toLowerCase().startsWith(typeAheadBuffer.current)
+    );
+    match?.focus();
+  }, []);
+
   return useCallback(
     (e: React.KeyboardEvent<HTMLDivElement>) => {
       const el = containerRef.current;
@@ -66,34 +90,28 @@ export function useMenuKeyboardNav({
       const currentIndex = focused ? items.indexOf(focused) : -1;
 
       switch (e.key) {
-        case 'ArrowDown': {
+        case 'ArrowDown':
           e.preventDefault();
           e.stopPropagation();
-          const next = currentIndex < items.length - 1 ? currentIndex + 1 : 0;
-          items[next]?.focus();
+          items[getNextIndex(currentIndex, items.length)]?.focus();
           break;
-        }
-        case 'ArrowUp': {
+        case 'ArrowUp':
           e.preventDefault();
           e.stopPropagation();
-          const prev = currentIndex > 0 ? currentIndex - 1 : items.length - 1;
-          items[prev]?.focus();
+          items[getPrevIndex(currentIndex, items.length)]?.focus();
           break;
-        }
-        case 'Home': {
+        case 'Home':
           e.preventDefault();
           e.stopPropagation();
           items[0]?.focus();
           break;
-        }
-        case 'End': {
+        case 'End':
           e.preventDefault();
           e.stopPropagation();
           items[items.length - 1]?.focus();
           break;
-        }
         case 'Enter':
-        case ' ': {
+        case ' ':
           // If the item's own onKeyDown already handled this key (calling
           // e.preventDefault()), skip the synthetic click to avoid invoking
           // onSelect twice. When the event is dispatched directly on the
@@ -104,39 +122,26 @@ export function useMenuKeyboardNav({
           }
           e.preventDefault();
           break;
-        }
-        case 'Tab': {
+        case 'Tab':
           e.preventDefault();
           onTabRef.current(e);
           break;
-        }
-        case 'Escape': {
+        case 'Escape':
           e.preventDefault();
           onEscapeRef.current(e);
           break;
-        }
-        case 'ArrowLeft': {
+        case 'ArrowLeft':
           if (onArrowLeftRef.current) {
             e.preventDefault();
             onArrowLeftRef.current(e);
           }
           break;
-        }
-        default: {
-          if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
-            typeAheadBuffer.current += e.key.toLowerCase();
-            if (typeAheadTimer.current) clearTimeout(typeAheadTimer.current);
-            typeAheadTimer.current = setTimeout(() => {
-              typeAheadBuffer.current = '';
-            }, 500);
-            const match = items.find((item) =>
-              (item.textContent ?? '').trim().toLowerCase().startsWith(typeAheadBuffer.current)
-            );
-            match?.focus();
+        default:
+          if (isPrintableTypeAheadKey(e)) {
+            handleTypeAhead(e, items);
           }
-        }
       }
     },
-    [containerRef]
+    [containerRef, handleTypeAhead]
   );
 }

@@ -30,7 +30,8 @@ const data: Person[] = [
 
 describe('DataTable', () => {
   it('renders without errors', () => {
-    render(<DataTable columns={columns} data={data} />);
+    const { container } = render(<DataTable columns={columns} data={data} />);
+    expect(container.firstChild).toBeInTheDocument();
   });
 
   it('renders column headers', () => {

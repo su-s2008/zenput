@@ -41,7 +41,10 @@ describe('buildPaginationItems', () => {
 
 describe('Pagination', () => {
   it('renders without crashing', () => {
-    render(<Pagination currentPage={1} totalCount={100} pageSize={10} onPageChange={vi.fn()} />);
+    const { container } = render(
+      <Pagination currentPage={1} totalCount={100} pageSize={10} onPageChange={vi.fn()} />
+    );
+    expect(container.firstChild).toBeInTheDocument();
   });
 
   it('renders a nav landmark with aria-label', () => {

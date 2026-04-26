@@ -51,9 +51,59 @@ function colorIndexFromName(name: string): number {
   let hash = 0;
   for (let i = 0; i < name.length; i++) {
     hash = name.charCodeAt(i) + ((hash << 5) - hash);
-    hash |= 0;
+    hash = Math.trunc(hash);
   }
   return Math.abs(hash) % BG_COLORS.length;
+}
+
+/** Build accessible label combining name + optional status. */
+function buildAccessibleLabel(name: string | undefined, status: AvatarStatus | undefined): string | undefined {
+  if (name && status) return `${name}, ${status}`;
+  return name ?? undefined;
+}
+
+interface AvatarContentProps {
+  showImg: boolean;
+  src: string | undefined;
+  name: string | undefined;
+  initials: string | undefined;
+  applyImgRole: boolean;
+  fallbackIcon: React.ReactNode;
+  onImgError: () => void;
+}
+
+function AvatarContent({
+  showImg,
+  src,
+  name,
+  initials,
+  applyImgRole,
+  fallbackIcon,
+  onImgError,
+}: AvatarContentProps): React.ReactElement {
+  if (showImg) {
+    return (
+      <img
+        src={src}
+        alt={applyImgRole ? '' : (name ?? '')}
+        aria-hidden={applyImgRole ? 'true' : undefined}
+        className={styles.img}
+        onError={onImgError}
+      />
+    );
+  }
+  if (initials) {
+    return (
+      <span className={styles.initials} aria-hidden="true">
+        {initials}
+      </span>
+    );
+  }
+  return (
+    <span className={styles.fallback} aria-hidden="true">
+      {fallbackIcon}
+    </span>
+  );
 }
 
 /**
@@ -84,15 +134,11 @@ export const Avatar = forwardRef<HTMLSpanElement, AvatarProps>(function Avatar(
   const initials = name ? getInitials(name) : undefined;
 
   const bgColor = colorByName && name ? BG_COLORS[colorIndexFromName(name)] : undefined;
+  const wrapperStyle = bgColor && !showImg
+    ? { ...style, backgroundColor: bgColor, color: '#fff' }
+    : style;
 
-  // Build an accessible label that includes both name and status so screen
-  // readers announce the full context (e.g. "Ada Lovelace, online").
-  const accessibleLabel = name && status ? `${name}, ${status}` : (name ?? undefined);
-
-  // Allow the consumer to provide their own label via `aria-label`; fall back
-  // to the derived `accessibleLabel`. Only apply `role="img"` when we end up
-  // with *some* accessible name, otherwise we'd produce an unlabeled image
-  // role (a11y failure).
+  const accessibleLabel = buildAccessibleLabel(name, status);
   const consumerAriaLabel = (rest as { 'aria-label'?: string })['aria-label'];
   const finalAriaLabel = consumerAriaLabel ?? accessibleLabel;
   const applyImgRole = Boolean(finalAriaLabel);
@@ -106,31 +152,20 @@ export const Avatar = forwardRef<HTMLSpanElement, AvatarProps>(function Avatar(
         styles[`shape-${shape}`],
         className
       )}
-      style={bgColor && !showImg ? { ...style, backgroundColor: bgColor, color: '#fff' } : style}
+      style={wrapperStyle}
       aria-label={applyImgRole ? finalAriaLabel : undefined}
       role={applyImgRole ? 'img' : undefined}
       {...rest}
     >
-      {showImg ? (
-        // When the wrapper exposes `role="img"` with an accessible name, the
-        // inner `<img>` must be decorative to avoid duplicate announcements.
-        // Otherwise (no wrapper label), let the `<img alt>` carry the label.
-        <img
-          src={src}
-          alt={applyImgRole ? '' : (name ?? '')}
-          aria-hidden={applyImgRole ? 'true' : undefined}
-          className={styles.img}
-          onError={() => setImgError(true)}
-        />
-      ) : initials ? (
-        <span className={styles.initials} aria-hidden="true">
-          {initials}
-        </span>
-      ) : (
-        <span className={styles.fallback} aria-hidden="true">
-          {fallbackIcon}
-        </span>
-      )}
+      <AvatarContent
+        showImg={showImg}
+        src={src}
+        name={name}
+        initials={initials}
+        applyImgRole={applyImgRole}
+        fallbackIcon={fallbackIcon}
+        onImgError={() => setImgError(true)}
+      />
       {status && (
         <span
           className={classNames(styles.status, styles[`status-${status}`])}

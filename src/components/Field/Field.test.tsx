@@ -20,11 +20,12 @@ import { expectNoA11yViolations } from '../../test-utils/axe';
 
 describe('Field (shorthand props)', () => {
   it('renders without errors', () => {
-    render(
+    const { container } = render(
       <Field>
         <input />
       </Field>
     );
+    expect(container.firstChild).toBeInTheDocument();
   });
 
   it('renders shorthand label', () => {
