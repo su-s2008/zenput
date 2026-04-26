@@ -26,8 +26,9 @@
 #   Pool:          "Default" (self-hosted). Adjust `pool.name` below if yours
 #                  is named differently.
 #   OS:            Linux ARM64 / aarch64 (Oracle Cloud Ampere A1).
-#   Pre-installed: git, Node 20.x (nvm is fine), npm 10+. Playwright browsers
-#                  are installed once into `~/.cache/ms-playwright`.
+#   Pre-installed: git, Node 20.x, npm 10+. Playwright Chromium browsers
+#                  are in `/home/ubuntu/.cache/ms-playwright`. Vercel CLI and
+#                  http-server are installed globally on the agent.
 #
 # ── Pipeline variables / service connections ────────────────────────────────
 #   SonarCloud service connection : "SonarCloud"
@@ -67,12 +68,10 @@ schedules:
     always: true
 
 variables:
-  - name: NODE_VERSION
-    value: '20.x'
   - name: npm_config_cache
-    value: $(Pipeline.Workspace)/.npm
+    value: /home/ubuntu/.npm
   - name: PLAYWRIGHT_BROWSERS_PATH
-    value: $(Agent.HomeDirectory)/.cache/ms-playwright
+    value: /home/ubuntu/.cache/ms-playwright
   - name: CI
     value: 'true'
   - name: FORCE_COLOR
@@ -100,36 +99,15 @@ stages:
         steps:
           - checkout: self
             clean: false       # keep node_modules/checkout between runs for speed
-            fetchDepth: 0
+            fetchDepth: 1
 
-          # ── Node: skip NodeTool if the correct major is already on PATH ──
+          # ── Toolchain verification ──────────────────────────────────────
           - script: |
               set -e
-              NEED_NODE_TASK=true
-              if command -v node >/dev/null 2>&1; then
-                CURRENT="$(node -v | sed -E 's/^v([0-9]+).*/\1/')"
-                WANTED="$(echo "$(NODE_VERSION)" | sed -E 's/^([0-9]+).*/\1/')"
-                if [ "$CURRENT" = "$WANTED" ]; then
-                  echo "Node $(node -v) already on PATH — skipping NodeTool."
-                  NEED_NODE_TASK=false
-                fi
-              fi
-              echo "##vso[task.setvariable variable=needNodeTask]$NEED_NODE_TASK"
-            displayName: 'Detect pre-installed Node'
-
-          - task: NodeTool@0
-            displayName: 'Install Node $(NODE_VERSION) (only if missing)'
-            condition: eq(variables['needNodeTask'], 'true')
-            inputs:
-              versionSpec: $(NODE_VERSION)
-
-          - task: Cache@2
-            displayName: 'Cache ~/.npm'
-            inputs:
-              key: 'npm | "$(Agent.OS)" | package-lock.json'
-              restoreKeys: |
-                npm | "$(Agent.OS)"
-              path: $(npm_config_cache)
+              echo "Node: $(node -v)"
+              echo "npm:  $(npm -v)"
+              echo "npm cache: $(npm_config_cache)"
+            displayName: 'Verify toolchain'
 
           - script: npm ci --prefer-offline --no-audit --fund=false
             displayName: 'Install dependencies (npm ci)'
@@ -206,27 +184,22 @@ stages:
               artifact: 'storybook-static'
 
           # ── Storybook a11y (axe via @storybook/test-runner) ─────────────
-          - task: Cache@2
-            displayName: 'Cache ms-playwright browsers'
-            inputs:
-              key: 'playwright | "$(Agent.OS)" | package-lock.json'
-              path: $(PLAYWRIGHT_BROWSERS_PATH)
-
           - script: |
               set -e
-              # Install Playwright browsers only when missing. Reuse the same
-              # path as the Cache@2 task above so cache hits are honored.
-              if [ ! -d "$PLAYWRIGHT_BROWSERS_PATH" ] || \
-                 [ -z "$(ls -A "$PLAYWRIGHT_BROWSERS_PATH" 2>/dev/null)" ]; then
-                npx playwright install --with-deps chromium
+              echo "Using PLAYWRIGHT_BROWSERS_PATH=$PLAYWRIGHT_BROWSERS_PATH"
+              CHROMIUM_DIR="$(find "$PLAYWRIGHT_BROWSERS_PATH" -maxdepth 1 \( -name 'chromium-*' -o -name 'chromium_headless_shell-*' \) -type d 2>/dev/null | head -1)"
+              if [ -z "$CHROMIUM_DIR" ]; then
+                echo "Playwright Chromium not found. Installing..."
+                # Omit --with-deps: system dependencies are pre-installed on this agent.
+                npx playwright install chromium
               else
-                echo "Playwright browsers already cached at $PLAYWRIGHT_BROWSERS_PATH — skipping install."
+                echo "Playwright Chromium already installed at $CHROMIUM_DIR"
               fi
-            displayName: 'Install Playwright chromium (if missing)'
+            displayName: 'Ensure Playwright Chromium exists (fallback install)'
 
           - script: |
               set -e
-              npx http-server storybook-static -p 6006 -s &
+              http-server storybook-static -p 6006 -s &
               SERVER_PID=$!
               npx wait-on http://127.0.0.1:6006 --timeout 60000
               npx test-storybook --url http://127.0.0.1:6006
@@ -248,20 +221,6 @@ stages:
         steps:
           - checkout: self
             clean: false
-
-          - task: NodeTool@0
-            displayName: 'Install Node $(NODE_VERSION)'
-            inputs:
-              versionSpec: $(NODE_VERSION)
-
-          - task: Cache@2
-            displayName: 'Cache ~/.npm'
-            inputs:
-              key: 'npm | "$(Agent.OS)" | package-lock.json'
-              path: $(npm_config_cache)
-
-          - script: npm install -g vercel@52
-            displayName: 'Install Vercel CLI'
 
           - script: vercel pull --yes --environment=$(VERCEL_ENV) --token=$(VERCEL_TOKEN)
             displayName: 'Pull Vercel project settings'
@@ -299,14 +258,6 @@ stages:
               steps:
                 - checkout: self
                   clean: false
-                - task: NodeTool@0
-                  displayName: 'Install Node $(NODE_VERSION)'
-                  inputs:
-                    versionSpec: $(NODE_VERSION)
-                - task: Cache@2
-                  inputs:
-                    key: 'npm | "$(Agent.OS)" | package-lock.json'
-                    path: $(npm_config_cache)
                 - script: npm ci --prefer-offline --no-audit --fund=false
                   displayName: 'npm ci'
                 - script: npm run build
