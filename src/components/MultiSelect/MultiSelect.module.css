@@ -1,0 +1,309 @@
+.wrapper {
+  --input-primary-color: #3b82f6;
+  --input-error-color: #dc2626;
+  --input-success-color: #15803d;
+  --input-warning-color: #b45309;
+  --input-border-color: #d1d5db;
+  --input-bg-color: #ffffff;
+  --input-text-color: #111827;
+  --input-placeholder-color: #6b7280;
+  --input-border-radius: 6px;
+  --input-font-family: inherit;
+  --input-focus-ring-color: rgba(59, 130, 246, 0.5);
+  --input-disabled-bg: #f3f4f6;
+  --input-disabled-text: #9ca3af;
+  display: inline-flex;
+  flex-direction: column;
+  gap: 4px;
+  font-family: var(--input-font-family);
+  position: relative;
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+.label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--input-text-color);
+}
+
+.required::after {
+  content: ' *';
+  color: var(--input-error-color);
+}
+
+/* Control box – the chip container + input */
+.control {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  cursor: text;
+  background-color: var(--input-bg-color);
+  border-radius: var(--input-border-radius);
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+  box-sizing: border-box;
+  min-height: 40px;
+  position: relative;
+}
+
+/* Size variants */
+.sm .control {
+  padding: 4px 32px 4px 8px;
+  font-size: 0.75rem;
+  min-height: 32px;
+}
+.md .control {
+  padding: 6px 36px 6px 10px;
+  font-size: 0.875rem;
+  min-height: 40px;
+}
+.lg .control {
+  padding: 8px 44px 8px 14px;
+  font-size: 1rem;
+  min-height: 48px;
+}
+
+/* Variant: outlined */
+.outlined .control {
+  border: 1px solid var(--input-border-color);
+}
+.outlined:not(.disabled) .control:hover {
+  border-color: var(--input-primary-color);
+}
+.outlined.focused .control {
+  border-color: var(--input-primary-color);
+  box-shadow: 0 0 0 3px var(--input-focus-ring-color);
+}
+
+/* Variant: filled */
+.filled .control {
+  border: 1px solid transparent;
+  background-color: #f3f4f6;
+}
+.filled:not(.disabled) .control:hover {
+  background-color: #e5e7eb;
+}
+.filled.focused .control {
+  background-color: var(--input-bg-color);
+  border-color: var(--input-primary-color);
+  box-shadow: 0 0 0 3px var(--input-focus-ring-color);
+}
+
+/* Validation states */
+.error .control {
+  border-color: var(--input-error-color) !important;
+}
+.error.focused .control {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.3) !important;
+}
+.success .control {
+  border-color: var(--input-success-color) !important;
+}
+.warning .control {
+  border-color: var(--input-warning-color) !important;
+}
+
+/* Disabled */
+.disabled .control {
+  background-color: var(--input-disabled-bg);
+  cursor: not-allowed;
+}
+
+/* Hidden native input */
+.searchInput {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: var(--input-font-family);
+  font-size: inherit;
+  color: var(--input-text-color);
+  flex: 1;
+  min-width: 60px;
+  padding: 0;
+}
+
+.searchInput::placeholder {
+  color: var(--input-placeholder-color);
+}
+
+.searchInput:disabled {
+  cursor: not-allowed;
+}
+
+/* Chevron / clear icons */
+.icons {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.clearBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  color: var(--input-placeholder-color);
+  font-size: 0.75rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+}
+
+.clearBtn:hover {
+  color: var(--input-text-color);
+}
+
+.chevron {
+  color: var(--input-placeholder-color);
+  font-size: 0.75rem;
+  transition: transform 0.15s ease;
+  pointer-events: none;
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+/* Chip / tag */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px;
+  background-color: #dbeafe;
+  color: var(--input-primary-color);
+  border-radius: 4px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  white-space: nowrap;
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tagLabel {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tagRemove {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  color: inherit;
+  font-size: 0.875rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  opacity: 0.7;
+  flex-shrink: 0;
+}
+
+.tagRemove:hover {
+  opacity: 1;
+}
+
+/* Dropdown */
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  margin-top: 4px;
+  background-color: var(--input-bg-color);
+  border: 1px solid var(--input-border-color);
+  border-radius: var(--input-border-radius);
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  max-height: 240px;
+  overflow-y: auto;
+  list-style: none;
+  margin-bottom: 0;
+  padding: 4px 0;
+}
+
+.groupHeader {
+  padding: 6px 12px 2px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--input-placeholder-color);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  position: sticky;
+  top: 0;
+  background-color: var(--input-bg-color);
+  z-index: 1;
+}
+
+.option {
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  color: var(--input-text-color);
+  transition: background-color 0.1s ease;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.optionHighlighted {
+  background-color: #eff6ff;
+  color: var(--input-primary-color);
+}
+
+.optionSelected {
+  background-color: #dbeafe;
+  color: var(--input-primary-color);
+  font-weight: 500;
+}
+
+.optionDisabled {
+  color: var(--input-disabled-text);
+  cursor: not-allowed;
+}
+
+.optionCheck {
+  font-size: 0.75rem;
+}
+
+.creatableOption {
+  font-style: italic;
+}
+
+.noOptions,
+.loading {
+  padding: 10px 12px;
+  font-size: 0.875rem;
+  color: var(--input-placeholder-color);
+  text-align: center;
+}
+
+/* Helper / validation text */
+.helperText {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+.errorText {
+  font-size: 0.75rem;
+  color: var(--input-error-color);
+}
+.successText {
+  font-size: 0.75rem;
+  color: var(--input-success-color);
+}
+.warningText {
+  font-size: 0.75rem;
+  color: var(--input-warning-color);
+}
