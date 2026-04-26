@@ -1,0 +1,100 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--zp-space-1);
+  width: 100%;
+}
+
+.labelRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: var(--zp-font-size-sm);
+  color: var(--zp-color-text-secondary);
+}
+
+.track {
+  width: 100%;
+  background-color: var(
+    --zp-component-progress-track-bg,
+    var(--zp-color-border-subtle, #e5e7eb)
+  );
+  border-radius: var(--zp-component-progress-radius, var(--zp-radius-full, 9999px));
+  overflow: hidden;
+}
+
+/* Sizes */
+.size-sm .track,
+.track.size-sm {
+  height: var(--zp-component-progress-height-sm, 4px);
+}
+
+.size-md .track,
+.track.size-md {
+  height: var(--zp-component-progress-height-md, 8px);
+}
+
+.size-lg .track,
+.track.size-lg {
+  height: var(--zp-component-progress-height-lg, 12px);
+}
+
+.fill {
+  height: 100%;
+  border-radius: inherit;
+  background-color: var(--zp-component-progress-fill-bg, var(--zp-color-brand, #6366f1));
+  transition: width var(--zp-duration-normal, 200ms) var(--zp-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
+}
+
+/* Status fill colors */
+.status-success .fill {
+  background-color: var(--zp-color-success, #22c55e);
+}
+
+.status-warning .fill {
+  background-color: var(--zp-color-warning, #f59e0b);
+}
+
+.status-error .fill {
+  background-color: var(--zp-color-danger, #ef4444);
+}
+
+/* Indeterminate */
+.indeterminate .fill {
+  width: 40% !important;
+  animation: zp-progress-indeterminate 1.5s ease-in-out infinite;
+}
+
+/* Striped */
+.striped .fill {
+  background-image: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.15) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0.15) 75%,
+    transparent 75%,
+    transparent
+  );
+  background-size: 1rem 1rem;
+}
+
+@keyframes zp-progress-indeterminate {
+  0% {
+    transform: translateX(-150%);
+  }
+  100% {
+    transform: translateX(350%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fill {
+    transition: none;
+  }
+  .indeterminate .fill {
+    animation: none;
+    width: 50% !important;
+  }
+}

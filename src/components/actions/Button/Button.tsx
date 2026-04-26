@@ -1,5 +1,6 @@
 import React, { forwardRef } from 'react';
 import { classNames } from '../../../utils';
+import { Spinner } from '../../feedback/Spinner';
 import styles from './Button.module.css';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'subtle' | 'outline' | 'ghost' | 'danger';
@@ -86,7 +87,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       {...rest}
     >
       {loading && (
-        <span className={styles.spinner} aria-hidden="true" data-testid="button-spinner" />
+        <Spinner size="sm" label="" className={styles.spinner} data-testid="button-spinner" aria-hidden="true" />
       )}
       <span
         className={classNames(loading ? styles.contentHidden : undefined)}

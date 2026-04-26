@@ -1,0 +1,70 @@
+.skeleton {
+  display: block;
+  background-color: var(--zp-component-skeleton-base-color, var(--zp-color-border-subtle, #e5e7eb));
+  border-radius: var(--zp-component-skeleton-radius, var(--zp-radius-sm, 4px));
+  overflow: hidden;
+  position: relative;
+}
+
+/* Shimmer animation */
+.shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--zp-component-skeleton-highlight-color, var(--zp-color-surface, #f3f4f6)) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: zp-skeleton-shimmer
+    var(--zp-component-skeleton-shimmer-duration, var(--zp-duration-shimmer, 1500ms))
+    linear infinite;
+}
+
+/* Pulse animation */
+.pulse {
+  animation: zp-skeleton-pulse
+    var(--zp-component-skeleton-shimmer-duration, var(--zp-duration-shimmer, 1500ms))
+    ease-in-out infinite;
+}
+
+@keyframes zp-skeleton-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes zp-skeleton-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shimmer::after,
+  .pulse {
+    animation: none;
+  }
+}
+
+/* Variants */
+.variant-text {
+  border-radius: var(--zp-component-skeleton-radius, var(--zp-radius-sm, 4px));
+}
+
+.variant-rect {
+  border-radius: var(--zp-component-skeleton-radius, var(--zp-radius-sm, 4px));
+}
+
+.variant-circle {
+  border-radius: 50%;
+}

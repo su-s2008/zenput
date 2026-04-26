@@ -1,0 +1,84 @@
+.wrapper {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--zp-space-2);
+}
+
+.svg {
+  transform: rotate(-90deg);
+  overflow: visible;
+}
+
+.track {
+  fill: none;
+  stroke: var(--zp-component-progress-track-bg, var(--zp-color-border-subtle, #e5e7eb));
+}
+
+.fill {
+  fill: none;
+  stroke: var(--zp-component-progress-fill-bg, var(--zp-color-brand, #6366f1));
+  stroke-linecap: round;
+  transition: stroke-dashoffset var(--zp-duration-normal, 200ms)
+    var(--zp-easing-standard, cubic-bezier(0.4, 0, 0.2, 1));
+}
+
+/* Status fill colors */
+.status-success .fill {
+  stroke: var(--zp-color-success, #22c55e);
+}
+
+.status-warning .fill {
+  stroke: var(--zp-color-warning, #f59e0b);
+}
+
+.status-error .fill {
+  stroke: var(--zp-color-danger, #ef4444);
+}
+
+/* Indeterminate */
+.indeterminate .fill {
+  stroke-dasharray: 60 100;
+  animation: zp-circular-indeterminate 1.4s linear infinite;
+}
+
+.indeterminate .svg {
+  animation: zp-circular-rotate 1.4s linear infinite;
+}
+
+.label {
+  font-size: var(--zp-font-size-sm);
+  color: var(--zp-color-text-secondary);
+  text-align: center;
+}
+
+@keyframes zp-circular-indeterminate {
+  0% {
+    stroke-dashoffset: 60;
+  }
+  50% {
+    stroke-dashoffset: 15;
+  }
+  100% {
+    stroke-dashoffset: 60;
+  }
+}
+
+@keyframes zp-circular-rotate {
+  0% {
+    transform: rotate(-90deg);
+  }
+  100% {
+    transform: rotate(270deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fill {
+    transition: none;
+  }
+  .indeterminate .fill,
+  .indeterminate .svg {
+    animation: none;
+  }
+}

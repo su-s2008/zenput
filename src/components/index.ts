@@ -27,6 +27,9 @@ export * from './actions';
 export * from './navigation';
 export * from './TokenBrowser';
 
+// Feedback / loading primitives
+export * from './feedback';
+
 // Overlay primitives
 export * from './Portal';
 export * from './overlay';

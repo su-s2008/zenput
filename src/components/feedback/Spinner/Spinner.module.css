@@ -1,0 +1,47 @@
+.spinner {
+  display: inline-block;
+  border-style: solid;
+  border-color: currentcolor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: zp-spin var(--zp-duration-spin, 600ms) linear infinite;
+  flex-shrink: 0;
+}
+
+/* Sizes */
+.size-sm {
+  width: 16px;
+  height: 16px;
+  border-width: 2px;
+}
+
+.size-md {
+  width: 24px;
+  height: 24px;
+  border-width: 2px;
+}
+
+.size-lg {
+  width: 32px;
+  height: 32px;
+  border-width: 3px;
+}
+
+.size-xl {
+  width: 48px;
+  height: 48px;
+  border-width: 4px;
+}
+
+@keyframes zp-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation: none;
+    opacity: 0.6;
+  }
+}

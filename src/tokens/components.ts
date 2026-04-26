@@ -297,7 +297,45 @@ export const defaultComponentTokens = {
     border: 'var(--zp-color-border-subtle)',
     shadow: 'var(--zp-shadow-lg)',
   } satisfies ToastTokens,
+
+  skeleton: {
+    baseColor: 'var(--zp-color-border-subtle)',
+    highlightColor: 'var(--zp-color-surface)',
+    shimmerDuration: 'var(--zp-duration-shimmer)',
+    radius: 'var(--zp-radius-sm)',
+  } satisfies SkeletonTokens,
+
+  progress: {
+    trackBg: 'var(--zp-color-border-subtle)',
+    fillBg: 'var(--zp-color-brand)',
+    heightSm: '4px',
+    heightMd: '8px',
+    heightLg: '12px',
+    radius: 'var(--zp-radius-full)',
+  } satisfies ProgressTokens,
 };
+
+/**
+ * Skeleton component tokens
+ */
+export interface SkeletonTokens {
+  baseColor?: string;
+  highlightColor?: string;
+  shimmerDuration?: string;
+  radius?: string;
+}
+
+/**
+ * Progress component tokens (shared by ProgressBar and CircularProgress)
+ */
+export interface ProgressTokens {
+  trackBg?: string;
+  fillBg?: string;
+  heightSm?: string;
+  heightMd?: string;
+  heightLg?: string;
+  radius?: string;
+}
 
 /**
  * All component token types
@@ -311,6 +349,8 @@ export interface ComponentTokensMap {
   dataTable?: Partial<DataTableTokens>;
   menu?: Partial<MenuTokens>;
   toast?: Partial<ToastTokens>;
+  skeleton?: Partial<SkeletonTokens>;
+  progress?: Partial<ProgressTokens>;
 }
 
 export type ComponentName = keyof ComponentTokensMap;

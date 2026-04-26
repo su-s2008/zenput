@@ -138,14 +138,11 @@
   border-color: var(--zp-color-danger-active);
 }
 
-/* Loading spinner */
+/* Loading spinner (sizing override for button context) */
 .spinner {
   width: 1em;
   height: 1em;
-  border: 2px solid currentcolor;
-  border-top-color: transparent;
-  border-radius: 50%;
-  animation: zp-btn-spin 600ms linear infinite;
+  border-width: 2px;
 }
 
 .contentHidden {
@@ -170,16 +167,4 @@
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
-}
-
-@keyframes zp-btn-spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .spinner {
-    animation: none;
-  }
 }
