@@ -1,0 +1,113 @@
+.trigger {
+  cursor: pointer;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+}
+
+.triggerWrap {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+}
+
+.trigger:disabled {
+  cursor: not-allowed;
+}
+
+.placeholder {
+  color: var(--input-placeholder-color, #6b7280);
+}
+
+.triggerText {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.triggerIcons {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.clearBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  font-size: 0.75rem;
+  border-radius: 9999px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--zp-color-text-secondary, #6b7280);
+  padding: 0;
+  transition: background-color 0.1s;
+}
+
+.clearBtn:hover {
+  background-color: var(--zp-color-surface-raised, #f3f4f6);
+  color: var(--zp-color-text-primary, #111827);
+}
+
+.calIcon {
+  font-size: 1em;
+  opacity: 0.6;
+}
+
+/* Panel */
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--zp-space-2, 8px);
+  padding: var(--zp-space-1, 4px);
+}
+
+/* Two-month layout */
+.calendars {
+  display: flex;
+  gap: var(--zp-space-4, 16px);
+  flex-wrap: wrap;
+}
+
+.calendarWrapper {
+  position: relative;
+}
+
+/* Presets */
+.presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--zp-space-1, 4px);
+  border-bottom: 1px solid var(--zp-color-border, #e5e7eb);
+  padding-bottom: var(--zp-space-2, 8px);
+}
+
+.presetBtn {
+  background: none;
+  border: 1px solid var(--zp-color-border, #e5e7eb);
+  border-radius: var(--zp-radius-md, 6px);
+  padding: var(--zp-space-1, 4px) var(--zp-space-2, 8px);
+  cursor: pointer;
+  font-size: 0.875rem;
+  color: var(--zp-color-text-primary, #111827);
+  transition: background-color 0.1s;
+}
+
+.presetBtn:hover {
+  background-color: var(--zp-color-surface-raised, #f3f4f6);
+}
+
+.hint {
+  font-size: 0.8125rem;
+  color: var(--zp-color-text-secondary, #6b7280);
+  margin: 0;
+  text-align: center;
+}

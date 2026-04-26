@@ -38,6 +38,11 @@ function usePopoverContext(component: string): PopoverContextValue {
   return ctx;
 }
 
+/** Hook for descendant components to read and control the nearest Popover state. */
+export function usePopoverState(): Pick<PopoverContextValue, 'open' | 'setOpen'> {
+  return usePopoverContext('usePopoverState');
+}
+
 export interface PopoverProps {
   open?: boolean;
   defaultOpen?: boolean;

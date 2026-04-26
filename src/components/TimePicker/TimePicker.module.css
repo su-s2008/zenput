@@ -1,0 +1,210 @@
+.trigger {
+  cursor: pointer;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+}
+
+.triggerWrap {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+}
+
+.trigger:disabled {
+  cursor: not-allowed;
+}
+
+.placeholder {
+  color: var(--input-placeholder-color, #6b7280);
+}
+
+.triggerText {
+  flex: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.triggerIcons {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.clearBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  font-size: 0.75rem;
+  border-radius: 9999px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--zp-color-text-secondary, #6b7280);
+  padding: 0;
+  transition: background-color 0.1s;
+}
+
+.clearBtn:hover {
+  background-color: var(--zp-color-surface-raised, #f3f4f6);
+  color: var(--zp-color-text-primary, #111827);
+}
+
+.clockIcon {
+  font-size: 1em;
+  opacity: 0.6;
+}
+
+/* Panel */
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--zp-space-2, 8px);
+  padding: var(--zp-space-2, 8px);
+  min-width: fit-content;
+}
+
+/* Columns */
+.columns {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+}
+
+.separator {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--zp-color-text-secondary, #6b7280);
+  padding: 0 2px;
+  margin-top: 2.25rem; /* align with items */
+  line-height: 2.25rem;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  min-width: 3rem;
+}
+
+.columnLabel {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--zp-color-text-secondary, #6b7280);
+  text-align: center;
+  padding-bottom: var(--zp-space-1, 4px);
+}
+
+.columnList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 10rem;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  outline: none;
+  border: 1px solid var(--zp-color-border, #e5e7eb);
+  border-radius: var(--zp-radius-md, 6px);
+}
+
+.columnList:focus-visible {
+  outline: 2px solid var(--zp-color-focus-ring, rgba(59, 130, 246, 0.5));
+  outline-offset: 2px;
+}
+
+.columnItem {
+  padding: 0 var(--zp-space-3, 12px);
+  height: 2.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9375rem;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  color: var(--zp-color-text-primary, #111827);
+  transition: background-color 0.1s;
+}
+
+.columnItem:hover:not(.columnItemDisabled) {
+  background-color: var(--zp-color-surface-raised, #f3f4f6);
+}
+
+.columnItemSelected {
+  background-color: var(--zp-color-brand, #3b82f6);
+  color: #fff;
+  font-weight: 600;
+  border-radius: var(--zp-radius-sm, 4px);
+}
+
+.columnItemSelected:hover {
+  background-color: var(--zp-color-brand-hover, #2563eb);
+}
+
+.columnItemDisabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* AM/PM column */
+.periodColumn {
+  display: flex;
+  flex-direction: column;
+  gap: var(--zp-space-1, 4px);
+  padding-top: 1.625rem; /* label height */
+  margin-left: var(--zp-space-2, 8px);
+}
+
+.periodBtn {
+  padding: var(--zp-space-1, 4px) var(--zp-space-2, 8px);
+  border: 1px solid var(--zp-color-border, #e5e7eb);
+  border-radius: var(--zp-radius-md, 6px);
+  background: none;
+  cursor: pointer;
+  font-size: 0.875rem;
+  color: var(--zp-color-text-primary, #111827);
+  transition: background-color 0.1s;
+}
+
+.periodBtn:hover {
+  background-color: var(--zp-color-surface-raised, #f3f4f6);
+}
+
+.periodBtnActive {
+  background-color: var(--zp-color-brand, #3b82f6);
+  color: #fff;
+  border-color: var(--zp-color-brand, #3b82f6);
+}
+
+/* Footer */
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  border-top: 1px solid var(--zp-color-border, #e5e7eb);
+  padding-top: var(--zp-space-2, 8px);
+}
+
+.confirmBtn {
+  background-color: var(--zp-color-brand, #3b82f6);
+  color: #fff;
+  border: none;
+  border-radius: var(--zp-radius-md, 6px);
+  padding: var(--zp-space-1, 4px) var(--zp-space-3, 12px);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.1s;
+}
+
+.confirmBtn:hover {
+  background-color: var(--zp-color-brand-hover, #2563eb);
+}
+
+.confirmBtn:focus-visible {
+  outline: 2px solid var(--zp-color-focus-ring, rgba(59, 130, 246, 0.5));
+  outline-offset: 2px;
+}
