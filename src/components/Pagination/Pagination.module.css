@@ -1,0 +1,140 @@
+/* ── Root ─────────────────────────────────────────────── */
+
+.pagination {
+  --pg-accent: var(--zp-color-brand, #3b82f6);
+  --pg-accent-fg: #ffffff;
+  --pg-text: var(--zp-color-text-primary, #111827);
+  --pg-text-muted: var(--zp-color-text-secondary, #6b7280);
+  --pg-border: var(--zp-color-border-subtle, #e5e7eb);
+  --pg-bg: var(--zp-color-bg-surface, #ffffff);
+  --pg-bg-hover: var(--zp-color-bg-subtle, #f9fafb);
+  --pg-focus-ring: var(--zp-color-brand-focus-ring, rgba(59, 130, 246, 0.4));
+  --pg-radius: var(--zp-radius-sm, 4px);
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-family: inherit;
+  font-size: 0.8125rem;
+  color: var(--pg-text-muted);
+}
+
+/* ── Controls row ─────────────────────────────────────── */
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ── Page size selector ───────────────────────────────── */
+
+.pageSizeWrapper {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pageSizeLabel {
+  font-size: 0.8125rem;
+  color: var(--pg-text-muted);
+  white-space: nowrap;
+}
+
+.pageSizeSelect {
+  height: var(--pg-btn-h);
+  padding: 0 6px;
+  border: 1px solid var(--pg-border);
+  border-radius: var(--pg-radius);
+  background-color: var(--pg-bg);
+  color: var(--pg-text);
+  font-size: 0.8125rem;
+  cursor: pointer;
+}
+
+.pageSizeSelect:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--pg-focus-ring);
+}
+
+/* ── Buttons ──────────────────────────────────────────── */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--pg-btn-h);
+  height: var(--pg-btn-h);
+  padding: 0 6px;
+  border: 1px solid var(--pg-border);
+  border-radius: var(--pg-radius);
+  background-color: var(--pg-bg);
+  color: var(--pg-text);
+  font-size: var(--pg-btn-font);
+  cursor: pointer;
+  line-height: 1;
+  transition:
+    border-color 0.1s ease,
+    background-color 0.1s ease,
+    color 0.1s ease;
+}
+
+.btn:hover:not(:disabled) {
+  border-color: var(--pg-accent);
+  color: var(--pg-accent);
+}
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--pg-focus-ring);
+}
+
+.btnActive {
+  background-color: var(--pg-accent);
+  border-color: var(--pg-accent);
+  color: var(--pg-accent-fg);
+  font-weight: 600;
+}
+
+.btnActive:hover:not(:disabled) {
+  color: var(--pg-accent-fg);
+}
+
+/* ── Ellipsis ─────────────────────────────────────────── */
+
+.ellipsis {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--pg-btn-h);
+  height: var(--pg-btn-h);
+  font-size: var(--pg-btn-font);
+  color: var(--pg-text-muted);
+  user-select: none;
+}
+
+/* ── Size variants ────────────────────────────────────── */
+
+.sizeSm {
+  --pg-btn-h: 26px;
+  --pg-btn-font: 0.75rem;
+  font-size: 0.75rem;
+}
+
+.sizeMd {
+  --pg-btn-h: 32px;
+  --pg-btn-font: 0.8125rem;
+}
+
+.sizeLg {
+  --pg-btn-h: 38px;
+  --pg-btn-font: 0.875rem;
+  font-size: 0.875rem;
+}

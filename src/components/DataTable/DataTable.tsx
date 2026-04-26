@@ -8,39 +8,9 @@ import {
 } from './DataTable.types';
 import { classNames } from '../../utils';
 import styles from './DataTable.module.css';
+import { Pagination } from '../Pagination/Pagination';
 
 const DEFAULT_SKELETON_ROW_COUNT = 5;
-
-/**
- * Returns an array of page numbers and 'ellipsis' placeholders to render in
- * the pagination bar. Always shows the first/last page and up to `windowSize`
- * pages around the current page, with ellipsis where gaps exist.
- */
-function buildPageItems(current: number, total: number, windowSize = 2): (number | 'ellipsis')[] {
-  // Clamp current to a valid page range so pagination stays stable under data changes.
-  const clamped = Math.min(Math.max(current, 1), Math.max(total, 1));
-
-  if (total <= 7) {
-    return Array.from({ length: total }, (_, i) => i + 1);
-  }
-
-  const items: (number | 'ellipsis')[] = [];
-  const left = Math.max(2, clamped - windowSize);
-  const right = Math.min(total - 1, clamped + windowSize);
-
-  items.push(1);
-
-  if (left > 2) items.push('ellipsis');
-
-  for (let p = left; p <= right; p++) {
-    items.push(p);
-  }
-
-  if (right < total - 1) items.push('ellipsis');
-
-  items.push(total);
-  return items;
-}
 
 /** Density CSS class map (only non-default densities have a class). */
 const DENSITY_CLASS: Record<Exclude<DataTableDensity, 'default'>, string> = {
@@ -55,6 +25,7 @@ export function DataTable<T extends DataTableRecord = DataTableRecord>({
   className,
   style,
   emptyMessage = 'No data available',
+  emptyState,
   pagination,
   onSort,
   loading = false,
@@ -398,12 +369,6 @@ export function DataTable<T extends DataTableRecord = DataTableRecord>({
     onExportCSV?.(filteredData, visibleColumns);
   }, [onExportCSV, filteredData, visibleColumns]);
 
-  // ── Pagination ─────────────────────────────────────────────────────────────
-
-  const totalPages = pagination
-    ? Math.max(1, Math.ceil(pagination.totalCount / pagination.pageSize))
-    : 1;
-
   const colSpan = visibleColumns.length + (selectable ? 1 : 0);
 
   // ── Skeleton rows ──────────────────────────────────────────────────────────
@@ -700,7 +665,7 @@ export function DataTable<T extends DataTableRecord = DataTableRecord>({
             ) : filteredData.length === 0 ? (
               <tr>
                 <td colSpan={colSpan} className={styles.emptyCell}>
-                  {emptyMessage}
+                  {emptyState ?? emptyMessage}
                 </td>
               </tr>
             ) : (
@@ -777,60 +742,39 @@ export function DataTable<T extends DataTableRecord = DataTableRecord>({
       </div>
 
       {/* Pagination controls */}
-      {pagination && (
-        <div className={styles.pagination}>
-          <span className={styles.paginationInfo}>
-            {loading || pagination.totalCount === 0
-              ? `0–0 of ${pagination.totalCount}`
-              : `${(pagination.currentPage - 1) * pagination.pageSize + 1}–${Math.min(
-                  pagination.currentPage * pagination.pageSize,
-                  pagination.totalCount
-                )} of ${pagination.totalCount}`}
-          </span>
-          <div className={styles.paginationControls}>
-            <button
-              type="button"
-              className={styles.pageButton}
-              disabled={loading || pagination.currentPage <= 1}
-              onClick={() => pagination.onPageChange(pagination.currentPage - 1)}
-              aria-label="Previous page"
-            >
-              ‹
-            </button>
-            {buildPageItems(pagination.currentPage, totalPages).map((item, idx) =>
-              item === 'ellipsis' ? (
-                <span key={`ellipsis-${idx}`} className={styles.pageEllipsis} aria-hidden="true">
-                  …
-                </span>
-              ) : (
-                <button
-                  key={item}
-                  type="button"
-                  className={classNames(
-                    styles.pageButton,
-                    item === pagination.currentPage ? styles.pageButtonActive : undefined
-                  )}
-                  disabled={loading}
-                  onClick={() => pagination.onPageChange(item)}
-                  aria-label={`Page ${item}`}
-                  aria-current={item === pagination.currentPage ? 'page' : undefined}
-                >
-                  {item}
-                </button>
-              )
-            )}
-            <button
-              type="button"
-              className={styles.pageButton}
-              disabled={loading || pagination.currentPage >= totalPages}
-              onClick={() => pagination.onPageChange(pagination.currentPage + 1)}
-              aria-label="Next page"
-            >
-              ›
-            </button>
+      {pagination && (() => {
+        // Clamp the displayed range to valid bounds so the "x–y of total" label
+        // stays consistent even if the consumer's currentPage drifts out of
+        // range (for example after totalCount shrinks).
+        const safePageSize = Math.max(1, Math.floor(pagination.pageSize) || 1);
+        const totalPages = Math.max(
+          1,
+          Math.ceil(Math.max(0, pagination.totalCount) / safePageSize)
+        );
+        const safeCurrentPage = Math.min(
+          Math.max(1, Math.floor(pagination.currentPage) || 1),
+          totalPages
+        );
+        const rangeStart = (safeCurrentPage - 1) * safePageSize + 1;
+        const rangeEnd = Math.min(safeCurrentPage * safePageSize, pagination.totalCount);
+        return (
+          <div className={styles.pagination}>
+            <span className={styles.paginationInfo}>
+              {loading || pagination.totalCount === 0
+                ? `0–0 of ${pagination.totalCount}`
+                : `${rangeStart}–${rangeEnd} of ${pagination.totalCount}`}
+            </span>
+            <Pagination
+              currentPage={pagination.currentPage}
+              totalCount={pagination.totalCount}
+              pageSize={pagination.pageSize}
+              onPageChange={pagination.onPageChange}
+              disabled={loading}
+              size="sm"
+            />
           </div>
-        </div>
-      )}
+        );
+      })()}
     </div>
   );
 }

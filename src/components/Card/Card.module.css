@@ -1,0 +1,156 @@
+/* ── Card root ────────────────────────────────────────── */
+
+.card {
+  --card-bg: var(--zp-component-card-bg, var(--zp-color-bg-surface, #ffffff));
+  --card-border: var(--zp-component-card-border, var(--zp-color-border-subtle, #e5e7eb));
+  --card-radius: var(--zp-component-card-radius, var(--zp-radius-lg, 12px));
+  --card-shadow: var(--zp-component-card-shadow, none);
+  --card-padding: var(--zp-component-card-padding, 1rem);
+  --card-focus-ring: var(--zp-color-brand-focus-ring, rgba(59, 130, 246, 0.4));
+
+  position: relative;
+  background-color: var(--card-bg);
+  border-radius: var(--card-radius);
+  overflow: hidden;
+  font-family: inherit;
+  color: inherit;
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+/* ── Variants ─────────────────────────────────────────── */
+
+.variantOutlined {
+  border: 1px solid var(--card-border);
+  box-shadow: var(--card-shadow);
+}
+
+.variantElevated {
+  border: none;
+  box-shadow: var(--zp-shadow-md, 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06));
+}
+
+.variantFilled {
+  border: none;
+  background-color: var(--zp-color-bg-subtle, #f9fafb);
+  box-shadow: var(--card-shadow);
+}
+
+/* ── Interactive ──────────────────────────────────────── */
+
+.interactive {
+  cursor: pointer;
+  text-decoration: none;
+  display: block;
+}
+
+.interactive:hover {
+  box-shadow: var(--zp-shadow-lg, 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05));
+  transform: translateY(-1px);
+}
+
+.interactive:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--card-focus-ring);
+}
+
+.interactive:active {
+  transform: translateY(0);
+}
+
+/* ── Padding variants for card root ───────────────────── */
+
+.paddingSm {
+  padding: 0.75rem;
+}
+
+.paddingMd {
+  padding: var(--card-padding);
+}
+
+.paddingLg {
+  padding: 1.5rem;
+}
+
+/* ── CardHeader ───────────────────────────────────────── */
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1rem var(--card-padding);
+}
+
+.headerAvatar {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.headerContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.headerTitle {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--zp-color-text-primary, #111827);
+  line-height: 1.4;
+}
+
+.headerDescription {
+  margin: 0.125rem 0 0;
+  font-size: 0.8125rem;
+  color: var(--zp-color-text-secondary, #6b7280);
+  line-height: 1.5;
+}
+
+.headerAction {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+/* ── CardMedia ────────────────────────────────────────── */
+
+.media {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+}
+
+.mediaInner {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.mediaImg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ── CardBody ─────────────────────────────────────────── */
+
+.body {
+  padding: 0.75rem var(--card-padding) 1rem;
+  font-size: 0.875rem;
+  color: var(--zp-color-text-primary, #111827);
+  line-height: 1.6;
+}
+
+/* ── CardFooter ───────────────────────────────────────── */
+
+.footer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem var(--card-padding);
+  border-top: 1px solid var(--card-border);
+  font-size: 0.8125rem;
+}

@@ -59,6 +59,19 @@ describe('DataTable', () => {
     expect(screen.getByText('Nothing here')).toBeInTheDocument();
   });
 
+  it('renders emptyState slot when provided and takes precedence over emptyMessage', () => {
+    render(
+      <DataTable
+        columns={columns}
+        data={[]}
+        emptyMessage="ignored"
+        emptyState={<div data-testid="custom-empty">Custom empty</div>}
+      />
+    );
+    expect(screen.getByTestId('custom-empty')).toBeInTheDocument();
+    expect(screen.queryByText('ignored')).not.toBeInTheDocument();
+  });
+
   it('renders a filter button only for filterable columns', () => {
     render(<DataTable columns={columns} data={data} />);
     const filterButtons = screen.getAllByRole('button', { name: /filter by/i });

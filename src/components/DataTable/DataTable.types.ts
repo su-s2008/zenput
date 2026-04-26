@@ -68,6 +68,11 @@ export interface DataTableProps<T extends DataTableRecord = DataTableRecord> {
   /** Message displayed when data array is empty or all rows are filtered out */
   emptyMessage?: string;
   /**
+   * Custom empty-state node rendered inside the table when there are no rows.
+   * Takes precedence over `emptyMessage` when both are provided.
+   */
+  emptyState?: React.ReactNode;
+  /**
    * Pagination configuration. When provided, the table renders built-in
    * pagination controls below the table body.
    */
