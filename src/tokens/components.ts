@@ -123,6 +123,48 @@ export interface TooltipTokens {
 }
 
 /**
+ * Menu component tokens
+ */
+export interface MenuTokens {
+  bg?: string;
+  border?: string;
+  radius?: string;
+  shadow?: string;
+  itemPaddingY?: string;
+  itemPaddingX?: string;
+  itemHoverBg?: string;
+  separatorColor?: string;
+}
+
+/**
+ * Toast component tokens
+ */
+export interface ToastTokens {
+  // Layout
+  padding?: string;
+  gap?: string;
+  maxWidth?: string;
+  // Border
+  borderRadius?: string;
+  borderWidth?: string;
+  // Colors (base)
+  bg?: string;
+  text?: string;
+  border?: string;
+  // Colors (per status)
+  infoBg?: string;
+  infoBorder?: string;
+  successBg?: string;
+  successBorder?: string;
+  warningBg?: string;
+  warningBorder?: string;
+  errorBg?: string;
+  errorBorder?: string;
+  // Shadow
+  shadow?: string;
+}
+
+/**
  * DataTable component tokens
  */
 export interface DataTableTokens {
@@ -233,6 +275,17 @@ export const defaultComponentTokens = {
     rowBgAlt: 'var(--zp-color-surface)',
   } satisfies DataTableTokens,
 
+  menu: {
+    bg: 'var(--zp-color-surface)',
+    border: 'var(--zp-color-border)',
+    radius: 'var(--zp-radius-md)',
+    shadow: 'var(--zp-shadow-lg)',
+    itemPaddingY: 'var(--zp-space-2)',
+    itemPaddingX: 'var(--zp-space-3)',
+    itemHoverBg: 'var(--zp-color-surface-raised)',
+    separatorColor: 'var(--zp-color-border-subtle)',
+  } satisfies MenuTokens,
+
   toast: {
     padding: 'var(--zp-space-3) var(--zp-space-4)',
     gap: 'var(--zp-space-2)',
@@ -247,34 +300,6 @@ export const defaultComponentTokens = {
 };
 
 /**
- * Toast component tokens
- */
-export interface ToastTokens {
-  // Layout
-  padding?: string;
-  gap?: string;
-  maxWidth?: string;
-  // Border
-  borderRadius?: string;
-  borderWidth?: string;
-  // Colors (base)
-  bg?: string;
-  text?: string;
-  border?: string;
-  // Colors (per status)
-  infoBg?: string;
-  infoBorder?: string;
-  successBg?: string;
-  successBorder?: string;
-  warningBg?: string;
-  warningBorder?: string;
-  errorBg?: string;
-  errorBorder?: string;
-  // Shadow
-  shadow?: string;
-}
-
-/**
  * All component token types
  */
 export interface ComponentTokensMap {
@@ -284,6 +309,7 @@ export interface ComponentTokensMap {
   dialog?: Partial<DialogTokens>;
   tooltip?: Partial<TooltipTokens>;
   dataTable?: Partial<DataTableTokens>;
+  menu?: Partial<MenuTokens>;
   toast?: Partial<ToastTokens>;
 }
 

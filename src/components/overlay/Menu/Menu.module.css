@@ -1,0 +1,104 @@
+.content {
+  z-index: calc(var(--zp-z-popover, 50) + 10);
+  min-width: 180px;
+  background-color: var(--zp-component-menu-bg, var(--zp-color-surface));
+  border: 1px solid var(--zp-component-menu-border, var(--zp-color-border));
+  border-radius: var(--zp-component-menu-radius, var(--zp-radius-md));
+  box-shadow: var(--zp-component-menu-shadow, var(--zp-shadow-lg));
+  padding: var(--zp-space-1) 0;
+  outline: none;
+  overflow: hidden;
+}
+
+/* Shared base for all item-like rows (item, checkbox, radio, subTrigger). */
+.menuItemBase {
+  display: flex;
+  align-items: center;
+  gap: var(--zp-space-2);
+  padding: var(--zp-component-menu-item-padding-y, var(--zp-space-2)) var(--zp-component-menu-item-padding-x, var(--zp-space-3));
+  cursor: default;
+  user-select: none;
+  outline: none;
+  border-radius: var(--zp-radius-sm);
+  color: var(--zp-color-text-primary);
+  font-size: var(--zp-font-size-sm);
+  line-height: var(--zp-line-height-normal);
+}
+
+.menuItemBase:hover,
+.menuItemBase:focus {
+  background-color: var(--zp-component-menu-item-hover-bg, var(--zp-color-surface-raised));
+}
+
+.item {
+  composes: menuItemBase;
+}
+
+.itemDestructive {
+  color: var(--zp-color-error);
+}
+
+.itemDisabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.itemIcon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.itemIndicator {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1rem;
+  flex-shrink: 0;
+}
+
+.separator {
+  height: 1px;
+  border: none;
+  margin: var(--zp-space-1) 0;
+  background-color: var(--zp-component-menu-separator-color, var(--zp-color-border-subtle));
+}
+
+.label {
+  padding: var(--zp-space-1) var(--zp-space-3);
+  font-size: var(--zp-font-size-xs);
+  font-weight: var(--zp-font-weight-semibold);
+  color: var(--zp-color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.checkboxItem {
+  composes: menuItemBase;
+}
+
+.radioItem {
+  composes: menuItemBase;
+}
+
+.subTrigger {
+  composes: menuItemBase;
+}
+
+.subTriggerArrow {
+  margin-left: auto;
+  font-size: 0.6em;
+  opacity: 0.7;
+}
+
+.subContent {
+  z-index: calc(var(--zp-z-popover, 50) + 20);
+  min-width: 180px;
+  background-color: var(--zp-component-menu-bg, var(--zp-color-surface));
+  border: 1px solid var(--zp-component-menu-border, var(--zp-color-border));
+  border-radius: var(--zp-component-menu-radius, var(--zp-radius-md));
+  box-shadow: var(--zp-component-menu-shadow, var(--zp-shadow-lg));
+  padding: var(--zp-space-1) 0;
+  outline: none;
+  overflow: hidden;
+}

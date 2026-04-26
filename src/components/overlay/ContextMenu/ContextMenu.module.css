@@ -1,0 +1,11 @@
+.content {
+  z-index: calc(var(--zp-z-popover, 50) + 10);
+  min-width: 180px;
+  background-color: var(--zp-component-menu-bg, var(--zp-color-surface));
+  border: 1px solid var(--zp-component-menu-border, var(--zp-color-border));
+  border-radius: var(--zp-component-menu-radius, var(--zp-radius-md));
+  box-shadow: var(--zp-component-menu-shadow, var(--zp-shadow-lg));
+  padding: var(--zp-space-1) 0;
+  outline: none;
+  overflow: hidden;
+}

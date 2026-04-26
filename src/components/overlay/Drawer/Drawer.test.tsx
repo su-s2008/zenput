@@ -148,19 +148,28 @@ describe('Drawer', () => {
     spy.mockRestore();
   });
 
-  it('warns when DrawerContent has no accessible name', async () => {
+  it('warns when DrawerContent has no accessible name', () => {
+    vi.useFakeTimers();
     const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-    render(
-      <Drawer defaultOpen>
-        <DrawerContent>
-          <DrawerBody>body without title</DrawerBody>
-        </DrawerContent>
-      </Drawer>
-    );
-    // Allow the deferred setTimeout in warnOnce to fire
-    await act(async () => {
-      await new Promise((r) => setTimeout(r, 10));
-    });
-    warnSpy.mockRestore();
+
+    try {
+      render(
+        <Drawer defaultOpen>
+          <DrawerContent>
+            <DrawerBody>body without title</DrawerBody>
+          </DrawerContent>
+        </Drawer>
+      );
+
+      act(() => {
+        vi.runAllTimers();
+      });
+
+      expect(warnSpy).toHaveBeenCalled();
+      expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('accessible name'));
+    } finally {
+      warnSpy.mockRestore();
+      vi.useRealTimers();
+    }
   });
 });

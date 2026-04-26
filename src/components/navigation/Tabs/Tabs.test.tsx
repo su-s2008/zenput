@@ -179,9 +179,22 @@ describe('Tabs', () => {
         </TabPanels>
       </Tabs>
     );
-    // All tabs disabled — keyboard navigation should return early without throwing
+
+    const tabA = screen.getByRole('tab', { name: 'A' });
+    const tabB = screen.getByRole('tab', { name: 'B' });
+
+    expect(tabA).toHaveAttribute('aria-selected', 'true');
+    expect(tabB).toHaveAttribute('aria-selected', 'false');
+    expect(screen.getByText('Panel A')).toBeInTheDocument();
+    expect(screen.queryByText('Panel B')).not.toBeInTheDocument();
+
+    // All tabs disabled — keyboard navigation should return early without changing selection
     fireEvent.keyDown(screen.getByRole('tablist'), { key: 'ArrowRight' });
-    // No panel change (initial "a" panel was default but disabled tabs show nothing)
+
+    expect(tabA).toHaveAttribute('aria-selected', 'true');
+    expect(tabB).toHaveAttribute('aria-selected', 'false');
+    expect(screen.getByText('Panel A')).toBeInTheDocument();
+    expect(screen.queryByText('Panel B')).not.toBeInTheDocument();
   });
 
   it('wraps ArrowRight from last tab back to first', async () => {

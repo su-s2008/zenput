@@ -183,14 +183,37 @@ describe('AutoComplete', () => {
     expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
   });
 
-  it('does not close dropdown on blur when focus stays within wrapper', () => {
+  it('closes dropdown on blur after the blur timeout runs', () => {
+    vi.useFakeTimers();
+    try {
+      render(<AutoComplete options={OPTIONS} />);
+      const input = screen.getByRole('combobox');
+      fireEvent.focus(input);
+      expect(screen.getByRole('listbox')).toBeInTheDocument();
+
+      fireEvent.blur(input);
+
+      act(() => {
+        vi.runAllTimers();
+      });
+
+      expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('does not close dropdown immediately on blur (close is deferred by timeout)', () => {
     render(<AutoComplete options={OPTIONS} />);
     const input = screen.getByRole('combobox');
-    // Open dropdown via fireEvent (no timers)
+
     fireEvent.focus(input);
-    // Blur without focus leaving the wrapper
+    expect(screen.getByRole('listbox')).toBeInTheDocument();
+
+    // Blur fires but the dropdown must not close synchronously — only after
+    // the blur-delay timer fires.
     fireEvent.blur(input);
-    // No assertion needed – just ensuring handleBlur runs without error
+    expect(screen.getByRole('listbox')).toBeInTheDocument();
   });
 
   it('cleans up blur timeout on unmount', () => {

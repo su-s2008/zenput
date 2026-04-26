@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import { render, fireEvent, act } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { useEscapeKey } from './useEscapeKey';
