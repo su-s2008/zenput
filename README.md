@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/konarsubhojit/zenput/actions/workflows/ci.yml/badge.svg)](https://github.com/konarsubhojit/zenput/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/konarsubhojit/zenput/branch/master/graph/badge.svg)](https://codecov.io/gh/konarsubhojit/zenput)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=konarsubhojit_simple-app&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=konarsubhojit_simple-app)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=zenput&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=zenput)
 [![npm](https://img.shields.io/npm/v/zenput.svg)](https://www.npmjs.com/package/zenput)
 [![bundle size](https://img.shields.io/bundlephobia/minzip/zenput)](https://bundlephobia.com/package/zenput)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
