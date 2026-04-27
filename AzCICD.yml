@@ -240,6 +240,19 @@ stages:
           - checkout: self
             clean: false
 
+          # ── Node toolchain (Vite 8 requires Node ^20.19.0 || >=22.12.0) ──
+          - script: |
+              set -e
+              export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
+              # shellcheck disable=SC1091
+              . "$NVM_DIR/nvm.sh"
+              nvm install 24
+              nvm use 24
+              NODE_BIN_DIR="$(dirname "$(nvm which 24)")"
+              echo "##vso[task.prependpath]$NODE_BIN_DIR"
+              echo "Selected Node: $(node -v) at $NODE_BIN_DIR"
+            displayName: 'Use Node 24.x (via nvm)'
+
           - script: vercel pull --yes --environment=$(VERCEL_ENV) --token=$(VERCEL_TOKEN)
             displayName: 'Pull Vercel project settings'
             env:

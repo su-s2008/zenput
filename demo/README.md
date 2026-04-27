@@ -10,7 +10,7 @@ no build step required.
 
 ## Requirements
 
-- Node.js 18+
+- Node.js 20.19+ or 22.12+ (required by Vite 8)
 - npm 9+
 
 ## Getting started
