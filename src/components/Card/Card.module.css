@@ -1,12 +1,11 @@
 /* ── Card root ────────────────────────────────────────── */
 
 .card {
-  --card-bg: var(--zp-component-card-bg, var(--zp-color-bg-surface, #ffffff));
-  --card-border: var(--zp-component-card-border, var(--zp-color-border-subtle, #e5e7eb));
+  --card-bg: var(--zp-component-card-bg, var(--zp-color-surface-1));
+  --card-border: var(--zp-component-card-border, var(--zp-color-border-subtle));
   --card-radius: var(--zp-component-card-radius, var(--zp-radius-lg, 12px));
   --card-shadow: var(--zp-component-card-shadow, none);
   --card-padding: var(--zp-component-card-padding, 1rem);
-  --card-focus-ring: var(--zp-color-brand-focus-ring, rgba(59, 130, 246, 0.4));
 
   position: relative;
   background-color: var(--card-bg);
@@ -15,29 +14,26 @@
   font-family: inherit;
   color: inherit;
   transition:
-    box-shadow 0.15s ease,
-    transform 0.15s ease;
+    box-shadow var(--zp-duration-fast) var(--zp-easing-standard),
+    transform var(--zp-duration-fast) var(--zp-easing-standard);
 }
 
 /* ── Variants ─────────────────────────────────────────── */
 
 .variantOutlined {
-  border: 1px solid var(--card-border);
+  border: var(--zp-border-width-1) solid var(--card-border);
   box-shadow: var(--card-shadow);
 }
 
 .variantElevated {
   border: none;
-  box-shadow: var(
-    --zp-shadow-md,
-    0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -1px rgba(0, 0, 0, 0.06)
-  );
+  background-color: var(--zp-color-surface-2);
+  box-shadow: var(--zp-shadow-md);
 }
 
 .variantFilled {
   border: none;
-  background-color: var(--zp-color-bg-subtle, #f9fafb);
+  background-color: var(--zp-color-surface-2);
   box-shadow: var(--card-shadow);
 }
 
@@ -50,17 +46,13 @@
 }
 
 .interactive:hover {
-  box-shadow: var(
-    --zp-shadow-lg,
-    0 10px 15px -3px rgba(0, 0, 0, 0.1),
-    0 4px 6px -2px rgba(0, 0, 0, 0.05)
-  );
+  box-shadow: var(--zp-shadow-lg);
   transform: translateY(-1px);
 }
 
 .interactive:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 3px var(--card-focus-ring);
+  outline: var(--zp-focus-ring-width) var(--zp-focus-ring-style) var(--zp-focus-ring-color);
+  outline-offset: var(--zp-focus-ring-offset);
 }
 
 .interactive:active {
@@ -105,14 +97,14 @@
   margin: 0;
   font-size: 0.9375rem;
   font-weight: 600;
-  color: var(--zp-color-text-primary, #111827);
+  color: var(--zp-color-text-primary);
   line-height: 1.4;
 }
 
 .headerDescription {
   margin: 0.125rem 0 0;
   font-size: 0.8125rem;
-  color: var(--zp-color-text-secondary, #6b7280);
+  color: var(--zp-color-text-secondary);
   line-height: 1.5;
 }
 
@@ -150,7 +142,7 @@
 .body {
   padding: 0.75rem var(--card-padding) 1rem;
   font-size: 0.875rem;
-  color: var(--zp-color-text-primary, #111827);
+  color: var(--zp-color-text-primary);
   line-height: 1.6;
 }
 
@@ -161,6 +153,6 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem var(--card-padding);
-  border-top: 1px solid var(--card-border);
+  border-top: var(--zp-border-width-1) solid var(--card-border);
   font-size: 0.8125rem;
 }

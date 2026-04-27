@@ -18,6 +18,8 @@ export * from './breakpoints';
 export * from './density';
 export * from './recipes';
 export * from './components';
+export * from './focusRing';
+export * from './typographyPresets';
 
 import {
   SemanticColors,
@@ -35,6 +37,7 @@ import { zIndex } from './zIndex';
 import { breakpoints } from './breakpoints';
 import { densityTokens, DensityScale } from './density';
 import { defaultComponentTokens, ComponentTokensMap, ComponentName } from './components';
+import { focusRingTokens } from './focusRing';
 
 export type ThemeMode = 'light' | 'dark' | 'highContrast';
 
@@ -47,8 +50,19 @@ export const semanticByMode: Record<ThemeMode, SemanticColors> = {
   highContrast: highContrastSemantic,
 };
 
+/** Convert a camelCase or mixed identifier to kebab-case.
+ * Handles letter→uppercase and letter→digit transitions so keys like
+ * `surfaceRaised` → `surface-raised` and `surface0` → `surface-0`. */
+export function toKebabCase(value: string): string {
+  return value
+    .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+    .replace(/([a-zA-Z])(\d)/g, '$1-$2')
+    .toLowerCase();
+}
+
+/** @internal Module-private alias used by buildCssVariables. */
 function kebab(value: string): string {
-  return value.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+  return toKebabCase(value);
 }
 
 /** Spacing-token keys may contain dots (e.g. `"0.5"`), which are not
@@ -101,6 +115,9 @@ export function buildCssVariables(
   assignTokens(vars, 'z', zIndex, kebab);
   assignTokens(vars, 'breakpoint', breakpoints);
   assignTokens(vars, 'elevation', elevation);
+
+  // Focus-ring static tokens (width, offset, style, color).
+  assignTokens(vars, 'focus-ring', focusRingTokens);
 
   // Overlay backdrop color — exposed as `--zp-overlay` (no category prefix).
   vars[`${CSS_VAR_PREFIX}-overlay`] = semantic.overlay;

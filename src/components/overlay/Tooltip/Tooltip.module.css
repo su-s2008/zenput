@@ -2,8 +2,9 @@
   z-index: var(--zp-z-tooltip);
   max-width: 240px;
   padding: var(--zp-space-1-5) var(--zp-space-2-5);
-  background-color: var(--zp-color-text-primary);
-  color: var(--zp-color-text-inverse);
+  background-color: var(--zp-color-neutral-bg-solid);
+  color: var(--zp-color-neutral-text-on-solid);
+  border: var(--zp-border-width-1) solid var(--zp-color-border-inverse);
   font-size: var(--zp-font-size-xs);
   line-height: var(--zp-line-height-tight);
   border-radius: var(--zp-radius-sm);

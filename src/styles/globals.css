@@ -4,8 +4,9 @@
  */
 
 .zp-focus-ring:focus-visible {
-  outline: 2px solid var(--zp-color-focus-ring);
-  outline-offset: 2px;
+  outline: var(--zp-focus-ring-width, 2px) var(--zp-focus-ring-style, solid)
+    var(--zp-focus-ring-color, var(--zp-color-focus-ring));
+  outline-offset: var(--zp-focus-ring-offset, 2px);
 }
 
 .zp-visually-hidden {

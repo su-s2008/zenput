@@ -1,12 +1,39 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { ThemeProvider } from '../../context/ThemeProvider';
 import { TokenBrowser } from './TokenBrowser';
 
 /** Wrap TokenBrowser in ThemeProvider so useTheme() works. */
 const renderWithTheme = (ui: React.ReactElement) => render(<ThemeProvider>{ui}</ThemeProvider>);
+const mockClipboard = () => {
+  const writeText = vi.fn().mockResolvedValue(undefined);
+  Object.defineProperty(navigator, 'clipboard', {
+    configurable: true,
+    value: { writeText },
+  });
+  return writeText;
+};
 
 describe('TokenBrowser', () => {
+  let originalClipboardDescriptor: PropertyDescriptor | undefined;
+
+  const restoreClipboard = () => {
+    if (originalClipboardDescriptor) {
+      Object.defineProperty(navigator, 'clipboard', originalClipboardDescriptor);
+      return;
+    }
+    Reflect.deleteProperty(navigator, 'clipboard');
+  };
+
+  beforeEach(() => {
+    originalClipboardDescriptor = Object.getOwnPropertyDescriptor(navigator, 'clipboard');
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+    restoreClipboard();
+  });
+
   it('renders without crashing', () => {
     renderWithTheme(<TokenBrowser />);
     expect(screen.getByText('Design Tokens Browser')).toBeInTheDocument();
@@ -24,6 +51,7 @@ describe('TokenBrowser', () => {
     expect(screen.getByRole('button', { name: 'Semantic Colors' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Color Palette' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Typography' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Typography Presets' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Spacing' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Border Radius' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Shadows & Elevation' })).toBeInTheDocument();
@@ -70,6 +98,86 @@ describe('TokenBrowser', () => {
       'aria-pressed',
       'true'
     );
+  });
+
+  it('labels color swatches with the copy action and copied CSS variable', () => {
+    renderWithTheme(<TokenBrowser />);
+    expect(
+      screen.getByRole('button', { name: 'Copy --zp-color-brand to clipboard' })
+    ).toBeInTheDocument();
+  });
+
+  it('labels token rows with the copy action and token context', () => {
+    renderWithTheme(<TokenBrowser defaultCategory="typographyPresets" />);
+    expect(
+      screen.getByRole('button', {
+        name: 'Copy display-lg fontFamily to clipboard',
+      })
+    ).toBeInTheDocument();
+  });
+
+  it('shows copied feedback only for the clicked token when values are shared', async () => {
+    const writeText = mockClipboard();
+    const clearTimeoutSpy = vi.spyOn(globalThis, 'clearTimeout');
+    renderWithTheme(<TokenBrowser defaultCategory="typographyPresets" />);
+
+    fireEvent.click(
+      screen.getByRole('button', {
+        name: 'Copy display-lg fontFamily to clipboard',
+      })
+    );
+
+    await waitFor(() => {
+      expect(writeText).toHaveBeenCalledWith('var(--zp-font-family-sans)');
+    });
+    expect(await screen.findByText('Copied!')).toBeInTheDocument();
+    expect(screen.getAllByText('Copied!')).toHaveLength(1);
+
+    fireEvent.click(
+      screen.getByRole('button', {
+        name: 'Copy heading-1 fontFamily to clipboard',
+      })
+    );
+
+    await waitFor(() => {
+      expect(writeText).toHaveBeenCalledTimes(2);
+      expect(writeText).toHaveBeenLastCalledWith('var(--zp-font-family-sans)');
+    });
+    expect(clearTimeoutSpy).toHaveBeenCalled();
+    expect(screen.getAllByText('Copied!')).toHaveLength(1);
+  });
+
+  it('clears copied feedback after the copy timeout expires', async () => {
+    mockClipboard();
+    renderWithTheme(<TokenBrowser />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Copy --zp-color-brand to clipboard' }));
+
+    expect(await screen.findByText('Copied!')).toBeInTheDocument();
+
+    await waitFor(
+      () => {
+        expect(screen.queryByText('Copied!')).not.toBeInTheDocument();
+      },
+      { timeout: 2000 }
+    );
+  });
+
+  it('clears the pending copy timer on unmount', async () => {
+    const writeText = mockClipboard();
+    const clearTimeoutSpy = vi.spyOn(globalThis, 'clearTimeout');
+    const { unmount } = renderWithTheme(<TokenBrowser />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Copy --zp-color-brand to clipboard' }));
+
+    await waitFor(() => {
+      expect(writeText).toHaveBeenCalledWith('--zp-color-brand');
+    });
+    expect(await screen.findByText('Copied!')).toBeInTheDocument();
+
+    unmount();
+
+    expect(clearTimeoutSpy).toHaveBeenCalled();
   });
 
   it('renders the Spacing category', () => {
@@ -129,6 +237,21 @@ describe('TokenBrowser', () => {
     // Base and variants headings
     expect(screen.getAllByText('Base').length).toBeGreaterThan(0);
     expect(screen.getAllByText('Variants').length).toBeGreaterThan(0);
+  });
+
+  it('renders the Typography Presets category with preset names', () => {
+    renderWithTheme(<TokenBrowser defaultCategory="typographyPresets" />);
+    expect(screen.getByRole('button', { name: 'Typography Presets' })).toHaveAttribute(
+      'aria-pressed',
+      'true'
+    );
+    // Each preset renders an h3 heading — use getAllByText since the name also
+    // appears in the class-name span inside the heading.
+    expect(screen.getAllByText(/display-lg/).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/heading-1/).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/body-md/).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/caption/).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/code/).length).toBeGreaterThan(0);
   });
 
   it('renders the Component Tokens category', () => {

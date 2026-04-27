@@ -11,7 +11,11 @@ export const zIndex = {
   sticky: 1100,
   banner: 1200,
   overlay: 1300,
+  drawer: 1350,
+  /** Full-screen dialog layer. */
   modal: 1400,
+  /** Named alias for `modal` — prefer this name when using the Dialog component. */
+  dialog: 1400,
   popover: 1500,
   skipNav: 1600,
   toast: 1700,

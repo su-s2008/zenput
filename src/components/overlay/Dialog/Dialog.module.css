@@ -1,7 +1,7 @@
 .overlay {
   position: fixed;
   inset: 0;
-  z-index: var(--zp-z-modal);
+  z-index: var(--zp-z-dialog);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -16,7 +16,7 @@
   flex-direction: column;
   max-height: calc(100vh - var(--zp-space-8));
   width: 100%;
-  background-color: var(--zp-color-surface);
+  background-color: var(--zp-color-surface-1);
   color: var(--zp-color-text-primary);
   border-radius: var(--zp-radius-lg);
   box-shadow: var(--zp-shadow-xl);
@@ -24,8 +24,8 @@
 }
 
 .content:focus-visible {
-  outline: 2px solid var(--zp-color-focus-ring);
-  outline-offset: 2px;
+  outline: var(--zp-focus-ring-width) var(--zp-focus-ring-style) var(--zp-focus-ring-color);
+  outline-offset: var(--zp-focus-ring-offset);
 }
 
 .size-sm {

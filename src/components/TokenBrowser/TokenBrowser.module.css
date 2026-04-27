@@ -91,6 +91,21 @@
   border: var(--zp-border-width-1) solid var(--zp-color-border);
   border-radius: var(--zp-radius-md);
   background: var(--zp-color-surface);
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  font-family: inherit;
+  color: inherit;
+}
+
+.tokenItem:hover {
+  background: var(--zp-color-surface-raised, var(--zp-color-surface));
+}
+
+.tokenItem:focus-visible {
+  outline: var(--zp-focus-ring-width, 2px) var(--zp-focus-ring-style, solid)
+    var(--zp-focus-ring-color, var(--zp-color-focus-ring));
+  outline-offset: var(--zp-focus-ring-offset, 2px);
 }
 
 .tokenDetails {

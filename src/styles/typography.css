@@ -1,0 +1,125 @@
+/**
+ * Zenput typography utility classes.
+ *
+ * Each `.zp-text-*` class maps to a semantic typography preset defined in
+ * `src/tokens/typographyPresets.ts`. All values reference CSS custom
+ * properties emitted by `ThemeProvider` so they automatically respond to
+ * theme changes.
+ *
+ * Usage:
+ *   <h1 class="zp-text-heading-1">Page title</h1>
+ *   <p  class="zp-text-body-md">Body copy</p>
+ */
+
+.zp-text-display-lg {
+  font-family: var(--zp-font-family-sans);
+  font-size: var(--zp-font-size-5xl);
+  font-weight: var(--zp-font-weight-bold);
+  line-height: var(--zp-line-height-tight);
+  letter-spacing: var(--zp-letter-spacing-tight);
+}
+
+.zp-text-display-md {
+  font-family: var(--zp-font-family-sans);
+  font-size: var(--zp-font-size-4xl);
+  font-weight: var(--zp-font-weight-bold);
+  line-height: var(--zp-line-height-tight);
+  letter-spacing: var(--zp-letter-spacing-tight);
+}
+
+.zp-text-heading-1 {
+  font-family: var(--zp-font-family-sans);
+  font-size: var(--zp-font-size-3xl);
+  font-weight: var(--zp-font-weight-bold);
+  line-height: var(--zp-line-height-tight);
+  letter-spacing: var(--zp-letter-spacing-tight);
+}
+
+.zp-text-heading-2 {
+  font-family: var(--zp-font-family-sans);
+  font-size: var(--zp-font-size-2xl);
+  font-weight: var(--zp-font-weight-semibold);
+  line-height: var(--zp-line-height-snug);
+  letter-spacing: var(--zp-letter-spacing-tight);
+}
+
+.zp-text-heading-3 {
+  font-family: var(--zp-font-family-sans);
+  font-size: var(--zp-font-size-xl);
+  font-weight: var(--zp-font-weight-semibold);
+  line-height: var(--zp-line-height-snug);
+  letter-spacing: var(--zp-letter-spacing-normal);
+}
+
+.zp-text-heading-4 {
+  font-family: var(--zp-font-family-sans);
+  font-size: var(--zp-font-size-lg);
+  font-weight: var(--zp-font-weight-semibold);
+  line-height: var(--zp-line-height-snug);
+  letter-spacing: var(--zp-letter-spacing-normal);
+}
+
+.zp-text-heading-5 {
+  font-family: var(--zp-font-family-sans);
+  font-size: var(--zp-font-size-md);
+  font-weight: var(--zp-font-weight-semibold);
+  line-height: var(--zp-line-height-normal);
+  letter-spacing: var(--zp-letter-spacing-normal);
+}
+
+.zp-text-heading-6 {
+  font-family: var(--zp-font-family-sans);
+  font-size: var(--zp-font-size-sm);
+  font-weight: var(--zp-font-weight-semibold);
+  line-height: var(--zp-line-height-normal);
+  letter-spacing: var(--zp-letter-spacing-wide);
+}
+
+.zp-text-body-lg {
+  font-family: var(--zp-font-family-sans);
+  font-size: var(--zp-font-size-lg);
+  font-weight: var(--zp-font-weight-regular);
+  line-height: var(--zp-line-height-relaxed);
+  letter-spacing: var(--zp-letter-spacing-normal);
+}
+
+.zp-text-body-md {
+  font-family: var(--zp-font-family-sans);
+  font-size: var(--zp-font-size-md);
+  font-weight: var(--zp-font-weight-regular);
+  line-height: var(--zp-line-height-normal);
+  letter-spacing: var(--zp-letter-spacing-normal);
+}
+
+.zp-text-body-sm {
+  font-family: var(--zp-font-family-sans);
+  font-size: var(--zp-font-size-sm);
+  font-weight: var(--zp-font-weight-regular);
+  line-height: var(--zp-line-height-normal);
+  letter-spacing: var(--zp-letter-spacing-normal);
+}
+
+.zp-text-caption {
+  font-family: var(--zp-font-family-sans);
+  font-size: var(--zp-font-size-xs);
+  font-weight: var(--zp-font-weight-regular);
+  line-height: var(--zp-line-height-normal);
+  letter-spacing: var(--zp-letter-spacing-normal);
+}
+
+.zp-text-overline {
+  font-family: var(--zp-font-family-sans);
+  font-size: var(--zp-font-size-xs);
+  font-weight: var(--zp-font-weight-semibold);
+  line-height: var(--zp-line-height-normal);
+  letter-spacing: var(--zp-letter-spacing-wider);
+  text-transform: uppercase;
+}
+
+.zp-text-code {
+  font-family: var(--zp-font-family-mono);
+  font-size: var(--zp-font-size-sm);
+  font-weight: var(--zp-font-weight-regular);
+  line-height: var(--zp-line-height-relaxed);
+  letter-spacing: var(--zp-letter-spacing-normal);
+}

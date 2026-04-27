@@ -2,7 +2,7 @@
   z-index: var(--zp-z-popover);
   min-width: 160px;
   max-width: min(320px, calc(100vw - var(--zp-space-4)));
-  background-color: var(--zp-color-surface);
+  background-color: var(--zp-color-surface-2);
   color: var(--zp-color-text-primary);
   border: var(--zp-border-width-1) solid var(--zp-color-border);
   border-radius: var(--zp-radius-md);
@@ -12,6 +12,6 @@
 }
 
 .content:focus-visible {
-  outline: 2px solid var(--zp-color-focus-ring);
-  outline-offset: 2px;
+  outline: var(--zp-focus-ring-width) var(--zp-focus-ring-style) var(--zp-focus-ring-color);
+  outline-offset: var(--zp-focus-ring-offset);
 }
