@@ -244,7 +244,156 @@ Switch between light, dark, and high-contrast modes:
 </ThemeProvider>
 ```
 
-Available modes: `'light'` (default), `'dark'`, `'highContrast'`
+Available modes: `'light'` (default), `'dark'`, `'highContrast'`, `'system'`
+
+#### System Mode (OS Preference)
+
+Use `mode="system"` to automatically follow the OS `prefers-color-scheme` preference. The resolved mode updates live when the user changes their OS setting:
+
+```tsx
+<ThemeProvider theme={{ mode: 'system' }}>
+  {/* Automatically light or dark based on OS preference */}
+</ThemeProvider>
+```
+
+#### Persistence with `storageKey`
+
+Pass `storageKey` to persist the user's mode choice across page loads. The stored value takes precedence over the `theme.mode` prop on subsequent visits:
+
+```tsx
+<ThemeProvider theme={{ mode: 'system' }} storageKey="zp-theme">
+  {/* User's last chosen mode is remembered */}
+</ThemeProvider>
+```
+
+Use `storage="sessionStorage"` to scope persistence to the current browser session:
+
+```tsx
+<ThemeProvider theme={{ mode: 'light' }} storageKey="zp-theme" storage="sessionStorage">
+  {/* ... */}
+</ThemeProvider>
+```
+
+#### `useColorMode()` Hook
+
+Read and control the color mode from any descendant component:
+
+```tsx
+import { useColorMode } from 'zenput';
+
+function ThemeToggle() {
+  const { mode, resolvedMode, setMode, toggle } = useColorMode();
+
+  return (
+    <button onClick={toggle}>
+      Current: {resolvedMode} (selected: {mode})
+    </button>
+  );
+}
+```
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `mode` | `ColorMode` | User-selected mode (may be `'system'`). |
+| `resolvedMode` | `ThemeMode` | Actual applied mode (`'light' \| 'dark' \| 'highContrast'`). |
+| `setMode(mode)` | `(mode: ColorMode) => void` | Change the mode (persists if `storageKey` is set). |
+| `toggle()` | `() => void` | Toggle between `'light'` and `'dark'`. |
+
+#### High-Contrast Auto-Detection
+
+When `detectHighContrast` is enabled alongside `mode="system"`, the provider automatically switches to `'highContrast'` when the OS `prefers-contrast: more` media feature is active:
+
+```tsx
+<ThemeProvider theme={{ mode: 'system' }} detectHighContrast>
+  {/* ... */}
+</ThemeProvider>
+```
+
+#### Anti-Flash Script (Next.js App Router)
+
+Prevent a flash of the wrong colour scheme during server-side rendering by injecting an inline script into `<head>` before React hydrates. Use `getColorModeScript` to generate the script string:
+
+```tsx
+// app/layout.tsx
+import Script from 'next/script';
+import { ThemeProvider, getColorModeScript } from 'zenput';
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <head>
+        <Script
+          id="zp-color-mode"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{
+            __html: getColorModeScript({ storageKey: 'zp-theme', defaultMode: 'system' }),
+          }}
+        />
+      </head>
+      <body>
+        {/* storageKey must match the script's storageKey */}
+        <ThemeProvider theme={{ mode: 'system' }} storageKey="zp-theme" as="main">
+          {children}
+        </ThemeProvider>
+      </body>
+    </html>
+  );
+}
+```
+
+The script sets `data-zp-theme` on `<html>` before the first paint so your CSS variables are already correct when the page renders. This eliminates the flash even when the user prefers dark mode or has a stored preference.
+
+#### `useReducedMotion()` Hook
+
+Detect the OS `prefers-reduced-motion: reduce` preference and disable animations accordingly. All built-in Zenput animations already honour this media feature via the `--zp-duration-*` CSS custom properties:
+
+```tsx
+import { useReducedMotion } from 'zenput';
+
+function AnimatedCard() {
+  const reduced = useReducedMotion();
+  return (
+    <div
+      style={{
+        transition: reduced ? 'none' : 'transform var(--zp-duration-normal) var(--zp-easing-standard)',
+      }}
+    >
+      {/* ... */}
+    </div>
+  );
+}
+```
+
+#### Nested `ThemeProvider`
+
+Nest `ThemeProvider` to apply a different theme to a specific section of your UI. The inner provider inherits the parent's resolved mode by default and merges CSS tokens — the child's values override the parent's:
+
+```tsx
+<ThemeProvider theme={{ mode: 'dark' }}>
+  {/* Dark mode throughout */}
+  <main>
+    <ThemeProvider
+      theme={{
+        components: {
+          button: { borderRadius: '9999px' },
+        },
+      }}
+    >
+      {/* Still dark mode, but with pill-shaped buttons in this section */}
+    </ThemeProvider>
+  </main>
+</ThemeProvider>
+```
+
+Custom CSS variables from parent providers are inherited and can be overridden:
+
+```tsx
+<ThemeProvider theme={{ cssVars: { '--brand-accent': '#6366f1' } }}>
+  <ThemeProvider theme={{ cssVars: { '--brand-accent': '#8b5cf6' } }}>
+    {/* --brand-accent is '#8b5cf6' here */}
+  </ThemeProvider>
+</ThemeProvider>
+```
 
 #### Density Scaling
 
