@@ -1,3 +1,4 @@
+'use client';
 import React, { forwardRef, useState, useCallback } from 'react';
 import { PasswordInputProps } from './PasswordInput.types';
 import { classNames, getValidationMessage, getValidationMessageClass } from '../../utils';
@@ -21,7 +22,7 @@ interface StrengthIndicatorProps {
   strength: number;
 }
 
-function StrengthIndicator({ strength }: StrengthIndicatorProps): React.ReactElement {
+function StrengthIndicator({ strength }: Readonly<StrengthIndicatorProps>): React.ReactElement {
   return (
     <>
       <div className={classNames(styles.strengthBar, styles[`strength${strength}`])}>

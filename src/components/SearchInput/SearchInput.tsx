@@ -1,3 +1,4 @@
+'use client';
 import React, { forwardRef, useState, useCallback, useRef } from 'react';
 import { SearchInputProps } from './SearchInput.types';
 import { classNames, getValidationMessage, getValidationMessageClass } from '../../utils';

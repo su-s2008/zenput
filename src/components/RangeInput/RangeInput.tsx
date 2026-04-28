@@ -1,3 +1,4 @@
+'use client';
 import React, { forwardRef, useState, useCallback } from 'react';
 import { RangeInputProps } from './RangeInput.types';
 import { classNames, getValidationMessage, getValidationMessageClass } from '../../utils';

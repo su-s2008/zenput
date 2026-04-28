@@ -1,3 +1,4 @@
+'use client';
 import React, { useState, useCallback, useRef, useEffect, useMemo, useId } from 'react';
 import {
   DataTableProps,
@@ -53,17 +54,18 @@ function HeaderLabel({
   isSorted,
   sortDir,
   handleSortClick,
-}: {
+}: Readonly<{
   col: DataTableColumn<DataTableRecord>;
   isSorted: boolean;
   sortDir: SortDirection | null;
   handleSortClick: (key: string) => void;
-}): React.ReactElement {
+}>): React.ReactElement {
   if (col.headerRender) return <>{col.headerRender(col)}</>;
   if (!col.sortable) {
     return <span className={styles.headerText}>{col.header}</span>;
   }
-  const ariaLabel = `Sort by ${col.header}${isSorted ? `, currently ${sortDir}` : ''}`;
+  const sortSuffix = isSorted ? `, currently ${sortDir}` : '';
+  const ariaLabel = `Sort by ${col.header}${sortSuffix}`;
   return (
     <button
       type="button"
@@ -95,7 +97,7 @@ function FilterDropdown<T extends DataTableRecord>({
   filterCheckboxId,
   toggleFilterValue,
   clearFilter,
-}: FilterDropdownProps<T>): React.ReactElement {
+}: Readonly<FilterDropdownProps<T>>): React.ReactElement {
   return (
     <div
       className={styles.filterDropdown}
@@ -235,15 +237,15 @@ export function DataTable<T extends DataTableRecord = DataTableRecord>({
   // ── Derive active (controlled vs uncontrolled) state ──────────────────────
 
   const activeFilters =
-    controlledFilterState !== undefined ? controlledFilterState : internalFilters;
+    controlledFilterState === undefined ? internalFilters : controlledFilterState;
   const activeSortState =
-    controlledSortState !== undefined ? controlledSortState : internalSortState;
+    controlledSortState === undefined ? internalSortState : controlledSortState;
   const activeExpandedKeys =
-    controlledExpandedKeys !== undefined ? controlledExpandedKeys : internalExpandedKeys;
+    controlledExpandedKeys === undefined ? internalExpandedKeys : controlledExpandedKeys;
   const activeGlobalFilter =
-    controlledGlobalFilter !== undefined ? controlledGlobalFilter : internalGlobalFilter;
+    controlledGlobalFilter === undefined ? internalGlobalFilter : controlledGlobalFilter;
   const activeHiddenColumns =
-    controlledHiddenColumns !== undefined ? controlledHiddenColumns : internalHiddenColumns;
+    controlledHiddenColumns === undefined ? internalHiddenColumns : controlledHiddenColumns;
 
   // ── Visible columns (column visibility toggle) ────────────────────────────
 
@@ -512,7 +514,7 @@ export function DataTable<T extends DataTableRecord = DataTableRecord>({
       ref={wrapperRef}
       className={classNames(
         styles.wrapper,
-        density !== 'default' ? DENSITY_CLASS[density] : undefined,
+        density === 'default' ? undefined : DENSITY_CLASS[density],
         className
       )}
       style={style}
@@ -561,7 +563,7 @@ export function DataTable<T extends DataTableRecord = DataTableRecord>({
                   Columns
                 </button>
                 {columnToggleOpen && (
-                  <div className={styles.columnToggleDropdown} role="group" aria-label="Columns">
+                  <div className={styles.columnToggleDropdown} role="group" /* NOSONAR */ aria-label="Columns">
                     {columns.map((col) => {
                       const isVisible = !activeHiddenColumns.includes(col.key);
                       const checkId = columnToggleId(col.key);

@@ -1,0 +1,23 @@
+{
+  "name": "zenput-nextjs-app-example",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Smoke-test fixture: verifies that zenput components work in Next.js App Router without 'use client' errors.",
+  "scripts": {
+    "build": "next build",
+    "dev": "next dev",
+    "start": "next start"
+  },
+  "dependencies": {
+    "next": "15.5.15",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "zenput": "file:../../"
+  },
+  "devDependencies": {
+    "@types/node": "22.15.3",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "typescript": "5.8.3"
+  }
+}

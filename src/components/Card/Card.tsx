@@ -1,3 +1,4 @@
+'use client';
 import React from 'react';
 import { classNames } from '../../utils';
 import { Slot } from '../../utils/slot';
@@ -49,10 +50,16 @@ export function Card({
   href,
   tabIndex,
   type,
-}: CardProps): React.ReactElement {
+}: Readonly<CardProps>): React.ReactElement {
+  let interactiveElement: React.ElementType;
+  if (href) {
+    interactiveElement = 'a';
+  } else {
+    interactiveElement = 'button';
+  }
   const Component: React.ElementType = asChild
     ? Slot
-    : (as ?? (interactive ? (href ? 'a' : 'button') : 'div'));
+    : (as ?? (interactive ? interactiveElement : 'div'));
 
   // Only forward `href` when rendering an `<a>` (or a custom component which
   // may consume it); only forward `type` when rendering a native `<button>` so
@@ -104,7 +111,7 @@ export function CardHeader({
   avatar,
   className,
   style,
-}: CardHeaderProps): React.ReactElement {
+}: Readonly<CardHeaderProps>): React.ReactElement {
   return (
     <div className={classNames(styles.header, className)} style={style}>
       {avatar && <div className={styles.headerAvatar}>{avatar}</div>}
@@ -130,7 +137,7 @@ export function CardMedia({
   aspectRatio = 16 / 9,
   className,
   style,
-}: CardMediaProps): React.ReactElement {
+}: Readonly<CardMediaProps>): React.ReactElement {
   // Use padding-bottom trick for intrinsic aspect-ratio reservation. Guard
   // against zero/negative/non-finite values which would produce broken layout.
   const safeAspectRatio = Number.isFinite(aspectRatio) && aspectRatio > 0 ? aspectRatio : 16 / 9;
@@ -152,7 +159,7 @@ CardMedia.displayName = 'CardMedia';
 // ---------------------------------------------------------------------------
 
 /** Main content area. */
-export function CardBody({ className, style, children }: CardBodyProps): React.ReactElement {
+export function CardBody({ className, style, children }: Readonly<CardBodyProps>): React.ReactElement {
   return (
     <div className={classNames(styles.body, className)} style={style}>
       {children}
@@ -167,7 +174,7 @@ CardBody.displayName = 'CardBody';
 // ---------------------------------------------------------------------------
 
 /** Optional footer section for actions or metadata. */
-export function CardFooter({ className, style, children }: CardFooterProps): React.ReactElement {
+export function CardFooter({ className, style, children }: Readonly<CardFooterProps>): React.ReactElement {
   return (
     <div className={classNames(styles.footer, className)} style={style}>
       {children}

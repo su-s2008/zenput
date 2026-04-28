@@ -1,3 +1,4 @@
+'use client';
 import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { Portal } from '../../Portal';
 import { useEscapeKey } from '../internal/useEscapeKey';

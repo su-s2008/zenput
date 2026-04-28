@@ -1,3 +1,4 @@
+'use client';
 import React from 'react';
 import { classNames } from '../../utils';
 import type { PaginationProps } from './Pagination.types';
@@ -155,7 +156,7 @@ export function Pagination({
         {/* Page numbers / ellipses */}
         {items.map((item, idx) =>
           item === 'ellipsis' ? (
-            <span key={`ellipsis-${idx}`} className={styles.ellipsis} aria-hidden="true">
+          <span key={`ellipsis-${idx}`} className={styles.ellipsis} aria-hidden="true">
               …
             </span>
           ) : (

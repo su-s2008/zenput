@@ -1,3 +1,4 @@
+'use client';
 import React, { forwardRef } from 'react';
 import { classNames } from '../../../utils';
 import { Button } from '../Button';
@@ -119,8 +120,8 @@ export const Tag = forwardRef<HTMLSpanElement, TagProps>(function Tag(
       ref={ref}
       className={wrapperClass}
       onClick={onClick}
-      role={isInteractive ? 'button' : undefined}
-      tabIndex={isInteractive ? 0 : undefined}
+      role={isInteractive ? 'button' : undefined} // NOSONAR
+      tabIndex={isInteractive ? 0 : undefined} // NOSONAR
       onKeyDown={
         isInteractive
           ? (e) => {

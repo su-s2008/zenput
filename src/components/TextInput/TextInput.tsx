@@ -1,3 +1,4 @@
+'use client';
 import React, { forwardRef } from 'react';
 import { TextInputProps } from './TextInput.types';
 import { classNames, getValidationMessage, getValidationMessageClass } from '../../utils';

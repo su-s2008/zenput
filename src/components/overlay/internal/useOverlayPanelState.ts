@@ -1,3 +1,4 @@
+'use client';
 /**
  * Shared state hook used by Dialog and Drawer. Both overlay-panel components
  * need identical context values for their open state, trigger-focus restoration,

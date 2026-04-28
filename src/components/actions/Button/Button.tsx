@@ -1,3 +1,4 @@
+'use client';
 import React, { forwardRef } from 'react';
 import { classNames } from '../../../utils';
 import { Slot } from '../../../utils/slot';
@@ -124,14 +125,19 @@ export const Button = createPolymorphicComponent<ButtonComponent>(
   const Component: React.ElementType = as ?? 'button';
   const isNativeButton = Component === 'button';
 
+  let extraButtonProps: Record<string, unknown>;
+  if (isNativeButton) {
+    extraButtonProps = { type: type ?? 'button', disabled: isDisabled };
+  } else if (isDisabled) {
+    extraButtonProps = { 'aria-disabled': true, 'data-disabled': '' };
+  } else {
+    extraButtonProps = {};
+  }
+
   return (
     <Component
       ref={ref}
-      {...(isNativeButton
-        ? { type: type ?? 'button', disabled: isDisabled }
-        : isDisabled
-          ? { 'aria-disabled': true, 'data-disabled': '' }
-          : {})}
+      {...extraButtonProps}
       aria-busy={loading ? true : ariaBusy}
       aria-label={resolvedAriaLabel}
       className={buttonClassName}

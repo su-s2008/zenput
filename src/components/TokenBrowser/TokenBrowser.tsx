@@ -1,3 +1,4 @@
+'use client';
 import React, { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import { useTheme } from '../../context/ThemeProvider';
 import { palette } from '../../tokens/colors';

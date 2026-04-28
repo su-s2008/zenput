@@ -1,3 +1,4 @@
+'use client';
 import React, { forwardRef, useState, useCallback, useRef, useEffect, useId } from 'react';
 import { AutoCompleteProps, AutoCompleteOption } from './AutoComplete.types';
 import {

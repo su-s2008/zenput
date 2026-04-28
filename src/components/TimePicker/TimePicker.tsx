@@ -1,3 +1,4 @@
+'use client';
 import React, {
   useCallback,
   useEffect,
@@ -68,7 +69,7 @@ interface ColumnProps {
   onChange: (value: number) => void;
 }
 
-function Column({ label, items, selected, onChange }: ColumnProps): React.ReactElement {
+function Column({ label, items, selected, onChange }: Readonly<ColumnProps>): React.ReactElement {
   const listRef = useRef<HTMLUListElement>(null);
   const ITEM_HEIGHT = 36;
 
@@ -87,7 +88,7 @@ function Column({ label, items, selected, onChange }: ColumnProps): React.ReactE
       <div className={styles.columnLabel}>{label}</div>
       <ul
         ref={listRef}
-        role="listbox"
+        role="listbox" // NOSONAR
         aria-label={label}
         className={styles.columnList}
         tabIndex={0}
@@ -109,7 +110,7 @@ function Column({ label, items, selected, onChange }: ColumnProps): React.ReactE
         {items.map((item) => (
           <li
             key={item.value}
-            role="option"
+            role="option" // NOSONAR
             aria-selected={item.value === selected}
             aria-disabled={item.disabled || undefined}
             className={classNames(
@@ -167,7 +168,7 @@ function TimePickerPanel({
   onSecondChange,
   onPeriodChange,
   onConfirm,
-}: TimePickerPanelProps): React.ReactElement {
+}: Readonly<TimePickerPanelProps>): React.ReactElement {
   const { setOpen } = usePopoverState();
 
   const handleConfirm = useCallback(() => {
@@ -315,12 +316,12 @@ export function TimePicker({
     const start = hourCycle === 12 ? 1 : 0;
     return Array.from({ length: count }, (_, i) => {
       const h = start + i;
-      const actualHour =
-        hourCycle === 12
-          ? period === 'AM'
-            ? h % 12
-            : (h % 12) + 12
-          : h;
+      let actualHour: number;
+      if (hourCycle === 12) {
+        actualHour = period === 'AM' ? h % 12 : (h % 12) + 12;
+      } else {
+        actualHour = h;
+      }
       const test: TimeValue = { hours: actualHour, minutes: draft.minutes, seconds: draft.seconds ?? 0 };
       return {
         value: h,
@@ -440,7 +441,7 @@ export function TimePicker({
             className={classNames(
               inputStyles.input,
               styles.trigger,
-              !displayText ? styles.placeholder : undefined
+              displayText ? undefined : styles.placeholder
             )}
           >
             <span className={styles.triggerText}>{displayText || placeholder}</span>

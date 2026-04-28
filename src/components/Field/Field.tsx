@@ -1,3 +1,4 @@
+'use client';
 import React, {
   createContext,
   useCallback,
@@ -157,7 +158,7 @@ Field.displayName = 'Field';
  * Label element for the field. Automatically associates with the control via
  * `htmlFor`.
  */
-export function FieldLabel({ children, className, ...rest }: FieldLabelProps): React.ReactElement {
+export function FieldLabel({ children, className, ...rest }: Readonly<FieldLabelProps>): React.ReactElement {
   const { controlId, required } = useFieldContext();
 
   return (

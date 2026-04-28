@@ -1,3 +1,4 @@
+'use client';
 import React, { forwardRef, useId } from 'react';
 import { RadioGroupProps } from './RadioGroup.types';
 import { classNames } from '../../utils';

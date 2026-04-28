@@ -1,3 +1,4 @@
+'use client';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 /** Value accepted by `setOpen`: either a boolean or an updater function. */

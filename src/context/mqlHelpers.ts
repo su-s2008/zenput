@@ -15,7 +15,7 @@ export function mqlAddListener(mql: MediaQueryList, handler: MqlChangeHandler): 
   if (typeof mql.addEventListener === 'function') {
     mql.addEventListener('change', handler);
   } else {
-    // Legacy API
+    // Legacy API // NOSONAR
     (mql as MediaQueryList & { addListener?: (fn: MqlChangeHandler) => void }).addListener?.(
       handler
     );
@@ -28,7 +28,7 @@ export function mqlRemoveListener(mql: MediaQueryList, handler: MqlChangeHandler
   if (typeof mql.removeEventListener === 'function') {
     mql.removeEventListener('change', handler);
   } else {
-    // Legacy API
+    // Legacy API // NOSONAR
     (
       mql as MediaQueryList & { removeListener?: (fn: MqlChangeHandler) => void }
     ).removeListener?.(handler);

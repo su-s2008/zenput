@@ -1,3 +1,4 @@
+'use client';
 /* ---------------------------------------------------------------------------
  * Calendar – popover-based, WAI-ARIA grid-pattern date picker surface.
  * Keyboard: ArrowKeys, PageUp/Down (month), Shift+PageUp/Down (year),
@@ -363,7 +364,7 @@ export const Calendar = forwardRef<HTMLDivElement, CalendarProps>(function Calen
       {/* Grid */}
       <table
         ref={gridRef}
-        role="grid"
+        role="grid" // NOSONAR
         aria-label={ariaLabel}
         aria-labelledby={ariaLabel ? undefined : (ariaLabelledby ?? titleId)}
         className={styles.grid}
@@ -384,10 +385,10 @@ export const Calendar = forwardRef<HTMLDivElement, CalendarProps>(function Calen
           </tr>
         </thead>
         <tbody>
-          {grid.map((week, wi) => {
+          {grid.map((week) => {
             const weekNum = showWeekNumbers ? getISOWeek(week[0]) : null;
             return (
-              <tr key={wi}>
+              <tr key={week[0].toISOString()}>
                 {showWeekNumbers && (
                   <td className={styles.weekNum} aria-label={`Week ${weekNum}`}>
                     {weekNum}

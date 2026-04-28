@@ -1,3 +1,4 @@
+'use client';
 import React, { forwardRef, useState, useCallback } from 'react';
 import { ToggleProps } from './Toggle.types';
 import { classNames } from '../../utils';

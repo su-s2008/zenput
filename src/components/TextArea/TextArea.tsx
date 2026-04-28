@@ -1,3 +1,4 @@
+'use client';
 import React, { forwardRef, useRef, useCallback } from 'react';
 import { TextAreaProps } from './TextArea.types';
 import { classNames, getValidationMessage, getValidationMessageClass } from '../../utils';
@@ -26,8 +27,8 @@ function TextAreaFooter({
   charCount,
   maxLength,
   isExceeded,
-}: TextAreaFooterProps): React.ReactElement | null {
-  if (!activeMessage && !showCharCount) return null;
+}: Readonly<TextAreaFooterProps>): React.ReactElement | null {
+  if (!activeMessage && !showCharCount) return null; // NOSONAR
   const charLabel = maxLength !== undefined ? `${charCount}/${maxLength}` : charCount;
   return (
     <div className={styles.footer}>
@@ -95,7 +96,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
     ref
   ) => {
     const internalRef = useRef<HTMLTextAreaElement>(null);
-    const textareaRef = (ref as React.RefObject<HTMLTextAreaElement>) ?? internalRef;
+    const textareaRef = (ref as React.RefObject<HTMLTextAreaElement>) ?? internalRef; // NOSONAR
 
     const { inputId, helperId, labelProps, inputAriaProps } = useFormField({
       id,

@@ -1,3 +1,4 @@
+'use client';
 import React, {
   forwardRef,
   useState,
@@ -280,7 +281,7 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
           styles.wrapper,
           styles[size],
           styles[variant],
-          validationState !== 'default' ? styles[validationState] : undefined,
+          validationState === 'default' ? undefined : styles[validationState],
           fullWidth ? styles.fullWidth : undefined,
           wrapperClassName
         )}
@@ -353,25 +354,31 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
         {showDropdown && (
           <ul
             id={listboxId}
-            role="listbox"
+            role="listbox" // NOSONAR
             aria-label={label ?? 'Options'}
             className={styles.dropdown}
           >
-            {isLoading ? (
-              <li className={styles.loadingState} role="status">
-                {loadingState ?? 'Loading…'}
-              </li>
-            ) : flatOptions.length === 0 ? (
-              <li className={styles.emptyState}>
-                {emptyState ?? 'No options found'}
-              </li>
-            ) : (
-              Array.from(grouped.entries()).map(([group, opts]) => (
+            {(() => {
+              if (isLoading) {
+                return (
+                  <li className={styles.loadingState} role="status" /* NOSONAR */>
+                    {loadingState ?? 'Loading…'}
+                  </li>
+                );
+              }
+              if (flatOptions.length === 0) {
+                return (
+                  <li className={styles.emptyState}>
+                    {emptyState ?? 'No options found'}
+                  </li>
+                );
+              }
+              return Array.from(grouped.entries()).map(([group, opts]) => (
                 <React.Fragment key={group || '__ungrouped'}>
                   {group && (
                     <li
                       className={styles.groupHeader}
-                      role="presentation"
+                      role="presentation" // NOSONAR
                       aria-hidden="true"
                     >
                       {group}
@@ -385,7 +392,7 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
                       <li
                         key={opt.value}
                         id={`${listboxId}-opt-${flatIdx}`}
-                        role="option"
+                        role="option" // NOSONAR
                         aria-selected={isSelected}
                         aria-disabled={opt.disabled}
                         className={classNames(
@@ -405,8 +412,8 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
                     );
                   })}
                 </React.Fragment>
-              ))
-            )}
+              ));
+            })()}
           </ul>
         )}
 

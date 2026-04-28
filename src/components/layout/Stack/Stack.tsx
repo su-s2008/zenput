@@ -1,3 +1,4 @@
+'use client';
 import React, { forwardRef } from 'react';
 import { classNames } from '../../../utils';
 import { Slot } from '../../../utils/slot';

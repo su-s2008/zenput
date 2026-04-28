@@ -1,3 +1,4 @@
+'use client';
 import React, { forwardRef, useState, useCallback } from 'react';
 import { ColorInputProps } from './ColorInput.types';
 import { classNames, getValidationMessage, getValidationMessageClass } from '../../utils';

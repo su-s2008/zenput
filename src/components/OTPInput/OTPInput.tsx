@@ -1,3 +1,4 @@
+'use client';
 import React, { forwardRef, useRef, useCallback, useId } from 'react';
 import { OTPInputProps } from './OTPInput.types';
 import { classNames } from '../../utils';

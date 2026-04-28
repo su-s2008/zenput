@@ -1113,6 +1113,139 @@ function EmailField() {
 ```
 
 
+## Next.js App Router
+
+Zenput ships with `'use client'` directives in its bundle so every component
+and hook is clearly marked as a Client Component boundary. This means you can
+import zenput components directly from **Server Components** — Next.js will
+automatically render them on the client.
+
+### Server-safe sub-path exports
+
+| Import path | Contents | Safe in Server Component? |
+|---|---|---|
+| `zenput` | All components + hooks | ✅ (via `'use client'` boundary) |
+| `zenput/tokens` | Design token objects, `cssVar()`, `buildCssVariables()` | ✅ Yes (no React) |
+| `zenput/server` | `getColorModeScript()` | ✅ Yes (no React) |
+| `zenput/forms` | `Form`, `useZenputForm` | ✅ (via `'use client'` boundary) |
+
+### Minimal App Router setup
+
+```tsx
+// app/layout.tsx  (Server Component)
+import Script from 'next/script';
+import { getColorModeScript } from 'zenput/server';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = { title: 'My App' };
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <head>
+        {/*
+         * Sets data-zp-theme on <html> before first paint so CSS variables
+         * are scoped correctly before React hydrates, preventing theme flash.
+         * The storageKey must match the one passed to <ThemeProvider>.
+         */}
+        <Script
+          id="zp-color-mode"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{
+            __html: getColorModeScript({ storageKey: 'zp-theme', defaultMode: 'system' }),
+          }}
+        />
+      </head>
+      <body>{children}</body>
+    </html>
+  );
+}
+```
+
+```tsx
+// app/page.tsx  (Server Component — token utilities run on the server)
+import { cssVar, CSS_VAR_PREFIX } from 'zenput/tokens';
+import MyForm from './MyForm';           // client component
+
+export default function Page() {
+  const brand = cssVar('color-brand');   // runs on server, no hooks needed
+  return <MyForm />;
+}
+```
+
+```tsx
+// app/MyForm.tsx  (Client Component)
+'use client';
+import { ThemeProvider, TextInput, Button } from 'zenput';
+
+export default function MyForm() {
+  return (
+    // storageKey must match the one passed to getColorModeScript above
+    <ThemeProvider theme={{ mode: 'system' }} storageKey="zp-theme">
+      <TextInput label="Email" placeholder="you@example.com" />
+      <Button>Submit</Button>
+    </ThemeProvider>
+  );
+}
+```
+
+### `getColorModeScript` options
+
+The `zenput/server` entry re-exports `getColorModeScript` from the same module
+that the main `zenput` bundle exports — so you can import it from either path.
+
+```ts
+import { getColorModeScript } from 'zenput/server';
+// or:
+import { getColorModeScript } from 'zenput';
+
+getColorModeScript({
+  storageKey: 'zp-theme',        // required — must match ThemeProvider storageKey
+  defaultMode: 'system',         // mode when no stored value ('system' respects OS)
+  storage: 'localStorage',       // 'localStorage' (default) or 'sessionStorage'
+  detectHighContrast: false,     // set true to honour prefers-contrast: more
+});
+```
+
+### `transpilePackages` (optional)
+
+If you see module resolution errors, add zenput to `transpilePackages` in
+`next.config.ts`:
+
+```ts
+// next.config.ts
+const nextConfig = {
+  transpilePackages: ['zenput'],
+};
+export default nextConfig;
+```
+
+---
+
+## SSR Safety
+
+All Zenput components are designed to render safely in server-side environments:
+
+- **`Portal`** — Defers `document` access until after mount using
+  `useSyncExternalStore` with a server snapshot of `false`; renders `null` on
+  the server. No browser globals accessed at module evaluation time.
+
+- **`useFocusTrap`** — All `document` access is inside `useEffect`, which only
+  runs on the client. Safe to call during SSR.
+
+- **`ThemeProvider`** — SSR-safe by default. When `mode='system'` is set,
+  `matchMedia` calls are deferred to `useEffect` and guarded by
+  `typeof window !== 'undefined'`. Deterministic SSR output is achieved by
+  rendering with the `defaultMode` until the client determines the OS preference.
+
+- **`useDisclosure`** — Uses `useState` and `useRef` from React 18+; no
+  `useId` fallback or random values that could cause hydration mismatches.
+
+- **Internal hooks** (`useClickOutside`, `useEscapeKey`, `useMenuKeyboardNav`)
+  — All event-listener registration is deferred to `useEffect`.
+
+---
+
 ## License
 
 MIT © konarsubhojit

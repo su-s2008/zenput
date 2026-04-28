@@ -6,3 +6,6 @@ reports/
 *.log
 .DS_Store
 storybook-static/
+
+# Next.js build outputs in examples/
+examples/**/.next/

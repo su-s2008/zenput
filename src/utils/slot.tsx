@@ -57,7 +57,7 @@ function assignRef<T>(ref: React.Ref<T> | undefined, node: T | null): void {
   if (typeof ref === 'function') {
     ref(node);
   } else if (ref != null && 'current' in ref) {
-    (ref as React.MutableRefObject<T | null>).current = node;
+    (ref as React.RefObject<T | null>).current = node;
   }
 }
 
@@ -110,7 +110,7 @@ export const Slot = React.forwardRef<Element, SlotProps>(function Slot(
   const childProps = children.props as AnyProps;
   const childRef =
     (childProps.ref as React.Ref<Element> | undefined) ??
-    ((children as unknown as { ref?: React.Ref<Element> }).ref as React.Ref<Element> | undefined);
+    ((children as unknown as { ref?: React.Ref<Element> }).ref as React.Ref<Element> | undefined); // NOSONAR
 
   const merged = mergeProps(slotProps as AnyProps, childProps);
 

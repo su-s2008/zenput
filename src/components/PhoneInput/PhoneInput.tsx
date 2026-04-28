@@ -1,3 +1,4 @@
+'use client';
 import React, { forwardRef, useState, useCallback } from 'react';
 import { PhoneInputProps, CountryCode } from './PhoneInput.types';
 import { classNames, getValidationMessage, getValidationMessageClass } from '../../utils';
@@ -29,7 +30,7 @@ function CountryDialSelect({
   value,
   onChange,
   disabled,
-}: CountryDialSelectProps): React.ReactElement {
+}: Readonly<CountryDialSelectProps>): React.ReactElement {
   return (
     <select
       className={styles.dialCodeSelect}

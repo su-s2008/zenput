@@ -1,3 +1,4 @@
+'use client';
 import React, { useCallback, useId } from 'react';
 import { MoneyInputProps } from './MoneyInput.types';
 import { classNames, getValidationMessage, getValidationMessageClass } from '../../utils';

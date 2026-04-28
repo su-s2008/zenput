@@ -1,3 +1,4 @@
+'use client';
 import React, { forwardRef } from 'react';
 import { DateInputProps } from './DateInput.types';
 import { NativeTypedInputField } from '../_shared/NativeTypedInputField';

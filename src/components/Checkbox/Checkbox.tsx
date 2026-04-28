@@ -1,3 +1,4 @@
+'use client';
 import React, { forwardRef, useEffect, useRef } from 'react';
 import { CheckboxProps } from './Checkbox.types';
 import { classNames } from '../../utils';

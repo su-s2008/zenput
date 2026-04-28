@@ -18,6 +18,8 @@ export default tseslint.config(
       'node_modules/**',
       'demo/**',
       '.vercel/**',
+      'examples/**/.next/**',
+      'examples/**/next-env.d.ts',
       '*.config.js',
       '*.config.cjs',
       '*.config.mjs',

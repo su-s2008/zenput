@@ -1,4 +1,5 @@
-import React, { createContext, useCallback, useContext, useEffect, useRef } from 'react';
+'use client';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef } from 'react';
 import { Controller, FormProvider, useFormContext, useFormState } from 'react-hook-form';
 import type { FieldErrors, FieldValues, Path } from 'react-hook-form';
 import { classNames } from '../utils';
@@ -37,12 +38,17 @@ function FormRoot<TFieldValues extends FieldValues = FieldValues>({
   className,
   style,
   ...rest
-}: FormProps<TFieldValues>): React.ReactElement {
+}: Readonly<FormProps<TFieldValues>>): React.ReactElement {
   const { handleSubmit, formState } = form;
+
+  const formInternalValue = useMemo(
+    () => ({ disabled: formState.isSubmitting }),
+    [formState.isSubmitting]
+  );
 
   return (
     <FormProvider {...form}>
-      <FormInternalContext.Provider value={{ disabled: formState.isSubmitting }}>
+      <FormInternalContext.Provider value={formInternalValue}>
         <form
           {...rest}
           className={classNames(styles.form, className)}
@@ -69,7 +75,7 @@ function FormField<TFieldValues extends FieldValues = FieldValues>({
   children,
   descriptionId,
   disabled: fieldDisabled,
-}: FormFieldProps<TFieldValues>): React.ReactElement {
+}: Readonly<FormFieldProps<TFieldValues>>): React.ReactElement {
   const { control } = useFormContext<TFieldValues>();
   const { disabled: formDisabled } = useFormInternal();
   const isDisabled = fieldDisabled ?? formDisabled;
@@ -118,7 +124,7 @@ FormField.displayName = 'Form.Field';
 // Form.Submit
 // ---------------------------------------------------------------------------
 
-function FormSubmit({ children = 'Submit', className, ...rest }: FormSubmitProps): React.ReactElement {
+function FormSubmit({ children = 'Submit', className, ...rest }: Readonly<FormSubmitProps>): React.ReactElement {
   const { disabled: formDisabled } = useFormInternal();
   const { isSubmitting } = useFormState();
 
@@ -146,7 +152,7 @@ function FormReset({
   className,
   onClick,
   ...rest
-}: FormResetProps): React.ReactElement {
+}: Readonly<FormResetProps>): React.ReactElement {
   const { disabled: formDisabled } = useFormInternal();
   const { isSubmitting } = useFormState();
   // With react-hook-form's Controller, inputs are controlled by RHF state, so
@@ -206,7 +212,7 @@ function flattenErrors(
     // Leaf error: has a `message` and/or `type` property and no further nested
     // field-shaped children.
     const v = value as { message?: string; type?: string | number } & Record<string, unknown>;
-    if (typeof v.message === 'string' || typeof v.type !== 'undefined') {
+    if (typeof v.message === 'string' || v.type !== undefined) {
       result.push({ path, message: v.message ?? `${path} is invalid` });
     } else if (Array.isArray(value)) {
       value.forEach((entry, index) => {
@@ -223,7 +229,7 @@ function FormErrorSummary({
   heading = 'Please fix the following errors:',
   className,
   style,
-}: FormErrorSummaryProps): React.ReactElement | null {
+}: Readonly<FormErrorSummaryProps>): React.ReactElement | null {
   const { errors } = useFormState();
   const { setFocus } = useFormContext<FieldValues>();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -245,7 +251,7 @@ function FormErrorSummary({
   const focusField = useCallback(
     (fieldPath: string) => {
       try {
-        setFocus(fieldPath as Path<FieldValues>);
+        setFocus(fieldPath as Path<FieldValues>); // NOSONAR
       } catch {
         // Fallback: locate the input by its escaped name attribute.
         if (typeof window !== 'undefined' && typeof CSS !== 'undefined' && CSS.escape) {

@@ -1,3 +1,4 @@
+'use client';
 import React, { forwardRef } from 'react';
 import { TimeInputProps } from './TimeInput.types';
 import { NativeTypedInputField } from '../_shared/NativeTypedInputField';

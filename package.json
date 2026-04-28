@@ -15,6 +15,18 @@
       "import": "./dist/esm/forms/index.js",
       "require": "./dist/cjs/forms/index.js",
       "types": "./dist/forms/index.d.ts"
+    },
+    "./tokens": {
+      "react-server": "./dist/esm/tokens/index.js",
+      "import": "./dist/esm/tokens/index.js",
+      "require": "./dist/cjs/tokens/index.js",
+      "types": "./dist/tokens/index.d.ts"
+    },
+    "./server": {
+      "react-server": "./dist/esm/server/index.js",
+      "import": "./dist/esm/server/index.js",
+      "require": "./dist/cjs/server/index.js",
+      "types": "./dist/server/index.d.ts"
     }
   },
   "files": [

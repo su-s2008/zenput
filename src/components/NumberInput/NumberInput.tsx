@@ -1,3 +1,4 @@
+'use client';
 import React, { forwardRef, useCallback, useState } from 'react';
 import { NumberInputProps } from './NumberInput.types';
 import { classNames, getValidationMessage, getValidationMessageClass } from '../../utils';

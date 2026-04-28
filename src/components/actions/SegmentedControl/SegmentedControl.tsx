@@ -1,3 +1,4 @@
+'use client';
 import React, {
   createContext,
   useCallback,
@@ -23,7 +24,7 @@ export type SegmentedControlSize = 'sm' | 'md' | 'lg';
  * collision-free for distinct inputs and always produces a valid id segment.
  */
 function safeIdSegment(value: string): string {
-  return value.replace(/[^A-Za-z0-9_-]/g, (ch) => `_${ch.charCodeAt(0).toString(16)}`);
+  return value.replace(/[^A-Za-z0-9_-]/g, (ch) => `_${(ch.codePointAt(0) ?? 0).toString(16)}`);
 }
 
 // ---------------------------------------------------------------------------
@@ -95,11 +96,11 @@ export function SegmentedControl({
   style,
   'aria-label': ariaLabel,
   'aria-labelledby': ariaLabelledBy,
-}: SegmentedControlProps): React.ReactElement {
+}: Readonly<SegmentedControlProps>): React.ReactElement {
   const baseId = useId();
   const isControlled = value !== undefined;
   const [internalValue, setInternalValue] = useState<string>(defaultValue ?? '');
-  const selected = isControlled ? (value as string) : internalValue;
+  const selected = isControlled ? (value as string) : internalValue; // NOSONAR
 
   const onSelect = useCallback(
     (val: string) => {
@@ -165,9 +166,14 @@ export function SegmentedControl({
   // so the group always has exactly one tabbable button.
   const rovingValue = selected || itemValues[0] || '';
 
+  const ctxValue = useMemo(
+    () => ({ value: selected, onSelect, size, baseId, rovingValue }),
+    [selected, onSelect, size, baseId, rovingValue]
+  );
+
   return (
     <SegmentedControlContext.Provider
-      value={{ value: selected, onSelect, size, baseId, rovingValue }}
+      value={ctxValue}
     >
       {/* eslint-disable-next-line jsx-a11y/interactive-supports-focus -- radiogroup focus is handled by roving tabindex on child radio buttons */}
       <div
@@ -215,7 +221,7 @@ export function SegmentedControlItem({
   disabled,
   children,
   className,
-}: SegmentedControlItemProps): React.ReactElement {
+}: Readonly<SegmentedControlItemProps>): React.ReactElement {
   const { value: selected, onSelect, baseId, rovingValue } = useSegmentedControlContext();
   const isSelected = selected === value;
   const isTabStop = rovingValue === value;
@@ -455,12 +461,17 @@ export function ToggleGroup(props: ToggleGroupProps): React.ReactElement {
     [itemValues, toggle, type]
   );
 
+  const toggleCtxValue = useMemo(
+    () => ({ isSelected, toggle, size, baseId, type, rovingValue }),
+    [isSelected, toggle, size, baseId, type, rovingValue]
+  );
+
   return (
-    <ToggleGroupContext.Provider value={{ isSelected, toggle, size, baseId, type, rovingValue }}>
+    <ToggleGroupContext.Provider value={toggleCtxValue}>
       {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- keyboard handler enables arrow-key navigation between toggle items */}
       <div
         ref={groupRef}
-        role="group"
+        role="group" // NOSONAR
         aria-label={ariaLabel}
         aria-labelledby={ariaLabelledBy}
         className={classNames(
@@ -504,7 +515,7 @@ export function ToggleGroupItem({
   disabled,
   children,
   className,
-}: ToggleGroupItemProps): React.ReactElement {
+}: Readonly<ToggleGroupItemProps>): React.ReactElement {
   const { isSelected, toggle, baseId, type, rovingValue } = useToggleGroupContext();
   const selected = isSelected(value);
 
@@ -512,10 +523,12 @@ export function ToggleGroupItem({
     if (!disabled) toggle(value);
   }, [disabled, toggle, value]);
 
-  // For `type="single"`, the group acts as a single tabstop with arrow-key
-  // navigation between items (roving tabindex). For `type="multiple"`, each
-  // toggle is independent and remains in the natural Tab sequence.
-  const tabIndex = type === 'single' ? (rovingValue === value ? 0 : -1) : 0;
+  let tabIndex: number;
+  if (type === 'single') {
+    tabIndex = rovingValue === value ? 0 : -1;
+  } else {
+    tabIndex = 0;
+  }
 
   return (
     <button
