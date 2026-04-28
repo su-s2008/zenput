@@ -79,14 +79,14 @@ jobs:
       - run: npm run test:ci
       - name: Upload coverage artifact
         if: matrix.node == '24'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: coverage
           path: coverage/
           if-no-files-found: warn
       - name: Upload JUnit results
         if: matrix.node == '24'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: junit
           path: reports/junit.xml
@@ -109,7 +109,7 @@ jobs:
           cache: 'npm'
       - run: npm ci --ignore-scripts
       - run: npm run build
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: dist
           path: dist/
@@ -126,7 +126,7 @@ jobs:
           cache: 'npm'
       - run: npm ci --ignore-scripts
       - run: npm run build-storybook
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: storybook-static
           path: storybook-static/
