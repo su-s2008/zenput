@@ -80,12 +80,12 @@
   -webkit-appearance: none;
   background: none;
   border: none;
-  border-right: 1px solid var(--input-border-color);
+  border-inline-end: 1px solid var(--input-border-color);
   outline: none;
   cursor: pointer;
   color: var(--input-text-color);
   font-family: var(--input-font-family);
-  padding-right: 4px;
+  padding-inline-end: 4px;
 }
 
 .dialCodeSelect:disabled {

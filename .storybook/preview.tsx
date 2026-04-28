@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Preview, Decorator } from '@storybook/react';
 import { ThemeProvider } from '../src/context';
-import type { Theme } from '../src/context';
+import type { Theme, Direction } from '../src/context';
 
 const THEMES: Record<string, Theme> = {
   Default: {},
@@ -33,13 +33,23 @@ const THEMES: Record<string, Theme> = {
   },
 };
 
+const VALID_DIRECTIONS: ReadonlySet<Direction> = new Set<Direction>(['ltr', 'rtl', 'auto']);
+
+function resolveDirection(value: unknown): Direction {
+  if (typeof value === 'string' && VALID_DIRECTIONS.has(value as Direction)) {
+    return value as Direction;
+  }
+  return 'ltr';
+}
+
 const withThemeProvider: Decorator = (Story, context) => {
   const themeName = context.globals.theme || 'Default';
   const theme = THEMES[themeName] || {};
   const bgColor = theme.bgColor;
+  const dir = resolveDirection(context.globals.direction);
   return (
     <div style={{ padding: '1.5rem', backgroundColor: bgColor || 'transparent' }}>
-      <ThemeProvider theme={theme}>
+      <ThemeProvider theme={theme} dir={dir}>
         <Story />
       </ThemeProvider>
     </div>
@@ -56,6 +66,19 @@ const preview: Preview = {
         title: 'Theme',
         icon: 'paintbrush',
         items: Object.keys(THEMES),
+        dynamicTitle: true,
+      },
+    },
+    direction: {
+      description: 'Text direction (LTR / RTL)',
+      defaultValue: 'ltr',
+      toolbar: {
+        title: 'Direction',
+        icon: 'paragraph',
+        items: [
+          { value: 'ltr', title: 'LTR' },
+          { value: 'rtl', title: 'RTL' },
+        ],
         dynamicTitle: true,
       },
     },

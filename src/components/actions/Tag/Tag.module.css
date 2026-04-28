@@ -67,7 +67,7 @@
   width: 1em !important;
   height: 1em !important;
   min-width: 0 !important;
-  margin-left: var(--zp-space-1);
+  margin-inline-start: var(--zp-space-1);
   flex-shrink: 0;
   font-size: 0.75em;
   border-radius: var(--zp-radius-full) !important;

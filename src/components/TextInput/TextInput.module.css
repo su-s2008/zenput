@@ -111,8 +111,8 @@
   border: none;
   border-bottom: 2px solid var(--input-border-color);
   border-radius: 0;
-  padding-left: 0;
-  padding-right: 0;
+  padding-inline-start: 0;
+  padding-inline-end: 0;
 }
 
 .underlined .input:hover:not(:disabled) {
@@ -158,11 +158,11 @@
 
 /* Prefix/Suffix */
 .hasPrefixIcon .input {
-  padding-left: 36px;
+  padding-inline-start: 36px;
 }
 
 .hasSuffixIcon .input {
-  padding-right: 36px;
+  padding-inline-end: 36px;
 }
 
 .prefixIcon,
@@ -176,11 +176,11 @@
 }
 
 .prefixIcon {
-  left: 10px;
+  inset-inline-start: 10px;
 }
 
 .suffixIcon {
-  right: 10px;
+  inset-inline-end: 10px;
 }
 
 .helperText {

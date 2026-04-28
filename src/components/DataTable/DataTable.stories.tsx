@@ -581,3 +581,30 @@ export const WithControlledExpansion: Story = {
     return <ControlledExpandTable />;
   },
 };
+
+
+export const RTL: StoryObj<typeof DataTable> = {
+  name: 'RTL — right-to-left DataTable',
+  globals: { direction: 'rtl' },
+  render: () => {
+    const rtlColumns: DataTableColumn<Employee>[] = [
+      { key: 'id', header: 'المعرّف', width: '60px' },
+      { key: 'name', header: 'الاسم', sortable: true },
+      { key: 'department', header: 'القسم', filterable: true },
+      { key: 'role', header: 'الدور' },
+      { key: 'status', header: 'الحالة', filterable: true },
+    ];
+    const rtlEmployees = [
+      { id: 1, name: 'أحمد علي', department: 'الهندسة', role: 'مهندس أول', status: 'نشط', salary: 120000 },
+      { id: 2, name: 'فاطمة حسن', department: 'التصميم', role: 'مصمم UX', status: 'نشط', salary: 95000 },
+      { id: 3, name: 'محمد إبراهيم', department: 'التسويق', role: 'مدير تسويق', status: 'غير نشط', salary: 105000 },
+    ];
+    return (
+      <DataTable
+        columns={rtlColumns}
+        data={rtlEmployees}
+        rowKey={(row) => row.id}
+      />
+    );
+  },
+};

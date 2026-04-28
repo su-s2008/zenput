@@ -99,3 +99,28 @@ export const Controlled: Story = {
     );
   },
 };
+
+export const RTL: Story = {
+  name: 'RTL — right-to-left Tabs',
+  globals: { direction: 'rtl' },
+  render: () => (
+    <Tabs defaultValue="tab1">
+      <TabList aria-label="علامات التبويب">
+        <Tab value="tab1">نظرة عامة</Tab>
+        <Tab value="tab2">التحليلات</Tab>
+        <Tab value="tab3">الإعدادات</Tab>
+      </TabList>
+      <TabPanels>
+        <TabPanel value="tab1">
+          <p>محتوى نظرة عامة — ملخص النشاط.</p>
+        </TabPanel>
+        <TabPanel value="tab2">
+          <p>محتوى التحليلات — الرسوم البيانية والبيانات.</p>
+        </TabPanel>
+        <TabPanel value="tab3">
+          <p>محتوى الإعدادات — خيارات التكوين.</p>
+        </TabPanel>
+      </TabPanels>
+    </Tabs>
+  ),
+};

@@ -96,7 +96,7 @@
   border: none;
   border-bottom: 2px solid var(--input-border-color);
   border-radius: 0;
-  padding-left: 0;
+  padding-inline-start: 0;
 }
 .underlined .input:hover:not(:disabled) {
   border-bottom-color: var(--input-primary-color);

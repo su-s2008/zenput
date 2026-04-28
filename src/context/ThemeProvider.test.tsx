@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, renderHook } from '@testing-library/react';
-import { ThemeProvider, useTheme, createTheme, tokenVar } from './ThemeProvider';
+import { ThemeProvider, useTheme, useDirection, createTheme, tokenVar } from './ThemeProvider';
 
 describe('ThemeProvider', () => {
   it('renders children inside a div wrapper by default', () => {
@@ -159,6 +159,36 @@ describe('ThemeProvider', () => {
     const wrapper = container.firstChild as HTMLElement;
     expect(wrapper.style.getPropertyValue('--zp-component-button-border-radius')).toBe('9999px');
   });
+
+  it('sets dir="ltr" on the wrapper by default', () => {
+    const { container } = render(
+      <ThemeProvider>
+        <span />
+      </ThemeProvider>
+    );
+    const wrapper = container.firstChild as HTMLElement;
+    expect(wrapper).toHaveAttribute('dir', 'ltr');
+  });
+
+  it('sets dir="rtl" on the wrapper when dir prop is rtl', () => {
+    const { container } = render(
+      <ThemeProvider dir="rtl">
+        <span />
+      </ThemeProvider>
+    );
+    const wrapper = container.firstChild as HTMLElement;
+    expect(wrapper).toHaveAttribute('dir', 'rtl');
+  });
+
+  it('sets dir="auto" on the wrapper when dir prop is auto', () => {
+    const { container } = render(
+      <ThemeProvider dir="auto">
+        <span />
+      </ThemeProvider>
+    );
+    const wrapper = container.firstChild as HTMLElement;
+    expect(wrapper).toHaveAttribute('dir', 'auto');
+  });
 });
 
 describe('useTheme', () => {
@@ -250,5 +280,44 @@ describe('tokenVar', () => {
 
   it('normalizes dots in spacing keys', () => {
     expect(tokenVar('space-0.5')).toBe('var(--zp-space-0-5)');
+  });
+});
+
+describe('useDirection', () => {
+  it('returns "ltr" by default (outside provider)', () => {
+    const { result } = renderHook(() => useDirection());
+    expect(result.current).toBe('ltr');
+  });
+
+  it('returns "ltr" when dir prop is ltr', () => {
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+      <ThemeProvider dir="ltr">{children}</ThemeProvider>
+    );
+    const { result } = renderHook(() => useDirection(), { wrapper });
+    expect(result.current).toBe('ltr');
+  });
+
+  it('returns "rtl" when dir prop is rtl', () => {
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+      <ThemeProvider dir="rtl">{children}</ThemeProvider>
+    );
+    const { result } = renderHook(() => useDirection(), { wrapper });
+    expect(result.current).toBe('rtl');
+  });
+
+  it('returns "auto" when dir prop is auto', () => {
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+      <ThemeProvider dir="auto">{children}</ThemeProvider>
+    );
+    const { result } = renderHook(() => useDirection(), { wrapper });
+    expect(result.current).toBe('auto');
+  });
+
+  it('reflects dir in the theme context', () => {
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+      <ThemeProvider dir="rtl">{children}</ThemeProvider>
+    );
+    const { result } = renderHook(() => useTheme(), { wrapper });
+    expect(result.current.dir).toBe('rtl');
   });
 });

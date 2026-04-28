@@ -36,7 +36,7 @@
 
 .vertical .tabList {
   flex-direction: column;
-  border-right: 2px solid var(--tabs-border);
+  border-inline-end: 2px solid var(--tabs-border);
   gap: 0;
   flex-shrink: 0;
 }
@@ -72,12 +72,15 @@
 }
 
 .vertical .tab {
-  /* Active indicator line sits at right */
+  /* Active indicator line sits at inline-end (right in LTR, left in RTL) */
   justify-content: flex-start;
-  border-right: 2px solid transparent;
-  margin-right: -2px;
-  text-align: left;
-  border-radius: var(--zp-radius-sm, 4px) 0 0 var(--zp-radius-sm, 4px);
+  border-inline-end: 2px solid transparent;
+  margin-inline-end: -2px;
+  text-align: start;
+  border-start-start-radius: var(--zp-radius-sm, 4px);
+  border-start-end-radius: 0;
+  border-end-end-radius: 0;
+  border-end-start-radius: var(--zp-radius-sm, 4px);
   padding: 0.625rem 1.25rem 0.625rem 1rem;
 }
 
@@ -102,7 +105,7 @@
 }
 
 .vertical .tabSelected {
-  border-right-color: var(--tabs-accent);
+  border-inline-end-color: var(--tabs-accent);
 }
 
 /* Disabled state */
@@ -124,7 +127,7 @@
 }
 
 .vertical .tabPanels {
-  padding-left: 1rem;
+  padding-inline-start: 1rem;
 }
 
 /* ------------------------------------------------------------------ */

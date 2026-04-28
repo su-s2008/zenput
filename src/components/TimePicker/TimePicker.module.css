@@ -1,6 +1,6 @@
 .trigger {
   cursor: pointer;
-  text-align: left;
+  text-align: start;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -155,7 +155,7 @@
   flex-direction: column;
   gap: var(--zp-space-1, 4px);
   padding-top: 1.625rem; /* label height */
-  margin-left: var(--zp-space-2, 8px);
+  margin-inline-start: var(--zp-space-2, 8px);
 }
 
 .periodBtn {

@@ -43,3 +43,26 @@ export const Sides: Story = {
     </div>
   ),
 };
+
+export const RTL: Story = {
+  name: 'RTL — right-to-left Popover',
+  globals: { direction: 'rtl' },
+  render: () => (
+    <div style={{ display: 'flex', gap: 16, padding: 80 }}>
+      <Popover>
+        <PopoverTrigger>افتح النافذة</PopoverTrigger>
+        <PopoverContent>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <strong>الإعدادات السريعة</strong>
+            <label>
+              <input type="checkbox" /> المزامنة التلقائية
+            </label>
+            <label>
+              <input type="checkbox" /> الإشعارات
+            </label>
+          </div>
+        </PopoverContent>
+      </Popover>
+    </div>
+  ),
+};

@@ -53,12 +53,12 @@
   appearance: none;
   -webkit-appearance: none;
   cursor: pointer;
-  padding-right: 36px;
+  padding-inline-end: 36px;
 }
 
 .arrow {
   position: absolute;
-  right: 10px;
+  inset-inline-end: 10px;
   pointer-events: none;
   color: var(--input-placeholder-color);
   display: flex;
@@ -115,7 +115,7 @@
   border: none;
   border-bottom: 2px solid var(--input-border-color);
   border-radius: 0;
-  padding-left: 0;
+  padding-inline-start: 0;
 }
 
 .underlined .input:hover:not(:disabled) {

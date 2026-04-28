@@ -149,11 +149,11 @@
 .helperText {
   font-size: 0.75rem;
   color: #6b7280;
-  margin-left: 24px;
+  margin-inline-start: 24px;
 }
 
 .errorText {
   font-size: 0.75rem;
   color: var(--input-error-color);
-  margin-left: 24px;
+  margin-inline-start: 24px;
 }

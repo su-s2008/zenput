@@ -88,3 +88,19 @@ export const ManyLevels: Story = {
     />
   ),
 };
+
+export const RTL: Story = {
+  name: 'RTL — Arabic breadcrumbs',
+  globals: { direction: 'rtl' },
+  render: () => (
+    <Breadcrumbs
+      items={[
+        { label: 'الرئيسية', href: '/' },
+        { label: 'المنتجات', href: '/products' },
+        { label: 'ويدجت برو' },
+      ]}
+      separator="‹"
+      aria-label="مسار التنقل"
+    />
+  ),
+};

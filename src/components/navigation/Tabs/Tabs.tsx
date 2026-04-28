@@ -12,6 +12,7 @@ import React, {
 } from 'react';
 import { classNames } from '../../../utils';
 import styles from './Tabs.module.css';
+import { useDirection } from '../../../context';
 import type {
   TabListProps,
   TabPanelProps,
@@ -98,6 +99,7 @@ Tabs.displayName = 'Tabs';
 export function TabList({ children, className, ...rest }: TabListProps): React.ReactElement {
   const { orientation, selected, onSelect } = useTabsContext();
   const listRef = useRef<HTMLDivElement>(null);
+  const dir = useDirection();
 
   // Collect enabled tab values in render order for keyboard navigation.
   const tabValues = useMemo(() => {
@@ -116,6 +118,14 @@ export function TabList({ children, className, ...rest }: TabListProps): React.R
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLDivElement>) => {
       const isHorizontal = orientation === 'horizontal';
+      // In RTL mode, ArrowRight moves to the previous (visually left) tab
+      // and ArrowLeft moves to the next (visually right) tab.
+      // When dir === 'auto', check the computed direction of the list element
+      // so keyboard nav matches whatever direction the browser resolved.
+      let isRtl = dir === 'rtl';
+      if (dir === 'auto' && listRef.current) {
+        isRtl = getComputedStyle(listRef.current).direction === 'rtl';
+      }
 
       // Gather enabled values at event-time so disabled tabs are skipped.
       const enabledValues = tabValues.filter((v) => {
@@ -133,10 +143,15 @@ export function TabList({ children, className, ...rest }: TabListProps): React.R
       const currentIdx = enabledValues.indexOf(selected);
       let nextIdx: number | null = null;
 
-      if ((isHorizontal && e.key === 'ArrowRight') || (!isHorizontal && e.key === 'ArrowDown')) {
+      // Determine logical "forward" and "backward" keys for horizontal tabs,
+      // accounting for RTL where the visual direction is mirrored.
+      const forwardKey = isRtl ? 'ArrowLeft' : 'ArrowRight';
+      const backwardKey = isRtl ? 'ArrowRight' : 'ArrowLeft';
+
+      if ((isHorizontal && e.key === forwardKey) || (!isHorizontal && e.key === 'ArrowDown')) {
         nextIdx = currentIdx < enabledValues.length - 1 ? currentIdx + 1 : 0;
       } else if (
-        (isHorizontal && e.key === 'ArrowLeft') ||
+        (isHorizontal && e.key === backwardKey) ||
         (!isHorizontal && e.key === 'ArrowUp')
       ) {
         nextIdx = currentIdx > 0 ? currentIdx - 1 : enabledValues.length - 1;
@@ -156,7 +171,7 @@ export function TabList({ children, className, ...rest }: TabListProps): React.R
         btn?.focus();
       }
     },
-    [orientation, tabValues, selected, onSelect]
+    [orientation, tabValues, selected, onSelect, dir]
   );
 
   return (

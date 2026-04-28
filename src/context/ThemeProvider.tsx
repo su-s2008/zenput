@@ -72,6 +72,9 @@ export interface Theme {
   cssVars?: Record<string, string>;
 }
 
+/** Text direction. Matches the HTML `dir` attribute values. */
+export type Direction = 'ltr' | 'rtl' | 'auto';
+
 /** Value returned by {@link useColorMode}. */
 export interface ColorModeContextValue {
   /** The user-selected mode (may be `'system'`). */
@@ -94,6 +97,8 @@ export interface ThemeContextValue {
   density: DensityScale;
   components: ComponentTokensMap;
   cssVars: Record<string, string>;
+  /** Text direction applied to the ThemeProvider wrapper. */
+  dir: Direction;
 }
 
 /** @internal — extends the public ThemeContextValue with the _hasProvider
@@ -115,6 +120,7 @@ const ThemeContext = createContext<InternalThemeContextValue>({
   density: defaultDensity,
   components: defaultComponents,
   cssVars: defaultCssVars,
+  dir: 'ltr',
   _hasProvider: false,
 });
 
@@ -267,6 +273,16 @@ interface ThemeProviderProps {
    * the wrapper.
    */
   as?: keyof React.JSX.IntrinsicElements | React.ElementType;
+  /**
+   * Text direction for all descendant components. Mirrors the HTML `dir`
+   * attribute and is exposed via the `useDirection()` hook so components
+   * can adapt their layout and keyboard interactions.
+   *
+   * - `'ltr'` — left-to-right (default)
+   * - `'rtl'` — right-to-left (Arabic, Hebrew, Persian, Urdu, …)
+   * - `'auto'` — browser auto-detection based on content
+   */
+  dir?: Direction;
   children: React.ReactNode;
   /**
    * When set, the user-selected color mode (which may be `'system'`) is
@@ -293,6 +309,7 @@ const EMPTY_THEME: Theme = Object.freeze({}) as Theme;
 export function ThemeProvider({
   theme = EMPTY_THEME,
   as = 'div',
+  dir = 'ltr',
   children,
   storageKey,
   storage = 'localStorage',
@@ -433,9 +450,10 @@ export function ThemeProvider({
       density,
       components,
       cssVars: mergedVars,
+      dir,
       _hasProvider: true,
     }),
-    [theme, resolvedMode, semantic, density, components, mergedVars]
+    [theme, resolvedMode, semantic, density, components, mergedVars, dir]
   );
 
   const WrapperComponent = as as React.ElementType;
@@ -443,7 +461,7 @@ export function ThemeProvider({
   return (
     <ThemeContext.Provider value={contextValue}>
       <ColorModeContext.Provider value={colorModeValue}>
-        <WrapperComponent data-zp-theme={resolvedMode} style={mergedVars as CSSProperties}>
+        <WrapperComponent data-zp-theme={resolvedMode} dir={dir} style={mergedVars as CSSProperties}>
           {children}
         </WrapperComponent>
       </ColorModeContext.Provider>
@@ -453,6 +471,26 @@ export function ThemeProvider({
 
 export function useTheme(): ThemeContextValue {
   return useContext(ThemeContext);
+}
+
+/**
+ * Returns the text direction (`'ltr'`, `'rtl'`, or `'auto'`) from the
+ * nearest `ThemeProvider`. Defaults to `'ltr'` when used outside a provider.
+ *
+ * Use this hook in components that need to adapt their layout, icon
+ * orientation, or keyboard interactions based on the reading direction.
+ *
+ * @example
+ * ```tsx
+ * function MyComponent() {
+ *   const dir = useDirection();
+ *   const isRtl = dir === 'rtl';
+ *   return <div style={{ marginInlineStart: isRtl ? '1rem' : undefined }}>…</div>;
+ * }
+ * ```
+ */
+export function useDirection(): Direction {
+  return useContext(ThemeContext).dir;
 }
 
 /**

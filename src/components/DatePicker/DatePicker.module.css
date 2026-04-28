@@ -1,6 +1,6 @@
 .trigger {
   cursor: pointer;
-  text-align: left;
+  text-align: start;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -80,7 +80,7 @@
 }
 
 .presetBtn {
-  text-align: left;
+  text-align: start;
   background: none;
   border: none;
   border-radius: var(--zp-radius-md, 6px);

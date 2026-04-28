@@ -107,16 +107,22 @@
 
 .toggleGroup .item {
   border-radius: 0;
-  border-right: var(--zp-border-width-1) solid var(--zp-color-border);
+  border-inline-end: var(--zp-border-width-1) solid var(--zp-color-border);
 }
 
 .toggleGroup .item:first-child {
-  border-radius: var(--sc-radius) 0 0 var(--sc-radius);
+  border-start-start-radius: var(--sc-radius);
+  border-start-end-radius: 0;
+  border-end-end-radius: 0;
+  border-end-start-radius: var(--sc-radius);
 }
 
 .toggleGroup .item:last-child {
-  border-radius: 0 var(--sc-radius) var(--sc-radius) 0;
-  border-right: none;
+  border-start-start-radius: 0;
+  border-start-end-radius: var(--sc-radius);
+  border-end-end-radius: var(--sc-radius);
+  border-end-start-radius: 0;
+  border-inline-end: none;
 }
 
 .toggleGroup .toggleItem.itemSelected {
