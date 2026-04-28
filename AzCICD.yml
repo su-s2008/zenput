@@ -189,6 +189,10 @@ stages:
           - script: npm run build-storybook
             displayName: 'Build Storybook'
 
+          # ── Demo parity check (all exported components must have a section) ─
+          - script: node demo/scripts/check-coverage.mjs
+            displayName: 'Demo coverage parity check'
+
           - task: PublishPipelineArtifact@1
             displayName: 'Publish dist/'
             inputs:
