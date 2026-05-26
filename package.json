@@ -1,6 +1,6 @@
 {
   "name": "zenput",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Zenput — a production-ready, accessible React TypeScript input components library",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
