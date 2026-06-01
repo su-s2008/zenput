@@ -99,7 +99,7 @@ export const Button = createPolymorphicComponent<ButtonComponent>(
 
   const buttonClassName = classNames(
     styles.button,
-   styles[variant-${variant === 'destructive' ? 'danger' : variant}],
+  styles[\variant-${variant === 'destructive' ? 'danger' : variant}`],
     styles[`size-${size}`],
     iconOnly ? styles.iconOnly : undefined,
     fullWidth ? styles.fullWidth : undefined,
