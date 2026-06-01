@@ -95,6 +95,19 @@ export const Disabled: Story = {
     </div>
   ),
 };
+export const Destructive: Story = {
+  args: {
+    variant: 'destructive',
+    children: 'Delete',
+  },
+};
+
+export const AsChild: Story = {
+  args: {
+    asChild: true,
+    children: <a href="#">Custom Link</a>,
+  },
+};
 
 export const FullWidth: Story = {
   args: { children: 'Full width', fullWidth: true },
