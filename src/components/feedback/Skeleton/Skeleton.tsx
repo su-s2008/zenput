@@ -150,3 +150,131 @@ export function SkeletonAvatar({
     />
   );
 }
+
+export interface SkeletonTableProps extends React.HTMLAttributes<HTMLDivElement> {
+  /** Number of skeleton rows to render. Default: `5`. */
+  rows?: number;
+  /** Number of columns. Default: `4`. */
+  columns?: number;
+  /** When true, includes a header row with bolder skeletons. Default: `true`. */
+  showHeader?: boolean;
+  /** Animation style. Default: `'shimmer'`. */
+  animation?: SkeletonAnimation;
+  /** Row height (CSS value). Default: `'1.25rem'`. */
+  rowHeight?: number | string;
+  className?: string;
+  style?: React.CSSProperties;
+}
+
+/**
+ * Convenience preset that renders a rectangular grid of skeleton cells,
+ * intended as a placeholder for `<table>`-style content while data loads.
+ *
+ * Marked `aria-hidden` so it does not pollute the accessibility tree.
+ */
+export function SkeletonTable({
+  rows = 5,
+  columns = 4,
+  showHeader = true,
+  animation = 'shimmer',
+  rowHeight = '1.25rem',
+  className,
+  style,
+  ...rest
+}: Readonly<SkeletonTableProps>): React.ReactElement {
+  const gridStyle: React.CSSProperties = {
+    display: 'grid',
+    gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
+    gap: '0.75rem',
+    ...style,
+  };
+  return (
+    <div {...rest} aria-hidden="true" className={className} style={gridStyle}>
+      {showHeader
+        ? Array.from({ length: columns }, (_, c) => (
+            <Skeleton
+              key={`h-${c}`}
+              variant="rect"
+              animation={animation}
+              height="1rem"
+              width="60%"
+            />
+          ))
+        : null}
+      {Array.from({ length: rows * columns }, (_, i) => (
+        <Skeleton
+          key={`c-${i}`}
+          variant="rect"
+          animation={animation}
+          height={rowHeight}
+          width="100%"
+        />
+      ))}
+    </div>
+  );
+}
+
+export interface SkeletonCardProps extends React.HTMLAttributes<HTMLDivElement> {
+  /** Show a circular avatar in the header. Default: `false`. */
+  showAvatar?: boolean;
+  /** Show a 16:9 media block at the top. Default: `false`. */
+  showMedia?: boolean;
+  /** Number of body text lines. Default: `3`. */
+  lines?: number;
+  /** Show a footer action row of two short skeletons. Default: `false`. */
+  showFooter?: boolean;
+  /** Animation style. Default: `'shimmer'`. */
+  animation?: SkeletonAnimation;
+  className?: string;
+  style?: React.CSSProperties;
+}
+
+/**
+ * Convenience preset that approximates a `<Card>` while content loads:
+ * optional media block, optional avatar + title/subtitle header, a few text
+ * lines, and an optional footer action row.
+ */
+export function SkeletonCard({
+  showAvatar = false,
+  showMedia = false,
+  lines = 3,
+  showFooter = false,
+  animation = 'shimmer',
+  className,
+  style,
+  ...rest
+}: Readonly<SkeletonCardProps>): React.ReactElement {
+  const rootStyle: React.CSSProperties = {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '0.75rem',
+    padding: '1rem',
+    border: '1px solid var(--zp-color-border-subtle, #e5e7eb)',
+    borderRadius: 'var(--zp-radius-lg, 12px)',
+    background: 'var(--zp-color-surface-elevated, #ffffff)',
+    ...style,
+  };
+  return (
+    <div {...rest} aria-hidden="true" className={className} style={rootStyle}>
+      {showMedia ? (
+        <Skeleton variant="rect" animation={animation} width="100%" height="9rem" radius={8} />
+      ) : null}
+      {showAvatar ? (
+        <span style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <SkeletonAvatar size={36} animation={animation} />
+          <span style={{ display: 'flex', flexDirection: 'column', gap: '0.375rem', flex: 1 }}>
+            <Skeleton variant="text" animation={animation} width="50%" height="0.875rem" />
+            <Skeleton variant="text" animation={animation} width="30%" height="0.75rem" />
+          </span>
+        </span>
+      ) : null}
+      <SkeletonText lines={lines} animation={animation} />
+      {showFooter ? (
+        <span style={{ display: 'flex', gap: '0.5rem', marginTop: '0.25rem' }}>
+          <Skeleton variant="rect" animation={animation} width="5rem" height="2rem" radius={6} />
+          <Skeleton variant="rect" animation={animation} width="5rem" height="2rem" radius={6} />
+        </span>
+      ) : null}
+    </div>
+  );
+}

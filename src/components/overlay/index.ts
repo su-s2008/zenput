@@ -1,4 +1,5 @@
 export * from './Dialog';
+export * from './ConfirmDialog';
 export * from './Drawer';
 export * from './Popover';
 export * from './Tooltip';

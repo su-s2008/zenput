@@ -1,0 +1,30 @@
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: var(--zp-radius-md, 8px);
+}
+
+.icon > * {
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
+.tone-default .icon {
+  background-color: var(--zp-color-info-subtle, #eff6ff);
+  color: var(--zp-color-info, #2563eb);
+}
+
+.tone-danger .icon {
+  background-color: var(--zp-color-danger-subtle, #fef2f2);
+  color: var(--zp-color-danger, #dc2626);
+}

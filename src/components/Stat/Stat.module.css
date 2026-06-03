@@ -1,0 +1,131 @@
+.stat {
+  --stat-accent: var(--zp-color-text-secondary, #6b7280);
+  --stat-accent-bg: var(--zp-color-surface, #f3f4f6);
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1.25rem;
+  border-radius: var(--zp-radius-lg, 12px);
+  border: 1px solid var(--zp-color-border-subtle, #e5e7eb);
+  background-color: var(--zp-color-surface-elevated, #ffffff);
+  font-family: inherit;
+  color: var(--zp-color-text-primary, #111827);
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.headerText {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--zp-color-text-secondary, #6b7280);
+  margin: 0;
+}
+
+.value {
+  font-size: 1.875rem;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--zp-color-text-primary, #111827);
+  margin: 0;
+}
+
+.hint {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--zp-color-text-secondary, #6b7280);
+}
+
+.iconChip {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: var(--zp-radius-md, 8px);
+  background-color: var(--stat-accent-bg);
+  color: var(--stat-accent);
+}
+
+.iconChip > * {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.delta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  align-self: flex-start;
+  padding: 0.125rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background-color: var(--stat-delta-bg, var(--zp-color-surface, #f3f4f6));
+  color: var(--stat-delta-fg, var(--zp-color-text-primary, #111827));
+}
+
+.deltaCaption {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--zp-color-text-secondary, #6b7280);
+  margin-left: 0.5rem;
+}
+
+.deltaRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 0.25rem;
+}
+
+.deltaArrow {
+  width: 0.75rem;
+  height: 0.75rem;
+}
+
+.trend {
+  margin-top: 0.5rem;
+}
+
+/* ── Sizes ────────────────────────────────────────────── */
+
+.size-sm { padding: 1rem; }
+.size-sm .value { font-size: 1.5rem; }
+
+.size-md { /* defaults */ }
+
+.size-lg { padding: 1.5rem; }
+.size-lg .value { font-size: 2.25rem; }
+
+/* ── Tones (accent chip + border) ─────────────────────── */
+
+.tone-neutral { --stat-accent: var(--zp-color-text-secondary, #6b7280); --stat-accent-bg: var(--zp-color-surface, #f3f4f6); }
+.tone-brand   { --stat-accent: var(--zp-color-brand, #2563eb);          --stat-accent-bg: var(--zp-color-info-subtle, #eff6ff); }
+.tone-info    { --stat-accent: var(--zp-color-info, #2563eb);           --stat-accent-bg: var(--zp-color-info-subtle, #eff6ff); }
+.tone-success { --stat-accent: var(--zp-color-success, #16a34a);        --stat-accent-bg: var(--zp-color-success-subtle, #f0fdf4); }
+.tone-warning { --stat-accent: var(--zp-color-warning, #d97706);        --stat-accent-bg: var(--zp-color-warning-subtle, #fffbeb); }
+.tone-danger  { --stat-accent: var(--zp-color-danger, #dc2626);         --stat-accent-bg: var(--zp-color-danger-subtle, #fef2f2); }
+
+/* ── Delta colors ─────────────────────────────────────── */
+
+.delta-up      { --stat-delta-bg: var(--zp-color-success-subtle, #f0fdf4); --stat-delta-fg: var(--zp-color-success-fg, #166534); }
+.delta-down    { --stat-delta-bg: var(--zp-color-danger-subtle, #fef2f2);  --stat-delta-fg: var(--zp-color-danger-fg, #991b1b); }
+.delta-flat    { --stat-delta-bg: var(--zp-color-surface, #f3f4f6);        --stat-delta-fg: var(--zp-color-text-secondary, #6b7280); }

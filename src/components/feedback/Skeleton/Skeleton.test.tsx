@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { Skeleton, SkeletonText, SkeletonAvatar } from './Skeleton';
+import { Skeleton, SkeletonText, SkeletonAvatar, SkeletonTable, SkeletonCard } from './Skeleton';
 import { expectNoA11yViolations } from '../../../test-utils/axe';
 
 describe('Skeleton', () => {
@@ -121,5 +121,92 @@ describe('Skeleton a11y (axe)', () => {
       </div>
     );
     await expectNoA11yViolations(container);
+  });
+});
+
+describe('SkeletonTable', () => {
+  it('is marked aria-hidden', () => {
+    render(<SkeletonTable data-testid="t" />);
+    expect(screen.getByTestId('t')).toHaveAttribute('aria-hidden', 'true');
+  });
+
+  it('renders header + rows*columns cells with defaults (5 rows, 4 cols)', () => {
+    const { container } = render(<SkeletonTable data-testid="t" />);
+    const cells = container.querySelectorAll('[class*="skeleton"]');
+    // 4 header cells + 5 * 4 body cells
+    expect(cells).toHaveLength(4 + 5 * 4);
+  });
+
+  it('renders only body cells when showHeader is false', () => {
+    const { container } = render(
+      <SkeletonTable data-testid="t" rows={2} columns={3} showHeader={false} />
+    );
+    const cells = container.querySelectorAll('[class*="skeleton"]');
+    expect(cells).toHaveLength(2 * 3);
+  });
+
+  it('sets gridTemplateColumns from the columns prop', () => {
+    render(<SkeletonTable data-testid="t" columns={6} />);
+    const el = screen.getByTestId('t');
+    expect(el.style.gridTemplateColumns).toBe('repeat(6, minmax(0, 1fr))');
+  });
+
+  it('forwards className and merges custom style', () => {
+    render(
+      <SkeletonTable data-testid="t" className="custom-table" style={{ background: 'red' }} />
+    );
+    const el = screen.getByTestId('t');
+    expect(el.className).toContain('custom-table');
+    expect(el.style.background).toBe('red');
+    expect(el.style.display).toBe('grid');
+  });
+
+  it('forwards animation prop to skeleton cells', () => {
+    const { container } = render(
+      <SkeletonTable rows={1} columns={1} showHeader={false} animation="pulse" />
+    );
+    const cell = container.querySelector('[class*="skeleton"]') as HTMLElement;
+    expect(cell.className).toMatch(/pulse/);
+  });
+});
+
+describe('SkeletonCard', () => {
+  it('is marked aria-hidden', () => {
+    render(<SkeletonCard data-testid="c" />);
+    expect(screen.getByTestId('c')).toHaveAttribute('aria-hidden', 'true');
+  });
+
+  it('renders the default number of body text lines (3)', () => {
+    const { container } = render(<SkeletonCard data-testid="c" />);
+    const cells = container.querySelectorAll('[class*="skeleton"]');
+    expect(cells).toHaveLength(3);
+  });
+
+  it('renders media block when showMedia is true', () => {
+    const { container } = render(<SkeletonCard data-testid="c" lines={0} showMedia />);
+    const cells = container.querySelectorAll('[class*="skeleton"]');
+    expect(cells).toHaveLength(1);
+    expect((cells[0] as HTMLElement).className).toMatch(/variant-rect/);
+  });
+
+  it('renders avatar + 2 header text skeletons when showAvatar is true', () => {
+    const { container } = render(<SkeletonCard data-testid="c" lines={0} showAvatar />);
+    const cells = container.querySelectorAll('[class*="skeleton"]');
+    // 1 avatar (circle) + 2 header text lines
+    expect(cells).toHaveLength(3);
+    expect(container.querySelectorAll('[class*="variant-circle"]')).toHaveLength(1);
+  });
+
+  it('renders 2 footer action skeletons when showFooter is true', () => {
+    const { container } = render(<SkeletonCard data-testid="c" lines={0} showFooter />);
+    const cells = container.querySelectorAll('[class*="skeleton"]');
+    expect(cells).toHaveLength(2);
+  });
+
+  it('forwards className and merges custom style', () => {
+    render(<SkeletonCard data-testid="c" className="custom-card" style={{ background: 'blue' }} />);
+    const el = screen.getByTestId('c');
+    expect(el.className).toContain('custom-card');
+    expect(el.style.background).toBe('blue');
   });
 });

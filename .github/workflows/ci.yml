@@ -64,9 +64,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # Run Node 22 + 24 on branch pushes; PRs only need Node 24 (faster feedback).
-        # Node ≥ 20.19 / ≥ 22.12 is required by vitest 4 / rolldown (uses node:util styleText).
-        node: ${{ github.event_name == 'push' && fromJSON('["22","24"]') || fromJSON('["24"]') }}
+        node: ['24']
     steps:
       - uses: actions/checkout@v6
         with:

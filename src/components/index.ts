@@ -35,6 +35,7 @@ export * from './TokenBrowser';
 export * from './Pagination';
 export * from './EmptyState';
 export * from './Card';
+export * from './Stat';
 
 // Feedback / loading primitives
 export * from './feedback';

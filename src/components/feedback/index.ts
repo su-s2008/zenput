@@ -3,3 +3,4 @@ export * from './Skeleton';
 export * from './ProgressBar';
 export * from './CircularProgress';
 export * from './VisuallyHidden';
+export * from './Alert';
