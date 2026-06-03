@@ -1,5 +1,5 @@
 'use client';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { classNames } from '../../../utils';
 import { Button } from '../../actions/Button';
 import {
@@ -42,28 +42,42 @@ export function ConfirmDialog({
 }: Readonly<ConfirmDialogProps>): React.ReactElement {
   const [loading, setLoading] = useState(false);
 
-  // Clear loading whenever the dialog closes (success path, parent-driven
-  // close, or external toggle) so a re-open never starts with a stuck spinner.
-  useEffect(() => {
+  // Reset `loading` whenever the dialog transitions from open to closed,
+  // including parent-driven external closes. Uses the React "store previous
+  // prop" pattern (https://react.dev/reference/react/useState#storing-information-from-previous-renders)
+  // so we never reset state from inside an effect.
+  const [prevOpen, setPrevOpen] = useState(open);
+  if (prevOpen !== open) {
+    setPrevOpen(open);
     if (!open) setLoading(false);
-  }, [open]);
+  }
+
+  // Route internal closes (success, cancel, overlay, escape) through this
+  // wrapper. The prev-prop check above handles externally-driven closes.
+  const handleOpenChange = useCallback(
+    (nextOpen: boolean) => {
+      if (!nextOpen) setLoading(false);
+      onOpenChange(nextOpen);
+    },
+    [onOpenChange]
+  );
 
   const handleConfirm = useCallback(async () => {
     if (loading) return;
     setLoading(true);
     try {
       await onConfirm();
-      onOpenChange(false);
+      handleOpenChange(false);
     } catch {
       // Keep the dialog open so the parent can render an error.
       setLoading(false);
     }
-  }, [loading, onConfirm, onOpenChange]);
+  }, [loading, onConfirm, handleOpenChange]);
 
   const handleCancel = useCallback(() => {
     if (loading) return;
-    onOpenChange(false);
-  }, [loading, onOpenChange]);
+    handleOpenChange(false);
+  }, [loading, handleOpenChange]);
 
   const hasBody = Boolean(description || children);
 
@@ -82,7 +96,7 @@ export function ConfirmDialog({
   return (
     <Dialog
       open={open}
-      onOpenChange={onOpenChange}
+      onOpenChange={handleOpenChange}
       closeOnOverlayClick={!loading}
       closeOnEscape={!loading}
     >
